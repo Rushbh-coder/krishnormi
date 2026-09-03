@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #17773f;
+  --color-primary-dark: #0f5c2f;
+  --color-accent: #e02859;
+  --color-accent-dark: #c81f4a;
+  --color-navy: #002261;
+  --color-text: #414141;
+  --color-text-dark: #1a1a1a;
+  --color-tint: rgba(11, 60, 93, 0.05);
+
+  --font-heading: "Poppins", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--color-text);
+    background: #ffffff;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  button {
+    font-family: var(--font-body);
+    cursor: pointer;
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+  }
+}
+
+@utility container {
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: 40px;
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-accent px-7 py-3.5 text-base font-semibold text-white whitespace-nowrap transition-[background,transform] duration-200 ease-in-out hover:-translate-y-px hover:bg-accent-dark;
+  }
+
+  .section-eyebrow {
+    @apply mb-3 inline-flex items-center gap-2 font-body text-base font-semibold text-accent;
+  }
+
+  .section-title {
+    @apply font-heading text-[40px] leading-[1.15] font-bold text-text-dark;
+  }
+
+  .section-divider {
+    @apply mt-4 h-[3px] w-[90px] border-none bg-accent;
+  }
+}
