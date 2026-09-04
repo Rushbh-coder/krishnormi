@@ -37,7 +37,7 @@ export default function TestimonialsEditor({ initialContent, initialVisible }) {
         />
       </Field>
 
-      <Field label="Patient testimonials" hint="The first one is shown on the public site.">
+      <Field label="Patient testimonials" hint="All of these are shown on the public site.">
         <ListEditor
           items={content.testimonials}
           onChange={set('testimonials')}

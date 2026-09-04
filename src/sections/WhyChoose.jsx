@@ -8,6 +8,7 @@ import ornament3 from "../assets/why-choose/ornament-3.svg";
 import ornament4 from "../assets/why-choose/ornament-4.svg";
 import { useSection } from "../context/HomepageContentContext";
 import { DEFAULT_CONTENT } from "../data/homepageDefaults";
+import ExpandableText from "../components/ExpandableText";
 
 // Fallback local asset per card slot (position matches the DB `cards` array).
 const TEMPLATE = [
@@ -41,7 +42,12 @@ function Card({ card, template }) {
           {card.title}
         </h3>
       </div>
-      <p className={`m-0 font-heading text-[15px] leading-[1.85] ${card.dark ? "text-white" : "text-text"}`}>{card.text}</p>
+      <ExpandableText
+        text={card.text}
+        lines={4}
+        className={`m-0 font-heading text-[15px] leading-[1.85] ${card.dark ? "text-white" : "text-text"}`}
+        toggleClassName={`mt-1.5 font-heading text-xs font-semibold hover:underline ${card.dark ? "text-white/80" : "text-accent"}`}
+      />
       <img
         className="pointer-events-none absolute right-4 bottom-3 h-auto w-16 opacity-50"
         src={template.ornament}
@@ -67,7 +73,7 @@ export default function WhyChoose() {
           <h2 className="section-title">{content.title}</h2>
           <hr className="section-divider mx-auto" />
         </div>
-        <div className="grid grid-cols-4 auto-rows-[278px] gap-6 max-[1100px]:grid-cols-2 max-[640px]:grid-cols-1 max-[640px]:auto-rows-auto">
+        <div className="grid grid-cols-4 auto-rows-[minmax(278px,auto)] gap-6 max-[1100px]:grid-cols-2 max-[640px]:grid-cols-1">
           {cards.map((card, i) => (
             <Card key={i} card={card} template={TEMPLATE[i] ?? {}} />
           ))}

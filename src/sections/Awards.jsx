@@ -6,6 +6,7 @@ import iconTeaching from '../assets/awards/icon-teaching.svg';
 import iconParticipation from '../assets/awards/icon-participation.svg';
 import { useSection } from '../context/HomepageContentContext';
 import { DEFAULT_CONTENT } from '../data/homepageDefaults';
+import ExpandableText from '../components/ExpandableText';
 
 // Fallback icon per card slot (position matches the DB `cards` array).
 const TEMPLATE = [
@@ -44,13 +45,13 @@ export default function Awards() {
 
           <h3 className="mt-7 font-heading text-[23px] leading-[1.55] font-semibold text-text-dark">{content.subtitle}</h3>
 
-          <p className="mt-4 font-body text-lg leading-[1.65] text-text">{content.body_text_1}</p>
+          <ExpandableText text={content.body_text_1} lines={3} className="mt-4 font-body text-lg leading-[1.65] text-text" />
 
-          <p className="mt-4 font-body text-lg leading-[1.65] text-text">{content.body_text_2}</p>
+          <ExpandableText text={content.body_text_2} lines={3} className="mt-4 font-body text-lg leading-[1.65] text-text" />
 
           <h4 className="mt-[26px] mb-1 font-heading text-xl font-semibold text-text-dark">{content.highlights_title}</h4>
 
-          <p className="mt-4 font-body text-lg leading-[1.65] text-text">{content.highlights_text}</p>
+          <ExpandableText text={content.highlights_text} lines={3} className="mt-4 font-body text-lg leading-[1.65] text-text" />
 
           <div className="mt-7 grid grid-cols-2 gap-6 max-[560px]:grid-cols-1">
             {cards.map((card, i) => {
@@ -65,9 +66,14 @@ export default function Awards() {
                     alt=""
                     aria-hidden="true"
                   />
-                  <div>
-                    <h5 className="mb-2 font-heading text-xl font-semibold text-navy">{card.title}</h5>
-                    <p className="font-body text-base leading-[1.5] text-text">{card.description}</p>
+                  <div className="min-w-0">
+                    <h5 className="mb-2 line-clamp-2 font-heading text-xl font-semibold text-navy">{card.title}</h5>
+                    <ExpandableText
+                      text={card.description}
+                      lines={3}
+                      className="font-body text-base leading-[1.5] text-text"
+                      toggleClassName="mt-1 font-heading text-xs font-semibold text-accent hover:underline"
+                    />
                   </div>
                 </div>
               );

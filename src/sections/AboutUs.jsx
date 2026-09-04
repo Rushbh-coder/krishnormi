@@ -6,13 +6,16 @@ import playRing from '../assets/about/ellipse-play-ring.svg';
 import playTriangle from '../assets/about/play-triangle.svg';
 import eyebrowIcon from '../assets/about/eyebrow-icon.svg';
 import signatureBar from '../assets/about/signature-bar.svg';
+import stethoscopeDecor from '../assets/about/stethoscope-decor.png';
 
 import iconClinical from '../assets/about/icon-clinical-dermatology.svg';
 import iconHairScalp from '../assets/about/icon-hair-scalp.svg';
 import iconLaser from '../assets/about/icon-laser-dermatology.svg';
 import iconAesthetic from '../assets/about/icon-aesthetic-dermatology.svg';
+import { useState } from 'react';
 import { useSection } from '../context/HomepageContentContext';
 import { DEFAULT_CONTENT } from '../data/homepageDefaults';
+import ExpandableText from '../components/ExpandableText';
 
 const FOCUS_TEMPLATE = [
   { icon: iconClinical, width: 52, height: 58 },
@@ -38,12 +41,19 @@ export default function AboutUs() {
   const content = row?.content ?? DEFAULT_CONTENT.about;
   const visible = row?.visible ?? true;
   const focusItems = content.focus_items ?? DEFAULT_CONTENT.about.focus_items;
+  const [activeFocus, setActiveFocus] = useState(0);
 
   if (!loading && !visible) return null;
 
   return (
-    <section className="overflow-hidden bg-white pt-[100px] pb-20 max-[560px]:pt-16 max-[560px]:pb-14">
-      <div className="container flex flex-wrap items-start gap-[60px]">
+    <section className="relative overflow-hidden bg-white pt-[100px] pb-20 max-[560px]:pt-16 max-[560px]:pb-14">
+      <div className="container relative z-[1] flex flex-wrap items-start gap-[60px]">
+        <img
+          className="pointer-events-none opacity-22 z-[2] absolute top-[66%] right-0 hidden w-[150px] min-[1300px]:block"
+          src={stethoscopeDecor}
+          alt=""
+          aria-hidden="true"
+        />
         <div className="relative aspect-[738/864] w-full max-w-[738px] flex-1 basis-[460px] max-[960px]:mx-auto max-[960px]:max-w-[520px]">
           <span
             className="absolute top-[6%] left-0 z-[1] aspect-square w-[29.3%] bg-contain bg-no-repeat"
@@ -79,7 +89,7 @@ export default function AboutUs() {
             <img className="absolute top-[34%] left-[34%] h-[32%] w-[32%]" src={playTriangle} alt="" aria-hidden="true" />
           </div>
 
-          <span className="absolute top-[10%] right-[1.5%] z-[4] origin-top-right whitespace-nowrap font-heading text-[20px] font-semibold text-navy [transform:rotate(-90deg)_translate(-100%,0)]">
+          <span className="absolute top-[12%] right-[-2%] z-[4] whitespace-nowrap font-heading text-[26px] font-semibold text-navy rotate-[-90deg] max-[560px]:hidden">
             How We Work
           </span>
         </div>
@@ -96,19 +106,23 @@ export default function AboutUs() {
 
           <hr className="section-divider" />
 
-          <p className="mt-6 font-heading text-xl leading-[1.5] font-semibold text-text-dark">{content.lead_text}</p>
+          <ExpandableText
+            text={content.lead_text}
+            lines={2}
+            className="mt-6 font-heading text-xl leading-[1.5] font-semibold text-text-dark"
+          />
 
-          <p className="mt-[18px] font-body text-lg leading-[1.7] text-text">{content.body_text_1}</p>
+          <ExpandableText text={content.body_text_1} lines={3} className="mt-[18px] font-body text-lg leading-[1.7] text-text" />
 
-          <p className="mt-[18px] font-body text-lg leading-[1.7] text-text">{content.body_text_2}</p>
+          <ExpandableText text={content.body_text_2} lines={3} className="mt-[18px] font-body text-lg leading-[1.7] text-text" />
 
-          <p className="mt-[18px] font-body text-lg leading-[1.7] text-text">{content.body_text_3}</p>
+          <ExpandableText text={content.body_text_3} lines={3} className="mt-[18px] font-body text-lg leading-[1.7] text-text" />
 
           <a href={content.cta_link || '#contact'} className="btn-primary mt-8">
             {content.cta_label}
           </a>
 
-          <div className="mt-10 flex gap-4">
+          <div className="mt-10 flex gap-2">
             <img className="h-auto w-[13px] flex-none" src={signatureBar} alt="" aria-hidden="true" />
             <div>
               <p className="mb-2 font-heading text-lg font-semibold text-[#293253]">{content.signature_role}</p>
@@ -120,26 +134,39 @@ export default function AboutUs() {
       </div>
 
       <div className="container">
-        <div className="mt-[90px] grid grid-cols-4 overflow-hidden rounded-xl border border-[#e9e9e9] max-[960px]:grid-cols-2 max-[560px]:grid-cols-1">
+        <div className="mt-12 grid grid-cols-4 gap-5 max-[960px]:grid-cols-2 max-[560px]:grid-cols-1">
           {FOCUS_TEMPLATE.map((template, i) => {
             const item = focusItems[i] ?? {};
+            const isActive = activeFocus === i;
             return (
-              <div
-                className="border-l border-[#e9e9e9] px-7 py-8 first:border-l-0 max-[960px]:[&:nth-child(-n+2)]:border-b max-[960px]:[&:nth-child(-n+2)]:border-[#e9e9e9] max-[960px]:[&:nth-child(3)]:border-l-0 max-[560px]:border-t max-[560px]:border-l-0 max-[560px]:border-[#e9e9e9] max-[560px]:first:border-t-0"
+              <button
+                type="button"
                 key={i}
+                onClick={() => setActiveFocus(i)}
+                className={`rounded-[10px] border-x border-y-[3px] border-x-[#e9e9e9] px-7 py-8 text-left transition-colors duration-200 ${
+                  isActive ? "border-y-accent" : "border-y-[#e9e9e9]"
+                }`}
               >
                 <img
-                  className="mb-[26px] block object-contain"
+                  className="mx-auto mb-[26px] block object-contain"
                   src={template.icon}
                   width={template.width}
                   height={template.height}
-                  style={template.opacity ? { opacity: template.opacity } : undefined}
+                  style={
+                    template.opacity ? { opacity: template.opacity } : undefined
+                  }
                   alt=""
                   aria-hidden="true"
                 />
-                <h3 className="mb-3.5 font-heading text-xl font-semibold text-navy">{item.title}</h3>
-                <p className="font-body text-[15px] leading-[1.6] text-text">{item.description}</p>
-              </div>
+                <h3
+                  className={`mb-3.5 line-clamp-1 font-heading text-xl font-semibold ${isActive ? "text-accent" : "text-navy"}`}
+                >
+                  {item.title}
+                </h3>
+                <p className="line-clamp-4 font-body text-[15px] leading-[1.6] text-text">
+                  {item.description}
+                </p>
+              </button>
             );
           })}
         </div>
