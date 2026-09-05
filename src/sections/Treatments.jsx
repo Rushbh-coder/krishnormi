@@ -49,7 +49,7 @@ export default function Treatments() {
             {content.button_label}
           </button>
           <img
-            className="mix-blend-screen right-[5%] mt-5 h-auto w-full max-w-[760px] max-[1100px]:hidden"
+            className="mix-blend-screen mt-5 h-auto w-full max-w-[760px]"
             src={content.hero_image_url || heroTreatment}
             width={1536}
             height={1200}

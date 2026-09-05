@@ -29,12 +29,12 @@ export default function Awards() {
       <img className="absolute inset-0 z-0 h-full w-full object-cover object-center" src={bgImage} alt="" aria-hidden="true" />
 
       <div className="container relative z-[1] flex flex-wrap items-start gap-[58px] max-[960px]:flex-col max-[960px]:items-center">
-        <div className="aspect-[509/866] w-full max-w-[490px] flex-1 basis-[420px] max-[960px]:max-w-[420px]">
+        <div className="aspect-[520/970] w-full max-w-[490px] flex-1 basis-[420px] max-[960px]:max-w-[420px]">
           <img
             className="h-full w-full object-cover"
             src={content.photo_url || doctorPhoto}
-            width={509}
-            height={866}
+            width={520}
+            height={970}
             alt="Dr. Deepa K. Bhatt receiving a professional recognition award"
           />
         </div>

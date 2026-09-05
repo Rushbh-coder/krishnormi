@@ -1,6 +1,7 @@
 import bgImage from "../assets/testimonials/bg.png";
 import patientPhoto from "../assets/testimonials/patient-photo.png";
 import stars from "../assets/testimonials/stars.svg";
+import iconyear from "../assets/testimonials/icon-years.svg";
 import iconSkin from "../assets/testimonials/icon-skin.svg";
 import iconPatients1 from "../assets/testimonials/icon-patients-1.svg";
 import iconPatients2 from "../assets/testimonials/icon-patients-2.svg";
@@ -14,7 +15,7 @@ const STAT_ICONS = [
   // Years
   <img
     key="years"
-    src={iconQuote}
+    src={iconyear}
     alt=""
     aria-hidden="true"
     className="h-[52px] w-[52px] object-contain"
@@ -57,11 +58,12 @@ const STAT_ICONS = [
 ];
 
 export default function Testimonials() {
-  const { row, loading } = useSection('testimonials');
+  const { row, loading } = useSection("testimonials");
   const content = row?.content ?? DEFAULT_CONTENT.testimonials;
   const visible = row?.visible ?? true;
   const stats = content.stats ?? DEFAULT_CONTENT.testimonials.stats;
-  const testimonialList = content.testimonials ?? DEFAULT_CONTENT.testimonials.testimonials;
+  const testimonialList =
+    content.testimonials ?? DEFAULT_CONTENT.testimonials.testimonials;
 
   if (!loading && !visible) return null;
   if (!testimonialList.length) return null;
@@ -145,7 +147,7 @@ export default function Testimonials() {
       </div>
 
       <div className="container relative pt-24 text-center max-[700px]:pt-5">
-        <h2 className="m-0 mb-4 font-heading text-[44px] font-bold text-white">
+        <h2 className="m-0 mb-4 font-heading text-[44px] font-bold text-white max-[700px]:text-[32px] max-[420px]:text-[26px]">
           {content.title}
         </h2>
         <div className="mx-auto mb-14 max-w-[780px]">
@@ -161,20 +163,20 @@ export default function Testimonials() {
           {testimonialList.map((testimonial, i) => (
             <div
               key={i}
-              className="relative rounded border border-[#eab308] p-[60px_48px_40px]"
+              className="relative rounded border border-[#eab308] p-[60px_48px_40px] max-[600px]:p-[50px_24px_28px]"
             >
               <img
-                className="absolute top-[-95px] left-[-30px] h-[250px] w-auto"
+                className="absolute top-[-95px] left-[-30px] h-[250px] w-auto max-[600px]:top-[-55px] max-[600px]:left-[-15px] max-[600px]:h-[140px]"
                 src={iconQuote}
                 alt=""
                 aria-hidden="true"
               />
               <img
-                className="absolute top-[-55px] left-110 mb-5 h-20 w-20 rounded-full border-[3px] border-[#eab308] object-cover"
+                className="absolute top-[-55px] left-1/2 mb-5 h-20 w-20 -translate-x-1/2 rounded-full border-[3px] border-[#eab308] object-cover max-[600px]:top-[-40px] max-[600px]:h-16 max-[600px]:w-16"
                 src={testimonial.photo_url || patientPhoto}
                 alt={testimonial.name}
               />
-              <p className="m-0 mb-4 font-heading text-[23px] font-medium text-white">
+              <p className="m-0 mb-4 font-heading text-[23px] font-medium text-white max-[600px]:text-lg">
                 {testimonial.name}
               </p>
               <div className="mx-auto mb-5 max-w-[1026px]">
