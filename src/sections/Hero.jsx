@@ -147,7 +147,7 @@ export default function Hero() {
           <span
             className="
               absolute
-              right-[29%]
+              right-[40%]
               bottom-[6%]
               z-[4]
 
@@ -188,7 +188,7 @@ export default function Hero() {
           <span
             className="
               absolute
-              right-[6%]
+              right-[16%]
               bottom-[6%]
               z-[4]
 

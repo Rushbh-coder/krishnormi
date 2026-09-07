@@ -73,7 +73,7 @@ export function Toggle({ checked, onChange, label, hint }) {
 
 /** Editable list of objects. Fixed-length lists (matching a fixed visual template, e.g. 4 feature
  * cards with fixed icons) hide add/remove; variable-length lists (testimonials, FAQ items) show them. */
-export function ListEditor({ items, onChange, renderItem, addLabel, newItem, fixedLength }) {
+export function ListEditor({ items, onChange, renderItem, addLabel, newItem, fixedLength, reorderable, moveHint }) {
   const updateItem = (index, patch) => {
     onChange(items.map((item, i) => (i === index ? { ...item, ...patch } : item)));
   };
@@ -83,19 +83,63 @@ export function ListEditor({ items, onChange, renderItem, addLabel, newItem, fix
   const addItem = () => {
     onChange([...items, newItem()]);
   };
+  const moveItem = (index, direction) => {
+    const target = index + direction;
+    if (target < 0 || target >= items.length) return;
+    const next = [...items];
+    [next[index], next[target]] = [next[target], next[index]];
+    onChange(next);
+  };
 
   return (
     <div className="flex flex-col gap-4">
+      {moveHint && !fixedLength && reorderable && (
+        <p className="-mt-1 font-body text-[11px] text-[#98a2b3]">{moveHint}</p>
+      )}
       {items.map((item, i) => (
         <div key={i} className="relative flex flex-col gap-3 rounded-xl border border-[#e4eae7] bg-white p-4">
           {!fixedLength && (
-            <button
-              type="button"
-              onClick={() => removeItem(i)}
-              className="absolute top-3 right-3 bg-transparent p-0 font-heading text-xs font-semibold text-[#df2759] hover:underline"
-            >
-              Remove
-            </button>
+            <div className="absolute top-3 right-3 flex items-center gap-1.5">
+              {reorderable && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => moveItem(i, -1)}
+                    disabled={i === 0}
+                    aria-label="Move up"
+                    title="Move up"
+                    className="flex h-7 w-7 items-center justify-center rounded-full border border-[#dce4e0] bg-white p-0 text-[#536660] transition-colors duration-150 hover:bg-[#f7f9f8] disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M6 15l6-6 6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveItem(i, 1)}
+                    disabled={i === items.length - 1}
+                    aria-label="Move down"
+                    title="Move down"
+                    className="flex h-7 w-7 items-center justify-center rounded-full border border-[#dce4e0] bg-white p-0 text-[#536660] transition-colors duration-150 hover:bg-[#f7f9f8] disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                </>
+              )}
+              <button
+                type="button"
+                onClick={() => removeItem(i)}
+                aria-label="Remove"
+                title="Remove"
+                className="flex h-7 w-7 items-center justify-center rounded-full border border-[#f7c8d5] bg-[#fce8ee] p-0 text-[#df2759] transition-colors duration-150 hover:bg-[#df2759] hover:text-white"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </div>
           )}
           {renderItem(item, (patch) => updateItem(i, patch), i)}
         </div>

@@ -11,7 +11,7 @@ export default function FAQ() {
   const { row, loading } = useSection("faq");
   const content = row?.content ?? DEFAULT_CONTENT.faq;
   const visible = row?.visible ?? true;
-  const faqs = content.items ?? DEFAULT_CONTENT.faq.items;
+  const faqs = (content.items ?? DEFAULT_CONTENT.faq.items).slice(0, 6);
 
   if (!loading && !visible) return null;
 

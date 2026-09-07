@@ -79,7 +79,7 @@ export default function Testimonials() {
   if (!testimonialList.length) return null;
 
   const activeIndex = current % testimonialList.length;
-  const testimonial = testimonialList[activeIndex];
+  const activeTestimonial = testimonialList[activeIndex];
   const hasMultiple = testimonialList.length > 1;
   const goPrev = () =>
     setCurrent((i) => (i - 1 + testimonialList.length) % testimonialList.length);
@@ -190,37 +190,46 @@ export default function Testimonials() {
             </button>
           )}
 
-          <div
-            key={activeIndex}
-            className="relative rounded border border-[#eab308] p-[60px_48px_40px] max-[600px]:p-[50px_24px_28px]"
-          >
-            <img
-              className="absolute top-[-95px] left-[-30px] h-[250px] w-auto max-[600px]:top-[-55px] max-[600px]:left-[-15px] max-[600px]:h-[140px]"
-              src={iconQuote}
-              alt=""
-              aria-hidden="true"
-            />
-            <img
-              className="absolute top-[-55px] left-1/2 mb-5 h-20 w-20 -translate-x-1/2 rounded-full border-[3px] border-[#eab308] object-cover max-[600px]:top-[-40px] max-[600px]:h-16 max-[600px]:w-16"
-              src={testimonial.photo_url || patientPhoto}
-              alt={testimonial.name}
-            />
-            <p className="m-0 mb-4 font-heading text-[23px] font-medium text-white max-[600px]:text-lg">
-              {testimonial.name}
-            </p>
-            <div className="mx-auto mb-5 max-w-[1026px]">
-              <ExpandableText
-                text={testimonial.quote}
-                lines={4}
-                className="font-heading text-base leading-[2] text-white/90"
-                toggleClassName="mt-1.5 font-heading text-sm font-semibold text-[#eab308] hover:underline"
-              />
+          <img
+            className="pointer-events-none absolute top-[-95px] left-[-30px] z-[5] h-[250px] w-auto max-[600px]:top-[-55px] max-[600px]:left-[-15px] max-[600px]:h-[140px]"
+            src={iconQuote}
+            alt=""
+            aria-hidden="true"
+          />
+          <img
+            className="pointer-events-none absolute top-[-55px] left-1/2 z-[5] h-20 w-20 -translate-x-1/2 rounded-full border-[3px] border-[#eab308] object-cover max-[600px]:top-[-40px] max-[600px]:h-16 max-[600px]:w-16"
+            src={activeTestimonial.photo_url || patientPhoto}
+            alt={activeTestimonial.name}
+          />
+
+          <div className="overflow-x-hidden">
+            <div
+              className="flex w-full transition-transform duration-500 ease-in-out"
+              style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+            >
+              {testimonialList.map((testimonial, i) => (
+                <div key={i} className="w-full flex-none">
+                  <div className="relative rounded border border-[#eab308] p-[60px_48px_40px] max-[600px]:p-[50px_24px_28px]">
+                    <p className="m-0 mb-4 font-heading text-[23px] font-medium text-white max-[600px]:text-lg">
+                      {testimonial.name}
+                    </p>
+                    <div className="mx-auto mb-5 max-w-[1026px]">
+                      <ExpandableText
+                        text={testimonial.quote}
+                        lines={4}
+                        className="font-heading text-base leading-[2] text-white/90"
+                        toggleClassName="mt-1.5 font-heading text-sm font-semibold text-[#eab308] hover:underline"
+                      />
+                    </div>
+                    <img
+                      className="mx-auto h-[21px]"
+                      src={stars}
+                      alt="5 out of 5 stars"
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
-            <img
-              className="mx-auto h-[21px]"
-              src={stars}
-              alt="5 out of 5 stars"
-            />
           </div>
 
           {hasMultiple && (

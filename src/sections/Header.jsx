@@ -6,10 +6,9 @@ import logoWordmark from "../assets/header/logo-wordmark.png";
 const NAV_LINKS = [
   { label: "Home", href: "#" },
   { label: "About Us", href: "#about" },
-  { label: "Our Doctor", href: "#our-doctor" },
-  { label: "Areas of Care", href: "#areas-of-care" },
   { label: "Treatments", href: "#treatments" },
   { label: "Gallery", href: "#gallery" },
+  { label: "Blogs", href: "#blogs" },
   { label: "Contact Us", href: "#contact" },
 ];
 

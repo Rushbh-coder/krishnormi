@@ -19,12 +19,14 @@ export default function FaqEditor({ initialContent, initialVisible }) {
 
       <ImageUploadField label="Photo" value={content.photo_url} onChange={set('photo_url')} folder="faq" fallback={photo} />
 
-      <Field label="Questions">
+      <Field label="Questions" hint="You can add as many as you like, but only the first 6 (in the order below) show on the public site.">
         <ListEditor
           items={content.items}
           onChange={set('items')}
           addLabel="Add question"
           newItem={() => ({ question: '', answer: '' })}
+          reorderable
+          moveHint="Use the arrows to reorder — only the first 6 questions appear on the public site."
           renderItem={(item, update) => (
             <>
               <TextInput value={item.question} onChange={(v) => update({ question: v })} placeholder="Question" />

@@ -29,7 +29,7 @@ export default function Treatments() {
 
   return (
     <section
-      className="relative overflow-hidden bg-[#15350e] bg-cover bg-center pt-[90px] pb-[0px] max-[460px]:pt-16 max-[460px]:pb-20"
+      className="relative overflow-hidden bg-[#15350e] bg-cover bg-center pt-[90px] pb-[-2%] max-[460px]:pt-16 max-[460px]:pb-5"
       style={{ backgroundImage: `url(${content.background_image_url || bgImage})` }}
     >
       <div className="absolute inset-0 bg-[linear-gradient(100deg,rgba(36,71,17,0.75),#15350e_75%)]" />
@@ -49,9 +49,9 @@ export default function Treatments() {
             {content.button_label}
           </button>
           <img
-            className="mix-blend-screen mt-8 h-auto w-full max-w-[760px]"
+            className="mix-blend-screen left-[50%] translate-x-[-10%] mt-15 mb-0 h-auto w-full max-w-[760px] max-[900px]:mb-[-10%] max-[900px]:mt-10 max-[900px]:w-full max-[900px]:max-w-[600px] max-[460px]:max-w-[400px]"
             src={content.hero_image_url || heroTreatment}
-            width={1536}
+            width={1600}
             height={1200}
             alt="Dermatology treatment illustration"
           />
