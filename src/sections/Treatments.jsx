@@ -29,11 +29,11 @@ export default function Treatments() {
 
   return (
     <section
-      className="relative overflow-hidden bg-[#15350e] bg-cover bg-center py-[100px] max-[560px]:py-16"
+      className="relative overflow-hidden bg-[#15350e] bg-cover bg-center pt-[90px] pb-[0px] max-[460px]:pt-16 max-[460px]:pb-20"
       style={{ backgroundImage: `url(${content.background_image_url || bgImage})` }}
     >
       <div className="absolute inset-0 bg-[linear-gradient(100deg,rgba(36,71,17,0.75),#15350e_75%)]" />
-      <div className="container relative grid grid-cols-[minmax(280px,460px)_1fr] items-start gap-10 max-[1000px]:grid-cols-1">
+      <div className="container relative grid grid-cols-[minmax(280px,460px)_1fr] items-start gap-10 max-[900px]:grid-cols-1">
         <div className="relative">
           <h2 className="m-0 font-heading text-[44px] leading-[1.25] font-bold text-white">{content.title}</h2>
           <hr className="section-divider mb-6" />
@@ -49,7 +49,7 @@ export default function Treatments() {
             {content.button_label}
           </button>
           <img
-            className="mix-blend-screen mt-5 h-auto w-full max-w-[760px]"
+            className="mix-blend-screen mt-8 h-auto w-full max-w-[760px]"
             src={content.hero_image_url || heroTreatment}
             width={1536}
             height={1200}
