@@ -15,7 +15,7 @@ import iconAesthetic from '../assets/about/icon-aesthetic-dermatology.svg';
 import { useState } from 'react';
 import { useSection } from '../context/HomepageContentContext';
 import { DEFAULT_CONTENT } from '../data/homepageDefaults';
-import ExpandableText from '../components/ExpandableText';
+import { useReducedMotion, useRevealOnce, revealClass } from '../hooks/useScrollReveal';
 
 const FOCUS_TEMPLATE = [
   { icon: iconClinical, width: 52, height: 58 },
@@ -43,6 +43,11 @@ export default function AboutUs() {
   const focusItems = content.focus_items ?? DEFAULT_CONTENT.about.focus_items;
   const [activeFocus, setActiveFocus] = useState(0);
 
+  const reducedMotion = useReducedMotion();
+  const [imageRef, imageVisible] = useRevealOnce(reducedMotion);
+  const [textRef, textVisible] = useRevealOnce(reducedMotion);
+  const [cardsRef, cardsVisible] = useRevealOnce(reducedMotion);
+
   if (!loading && !visible) return null;
 
   return (
@@ -54,7 +59,10 @@ export default function AboutUs() {
           alt=""
           aria-hidden="true"
         />
-        <div className="relative aspect-[738/864] w-full max-w-[738px] flex-1 basis-[460px] max-[960px]:mx-auto max-[960px]:max-w-[520px]">
+        <div
+          ref={imageRef}
+          className={`relative aspect-[738/864] w-full max-w-[738px] flex-1 basis-[460px] max-[960px]:mx-auto max-[960px]:max-w-[520px] ${revealClass(imageVisible)}`}
+        >
           <span
             className="absolute top-[6%] left-0 z-[1] aspect-square w-[29.3%] bg-contain bg-no-repeat"
             style={{ backgroundImage: `url(${ringDecor})` }}
@@ -94,7 +102,7 @@ export default function AboutUs() {
           </span>
         </div>
 
-        <div className="max-w-[711px] flex-1 basis-[420px] max-[960px]:max-w-full">
+        <div ref={textRef} className={`max-w-[711px] flex-1 basis-[420px] max-[960px]:max-w-full ${revealClass(textVisible)}`}>
           <p className="section-eyebrow">
             <img src={eyebrowIcon} width={24} height={24} alt="" aria-hidden="true" />
             {content.eyebrow_text}
@@ -106,17 +114,15 @@ export default function AboutUs() {
 
           <hr className="section-divider" />
 
-          <ExpandableText
-            text={content.lead_text}
-            lines={2}
-            className="mt-6 font-heading text-xl leading-[1.5] font-semibold text-text-dark"
-          />
+          <p className="mt-6 font-heading text-xl leading-[1.5] font-semibold text-text-dark">
+            {content.lead_text}
+          </p>
 
-          <ExpandableText text={content.body_text_1} lines={3} className="mt-[18px] font-body text-lg leading-[1.7] text-text" />
+          <p className="mt-[18px] font-body text-lg leading-[1.7] text-text">{content.body_text_1}</p>
 
-          <ExpandableText text={content.body_text_2} lines={3} className="mt-[18px] font-body text-lg leading-[1.7] text-text" />
+          <p className="mt-[18px] font-body text-lg leading-[1.7] text-text">{content.body_text_2}</p>
 
-          <ExpandableText text={content.body_text_3} lines={3} className="mt-[18px] font-body text-lg leading-[1.7] text-text" />
+          <p className="mt-[18px] font-body text-lg leading-[1.7] text-text">{content.body_text_3}</p>
 
           <a href={content.cta_link || '#contact'} className="btn-primary mt-8">
             {content.cta_label}
@@ -134,7 +140,7 @@ export default function AboutUs() {
       </div>
 
       <div className="container">
-        <div className="mt-12 grid grid-cols-4 gap-5 max-[960px]:grid-cols-2 max-[560px]:grid-cols-1">
+        <div ref={cardsRef} className={`mt-12 grid grid-cols-4 gap-5 max-[960px]:grid-cols-2 max-[560px]:grid-cols-1 ${revealClass(cardsVisible)}`}>
           {FOCUS_TEMPLATE.map((template, i) => {
             const item = focusItems[i] ?? {};
             const isActive = activeFocus === i;

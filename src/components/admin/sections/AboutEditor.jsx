@@ -24,17 +24,17 @@ export default function AboutEditor({ initialContent, initialVisible }) {
       </div>
 
       <Field label="Lead text">
-        <TextArea value={content.lead_text} onChange={set('lead_text')} rows={2} />
+        <TextArea value={content.lead_text} onChange={set('lead_text')} rows={2} maxLength={100} previewLines={0} />
       </Field>
 
       <Field label="Body paragraph 1">
-        <TextArea value={content.body_text_1} onChange={set('body_text_1')} rows={3} />
+        <TextArea value={content.body_text_1} onChange={set('body_text_1')} rows={3} maxLength={200} previewLines={0} />
       </Field>
       <Field label="Body paragraph 2">
-        <TextArea value={content.body_text_2} onChange={set('body_text_2')} rows={2} />
+        <TextArea value={content.body_text_2} onChange={set('body_text_2')} rows={2} maxLength={200} previewLines={0} />
       </Field>
       <Field label="Body paragraph 3">
-        <TextArea value={content.body_text_3} onChange={set('body_text_3')} rows={3} />
+        <TextArea value={content.body_text_3} onChange={set('body_text_3')} rows={3} maxLength={200} previewLines={0} />
       </Field>
 
       <div className="flex gap-4 max-[900px]:flex-col">
@@ -75,8 +75,8 @@ export default function AboutEditor({ initialContent, initialVisible }) {
           fixedLength
           renderItem={(item, update) => (
             <>
-              <TextInput value={item.title} onChange={(v) => update({ title: v })} placeholder="Title" />
-              <TextArea value={item.description} onChange={(v) => update({ description: v })} rows={2} placeholder="Description" />
+              <TextInput value={item.title} onChange={(v) => update({ title: v })} placeholder="Title" maxLength={20} />
+              <TextArea value={item.description} onChange={(v) => update({ description: v })} rows={2} placeholder="Description" maxLength={100} previewLines={0} />
             </>
           )}
         />

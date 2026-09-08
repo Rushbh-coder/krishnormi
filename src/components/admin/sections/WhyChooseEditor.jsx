@@ -17,27 +17,57 @@ export default function WhyChooseEditor({ initialContent, initialVisible }) {
   const set = (key) => (value) => setContent((c) => ({ ...c, [key]: value }));
 
   return (
-    <SectionPanel title="Why choose us" description="The 8-tile grid" visible={visible} onVisibleChange={setVisible} lastSaved={lastSaved}>
+    <SectionPanel
+      title="Why choose us"
+      description="The 8-tile grid"
+      visible={visible}
+      onVisibleChange={setVisible}
+      lastSaved={lastSaved}
+    >
       <Field label="Section title">
-        <TextInput value={content.title} onChange={set('title')} />
+        <TextInput
+          value={content.title}
+          onChange={set("title")}
+          maxLength={20}
+        />
       </Field>
 
       <Field label="Tiles (8 fixed slots — 4 photo, 4 text)">
         <ListEditor
           items={content.cards}
-          onChange={set('cards')}
+          onChange={set("cards")}
           fixedLength
           renderItem={(card, update, i) =>
-            card.type === 'image' ? (
-              <ImageUploadField value={card.image_url} onChange={(v) => update({ image_url: v })} folder="why-choose" fallback={IMAGE_FALLBACKS[i]} />
+            card.type === "image" ? (
+              <ImageUploadField
+                value={card.image_url}
+                onChange={(v) => update({ image_url: v })}
+                folder="why-choose"
+                fallback={IMAGE_FALLBACKS[i]}
+              />
             ) : (
               <>
                 <label className="flex items-center gap-2 font-body text-xs text-[#536660]">
-                  <input type="checkbox" checked={!!card.dark} onChange={(e) => update({ dark: e.target.checked })} />
+                  <input
+                    type="checkbox"
+                    checked={!!card.dark}
+                    onChange={(e) => update({ dark: e.target.checked })}
+                  />
                   Dark tile
                 </label>
-                <TextInput value={card.title} onChange={(v) => update({ title: v })} placeholder="Title" />
-                <TextArea value={card.text} onChange={(v) => update({ text: v })} rows={3} placeholder="Text" />
+                <TextInput
+                  value={card.title}
+                  onChange={(v) => update({ title: v })}
+                  placeholder="Title"
+                  maxLength={20}
+                />
+                <TextArea
+                  value={card.text}
+                  onChange={(v) => update({ text: v })}
+                  rows={3}
+                  placeholder="Text"
+                  maxLength={150}
+                />
               </>
             )
           }
@@ -52,7 +82,7 @@ export default function WhyChooseEditor({ initialContent, initialVisible }) {
         disabled={saving}
         className="self-start rounded-[10px] bg-[#df2759] px-5 py-2.5 font-heading text-sm font-semibold text-white shadow-[0_6px_14px_-4px_rgba(224,38,89,0.16)] disabled:opacity-60"
       >
-        {saving ? 'Saving…' : 'Save changes'}
+        {saving ? "Saving…" : "Save changes"}
       </button>
     </SectionPanel>
   );

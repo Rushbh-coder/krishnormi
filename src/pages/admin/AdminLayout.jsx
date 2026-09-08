@@ -22,8 +22,8 @@ const NAV_ITEMS = [
   { key: 'areas-of-care', label: 'Areas of Care', icon: iconAreasOfCare },
   { key: 'treatments', label: 'Treatments', icon: iconTreatments },
   { key: 'gallery', label: 'Gallery', icon: iconGallery },
-  { key: 'contact-us', label: 'Contact Us', icon: iconContactUs },
-  { key: 'appointments', label: 'Appointments', icon: iconAppointments },
+  { key: 'contact-us', label: 'Contact Us', icon: iconContactUs, to: '/admin/contact-page' },
+  { key: 'appointments', label: 'Appointments', icon: iconAppointments, to: '/admin/appointments' },
 ];
 
 function initialsFromEmail(email) {

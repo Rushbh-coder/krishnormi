@@ -1,19 +1,13 @@
 import logoIcon from "../assets/header/logo-icon.png";
 import logoWordmark from "../assets/header/logo-wordmark.png";
-import bgLeaf from "../assets/footer/bg-leaf.png";
+import bgFull from "../assets/footer/bg-full.png";
 import decoration from "../assets/footer/decoration.svg";
-import iconLocation from "../assets/footer/icon-location.svg";
-import iconEmail from "../assets/footer/icon-email.svg";
-import iconPhone from "../assets/footer/icon-phone-glyph.svg";
-import iconFacebook from "../assets/footer/icon-facebook.svg";
-import iconLinkedin from "../assets/footer/icon-linkedin.svg";
-import iconGoogle from "../assets/footer/icon-google.svg";
-import iconSocial4 from "../assets/footer/icon-social-4-glyph.svg";
-import iconWhatsapp from "../assets/footer/icon-whatsapp.svg";
+import { FaFacebookF, FaLinkedinIn, FaGoogle, FaWhatsapp, FaMapMarkerAlt, FaEnvelope, FaPhoneAlt } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 
 import { useSection } from "../context/HomepageContentContext";
 import { DEFAULT_CONTENT } from "../data/homepageDefaults";
-import ExpandableText from "../components/ExpandableText";
+import { useReducedMotion, useRevealOnce, revealClass } from "../hooks/useScrollReveal";
 
 const linksCol1 = ["Home", "About Us", "Our Doctor", "Areas of Care"];
 
@@ -30,29 +24,32 @@ export default function Footer() {
   const { row } = useSection("footer");
   const content = row?.content ?? DEFAULT_CONTENT.footer;
 
+  const reducedMotion = useReducedMotion();
+  const [contentRef, contentVisible] = useRevealOnce(reducedMotion);
+
   const socials = [
     {
-      icon: iconFacebook,
+      Icon: FaFacebookF,
       label: "Facebook",
       href: content.facebook_url || "#",
     },
     {
-      icon: iconLinkedin,
+      Icon: FaLinkedinIn,
       label: "LinkedIn",
       href: content.linkedin_url || "#",
     },
     {
-      icon: iconGoogle,
+      Icon: FaGoogle,
       label: "Google",
       href: content.google_url || "#",
     },
     {
-      icon: iconSocial4,
+      Icon: FaXTwitter,
       label: "Twitter",
       href: content.twitter_url || "#",
     },
     {
-      icon: iconWhatsapp,
+      Icon: FaWhatsapp,
       label: "WhatsApp",
       href: content.whatsapp_url || "#",
     },
@@ -62,10 +59,10 @@ export default function Footer() {
     <footer className="relative overflow-hidden bg-[#e8e8e8] pt-16">
       {/* Background */}
       <img
-        src={bgLeaf}
+        src={bgFull}
         alt=""
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover object-center opacity-40"
+        className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover object-center"
       />
 
       {/* Decoration */}
@@ -77,7 +74,10 @@ export default function Footer() {
       />
 
       {/* Main Footer Content */}
-      <div className="container relative z-10 grid grid-cols-[1.15fr_1fr_1fr] gap-10 pb-12 max-[900px]:grid-cols-1">
+      <div
+        ref={contentRef}
+        className={`container relative z-10 grid grid-cols-[1.15fr_1fr_1fr] gap-10 pb-12 max-[900px]:grid-cols-1 ${revealClass(contentVisible)}`}
+      >
         {/* LEFT COLUMN */}
         <div
           className={`
@@ -106,7 +106,7 @@ export default function Footer() {
               aria-hidden="true"
               className="
                 block
-                h-[50px]
+                h-[60px]
                 w-auto
                 flex-none
                 object-contain
@@ -136,21 +136,16 @@ export default function Footer() {
 
           {/* Description */}
           <div className="mb-6 max-w-[400px]">
-            <ExpandableText
-              text={content.description}
-              lines={3}
-              className="font-body text-[15px] leading-[1.6] text-text"
-              toggleClassName="mt-1 font-heading text-xs font-semibold text-accent hover:underline"
-            />
+            <p className="font-body text-[15px] leading-[1.6] text-text">{content.description}</p>
           </div>
 
           {/* Social Icons */}
           <div className="flex flex-wrap gap-3">
-            {socials.map((social) => (
+            {socials.map(({ Icon, label, href }) => (
               <a
-                key={social.label}
-                href={social.href}
-                aria-label={social.label}
+                key={label}
+                href={href}
+                aria-label={label}
                 target="_blank"
                 rel="noreferrer"
                 className="
@@ -161,17 +156,14 @@ export default function Footer() {
                   justify-center
                   rounded-full
                   bg-accent
+                  text-white
                   transition
                   duration-200
                   hover:-translate-y-0.5
                   hover:opacity-90
-                  [&_img]:h-4
-                  [&_img]:w-4
-                  [&_img]:brightness-0
-                  [&_img]:invert
                 "
               >
-                <img src={social.icon} alt="" aria-hidden="true" />
+                <Icon size={18} aria-hidden="true" />
               </a>
             ))}
           </div>
@@ -278,8 +270,8 @@ export default function Footer() {
 
           {/* Address */}
           <div className="mb-5 flex items-start gap-4">
-            <span className="flex h-[42px] w-[42px] flex-none items-center justify-center rounded-full bg-accent [&_img]:h-[18px] [&_img]:w-[18px] [&_img]:brightness-0 [&_img]:invert">
-              <img src={iconLocation} alt="" aria-hidden="true" />
+            <span className="flex h-[42px] w-[42px] flex-none items-center justify-center rounded-full bg-accent text-white">
+              <FaMapMarkerAlt size={25} aria-hidden="true" />
             </span>
 
             <p className="m-0 pt-2 font-heading text-base leading-[1.5] font-medium text-text-dark">
@@ -289,8 +281,8 @@ export default function Footer() {
 
           {/* Email */}
           <div className="mb-5 flex items-start gap-4">
-            <span className="flex h-[42px] w-[42px] flex-none items-center justify-center rounded-full bg-accent [&_img]:h-[18px] [&_img]:w-[18px] [&_img]:brightness-0 [&_img]:invert">
-              <img src={iconEmail} alt="" aria-hidden="true" />
+            <span className="flex h-[42px] w-[42px] flex-none items-center justify-center rounded-full bg-accent text-white">
+              <FaEnvelope size={20} aria-hidden="true" />
             </span>
 
             <a
@@ -303,8 +295,8 @@ export default function Footer() {
 
           {/* Phone */}
           <div className="mb-5 flex items-start gap-4">
-            <span className="flex h-[42px] w-[42px] flex-none items-center justify-center rounded-full bg-accent [&_img]:h-[18px] [&_img]:w-[18px] [&_img]:brightness-0 [&_img]:invert">
-              <img src={iconPhone} alt="" aria-hidden="true" />
+            <span className="flex h-[42px] w-[42px] flex-none items-center justify-center rounded-full bg-accent text-white">
+              <FaPhoneAlt size={20} aria-hidden="true" />
             </span>
 
             <a

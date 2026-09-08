@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
+import ExpandableText from '../ExpandableText';
+import ImageReplaceModal from './ImageReplaceModal';
 
 const LABEL = 'font-heading text-[13px] font-semibold text-[#344054]';
 const HINT = 'font-body text-[11px] text-[#98a2b3]';
@@ -31,16 +33,43 @@ export function TextInput({ value, onChange, ...props }) {
   );
 }
 
-export function TextArea({ value, onChange, rows = 3, ...props }) {
+export function TextArea({ value, onChange, rows = 3, maxLength = 500, previewLines = 3, ...props }) {
+  const text = value ?? '';
+  const charCount = text.length;
+  const overLimit = charCount >= maxLength;
+
+  const handleChange = (event) => {
+    onChange(event.target.value.slice(0, maxLength));
+  };
+
   return (
-    <div className={INPUT_WRAP}>
-      <textarea
-        className={`${INPUT} h-auto resize-none py-3`}
-        rows={rows}
-        value={value ?? ''}
-        onChange={(event) => onChange(event.target.value)}
-        {...props}
-      />
+    <div className="flex flex-col gap-1">
+      <div className={INPUT_WRAP}>
+        <textarea
+          className={`${INPUT} h-auto resize-none py-3`}
+          rows={rows}
+          maxLength={maxLength}
+          value={text}
+          onChange={handleChange}
+          {...props}
+        />
+      </div>
+      <p className={`self-end font-body text-[11px] ${overLimit ? 'text-[#df2759]' : 'text-[#98a2b3]'}`}>
+        {charCount}/{maxLength}
+      </p>
+      {text && previewLines > 0 && (
+        <div className="rounded-[8px] border border-dashed border-[#dce4e0] bg-[#fafcfb] px-3 py-2">
+          <p className="mb-1 font-body text-[10px] font-semibold tracking-[0.04em] text-[#98a2b3] uppercase">
+            Live page preview
+          </p>
+          <ExpandableText
+            text={text}
+            lines={previewLines}
+            className="font-body text-[13px] leading-[1.5] text-[#344054]"
+            toggleClassName="mt-0.5 block font-heading text-xs font-semibold text-[#14733e] hover:underline"
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -157,22 +186,39 @@ export function ListEditor({ items, onChange, renderItem, addLabel, newItem, fix
   );
 }
 
-/** Uploads to the `site-media` storage bucket under `folder/` and reports back the public URL. */
-export function ImageUploadField({ label, value, onChange, folder, fallback }) {
+/** Uploads to the `site-media` storage bucket under `folder/` and reports back the public URL.
+ * Picking a file opens a crop/zoom/preview modal before anything is actually uploaded. */
+export function ImageUploadField({ label, value, onChange, folder, fallback, aspect }) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
+  const [pendingFile, setPendingFile] = useState(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const fileInputRef = useRef(null);
 
-  const handleFile = async (event) => {
+  const modalOpen = !!pendingFile || previewOpen;
+
+  const handlePick = (event) => {
     const file = event.target.files?.[0];
     event.target.value = '';
     if (!file) return;
     setError('');
+    setPendingFile(file);
+  };
+
+  const closeModal = () => {
+    setPendingFile(null);
+    setPreviewOpen(false);
+  };
+
+  const handleConfirm = async (blob) => {
     setUploading(true);
-    const path = `${folder}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '-')}`;
-    const { error: uploadError } = await supabase.storage.from('site-media').upload(path, file, {
+    const baseName = pendingFile ? pendingFile.name.replace(/\.[^.]+$/, '') : (value || 'image').split('/').pop().replace(/\.[^.]+$/, '');
+    const originalName = baseName + (blob.type === 'image/png' ? '.png' : '.jpg');
+    const path = `${folder}/${Date.now()}-${originalName.replace(/[^a-zA-Z0-9._-]/g, '-')}`;
+    const { error: uploadError } = await supabase.storage.from('site-media').upload(path, blob, {
       cacheControl: '3600',
       upsert: false,
+      contentType: blob.type,
     });
     setUploading(false);
     if (uploadError) {
@@ -181,31 +227,72 @@ export function ImageUploadField({ label, value, onChange, folder, fallback }) {
     }
     const { data } = supabase.storage.from('site-media').getPublicUrl(path);
     onChange(data.publicUrl);
+    closeModal();
   };
 
   return (
     <div className="flex flex-col gap-2">
       {label && <label className={LABEL}>{label}</label>}
       <div className="flex h-28 items-center gap-4 rounded-xl border border-dashed border-[#cfddd7] bg-[#fafcfb] px-[18px]">
-        <div className="h-20 w-20 flex-none overflow-hidden rounded-lg bg-gradient-to-r from-[#e8f7f0] to-[#fce8f0]">
+        <button
+          type="button"
+          onClick={() => setPreviewOpen(true)}
+          disabled={uploading || !(value || fallback)}
+          aria-label="Preview image"
+          title="Click to preview image"
+          className="group relative h-20 w-20 flex-none overflow-hidden rounded-lg border-none bg-gradient-to-r from-[#e8f7f0] to-[#fce8f0] p-0 disabled:cursor-not-allowed"
+        >
           {(value || fallback) && (
             <img src={value || fallback} alt="" className="h-full w-full object-cover" />
           )}
-        </div>
+          <span className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-150 group-hover:bg-black/40 group-hover:opacity-100">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M12 5c-5 0-8.5 4-9.5 7 1 3 4.5 7 9.5 7s8.5-4 9.5-7c-1-3-4.5-7-9.5-7Z"
+                stroke="white"
+                strokeWidth="1.5"
+                strokeLinejoin="round"
+              />
+              <circle cx="12" cy="12" r="2.5" stroke="white" strokeWidth="1.5" />
+            </svg>
+          </span>
+        </button>
         <div className="flex flex-col gap-[5px]">
           <p className="font-body text-[11px] break-all text-[#98a2b3]">{value ? value.split('/').pop() : 'Using default image'}</p>
-          <button
-            type="button"
-            className="self-start bg-transparent p-0 font-heading text-xs font-semibold text-[#0b6b45] hover:underline disabled:opacity-50"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={uploading}
-          >
-            {uploading ? 'Uploading…' : 'Replace image'}
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              className="self-start bg-transparent p-0 font-heading text-xs font-semibold text-[#344054] hover:underline disabled:opacity-50"
+              onClick={() => setPreviewOpen(true)}
+              disabled={uploading || !(value || fallback)}
+            >
+              Preview
+            </button>
+            <button
+              type="button"
+              className="self-start bg-transparent p-0 font-heading text-xs font-semibold text-[#0b6b45] hover:underline disabled:opacity-50"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+            >
+              {uploading ? 'Uploading…' : 'Replace image'}
+            </button>
+          </div>
           {error && <p className="font-body text-[11px] text-[#df2759]">{error}</p>}
-          <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
+          <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handlePick} />
         </div>
       </div>
+
+      {modalOpen && (
+        <ImageReplaceModal
+          file={pendingFile}
+          currentUrl={value}
+          fallbackUrl={fallback}
+          recommendedAspect={aspect}
+          confirming={uploading}
+          onCancel={closeModal}
+          onConfirm={handleConfirm}
+        />
+      )}
     </div>
   );
 }

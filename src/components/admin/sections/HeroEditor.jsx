@@ -11,25 +11,30 @@ export default function HeroEditor({ initialContent, initialVisible }) {
 
   const set = (key) => (value) => setContent((c) => ({ ...c, [key]: value }));
 
+  const setHeadingWords = (raw) => {
+    const chunks = raw.match(/\S+\s*/g) || [];
+    set('heading')(chunks.length <= 30 ? raw : chunks.slice(0, 30).join(''));
+  };
+
   return (
     <SectionPanel title="Hero banner" description="Primary message visitors see first" visible={visible} onVisibleChange={setVisible} lastSaved={lastSaved}>
-      <Field label="Heading" hint="Recommended: up to 65 characters">
-        <TextInput value={content.heading} onChange={set('heading')} maxLength={65} />
+      <Field label="Heading" hint="Up to 30 words">
+        <TextInput value={content.heading} onChange={setHeadingWords} />
       </Field>
 
       <Field label="Supporting text">
-        <TextArea value={content.supporting_text} onChange={set('supporting_text')} rows={2} />
+        <TextArea value={content.supporting_text} onChange={set('supporting_text')} rows={2} maxLength={100} previewLines={0} />
       </Field>
 
       <Field label="Body paragraph 1">
-        <TextArea value={content.body_text_1} onChange={set('body_text_1')} rows={3} />
+        <TextArea value={content.body_text_1} onChange={set('body_text_1')} rows={3} maxLength={180} previewLines={0} />
       </Field>
 
       <Field label="Body paragraph 2">
-        <TextArea value={content.body_text_2} onChange={set('body_text_2')} rows={3} />
+        <TextArea value={content.body_text_2} onChange={set('body_text_2')} rows={3} maxLength={180} previewLines={0} />
       </Field>
 
-      <ImageUploadField label="Background image" value={content.image_url} onChange={set('image_url')} folder="hero" fallback={heroBackground} />
+      <ImageUploadField label="Background image" value={content.image_url} onChange={set('image_url')} folder="hero" fallback={heroBackground} aspect={2} />
 
       <div className="flex gap-4 max-[900px]:flex-col">
         <Field label="Button label">

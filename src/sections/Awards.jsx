@@ -6,7 +6,7 @@ import iconTeaching from '../assets/awards/icon-teaching.svg';
 import iconParticipation from '../assets/awards/icon-participation.svg';
 import { useSection } from '../context/HomepageContentContext';
 import { DEFAULT_CONTENT } from '../data/homepageDefaults';
-import ExpandableText from '../components/ExpandableText';
+import { useReducedMotion, useRevealOnce, revealClass } from '../hooks/useScrollReveal';
 
 // Fallback icon per card slot (position matches the DB `cards` array).
 const TEMPLATE = [
@@ -22,6 +22,10 @@ export default function Awards() {
   const visible = row?.visible ?? true;
   const cards = content.cards ?? DEFAULT_CONTENT.awards.cards;
 
+  const reducedMotion = useReducedMotion();
+  const [photoRef, photoVisible] = useRevealOnce(reducedMotion);
+  const [textRef, textVisible] = useRevealOnce(reducedMotion);
+
   if (!loading && !visible) return null;
 
   return (
@@ -29,7 +33,7 @@ export default function Awards() {
       <img className="absolute inset-0 z-0 h-full w-full object-cover object-center" src={bgImage} alt="" aria-hidden="true" />
 
       <div className="container relative z-[1] flex flex-wrap items-start gap-[58px] max-[960px]:flex-col max-[960px]:items-center">
-        <div className="aspect-[520/970] w-full max-w-[490px] flex-1 basis-[420px] max-[960px]:max-w-[420px]">
+        <div ref={photoRef} className={`aspect-[520/970] w-full max-w-[490px] flex-1 basis-[420px] max-[960px]:max-w-[420px] ${revealClass(photoVisible)}`}>
           <img
             className="h-full w-full object-cover"
             src={content.photo_url || doctorPhoto}
@@ -39,19 +43,19 @@ export default function Awards() {
           />
         </div>
 
-        <div className="max-w-[876px] flex-1 basis-[520px] max-[960px]:max-w-full">
+        <div ref={textRef} className={`max-w-[876px] flex-1 basis-[520px] max-[960px]:max-w-full ${revealClass(textVisible)}`}>
           <h2 className="section-title text-[45px] leading-[1.3] text-navy max-[560px]:text-[32px]">{content.title}</h2>
           <hr className="section-divider w-[205px]" />
 
           <h3 className="mt-7 font-heading text-[23px] leading-[1.55] font-semibold text-text-dark">{content.subtitle}</h3>
 
-          <ExpandableText text={content.body_text_1} lines={3} className="mt-4 font-body text-lg leading-[1.65] text-text" />
+          <p className="mt-4 font-body text-lg leading-[1.65] text-text">{content.body_text_1}</p>
 
-          <ExpandableText text={content.body_text_2} lines={3} className="mt-4 font-body text-lg leading-[1.65] text-text" />
+          <p className="mt-4 font-body text-lg leading-[1.65] text-text">{content.body_text_2}</p>
 
           <h4 className="mt-[26px] mb-1 font-heading text-xl font-semibold text-text-dark">{content.highlights_title}</h4>
 
-          <ExpandableText text={content.highlights_text} lines={3} className="mt-4 font-body text-lg leading-[1.65] text-text" />
+          <p className="mt-4 font-body text-lg leading-[1.65] text-text">{content.highlights_text}</p>
 
           <div className="mt-7 grid grid-cols-2 gap-6 max-[560px]:grid-cols-1">
             {cards.map((card, i) => {
@@ -68,12 +72,7 @@ export default function Awards() {
                   />
                   <div className="min-w-0">
                     <h5 className="mb-2 line-clamp-2 font-heading text-xl font-semibold text-navy">{card.title}</h5>
-                    <ExpandableText
-                      text={card.description}
-                      lines={3}
-                      className="font-body text-base leading-[1.5] text-text"
-                      toggleClassName="mt-1 font-heading text-xs font-semibold text-accent hover:underline"
-                    />
+                    <p className="font-body text-base leading-[1.5] text-text">{card.description}</p>
                   </div>
                 </div>
               );

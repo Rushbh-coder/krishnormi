@@ -221,3 +221,49 @@
     font-size: 29px;
   }
 }
+
+
+/* =====================================================
+   HERO DOCTOR NAMEPLATE — gentle continuous float
+===================================================== */
+
+@keyframes nameplate-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-nameplate-float {
+  animation: nameplate-float 3.6s ease-in-out infinite;
+}
+
+
+/* =====================================================
+   PAGE-LOAD FADE-UP — for above-the-fold content that
+   can't rely on a scroll observer (it's visible on load)
+===================================================== */
+
+@keyframes fade-up-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up-in {
+  animation: fade-up-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up-in,
+  .animate-nameplate-float {
+    animation: none;
+  }
+}

@@ -14,7 +14,7 @@ export default function FaqEditor({ initialContent, initialVisible }) {
   return (
     <SectionPanel title="FAQ" description="Frequently asked questions accordion" visible={visible} onVisibleChange={setVisible} lastSaved={lastSaved}>
       <Field label="Intro text">
-        <TextArea value={content.intro_text} onChange={set('intro_text')} rows={2} />
+        <TextArea value={content.intro_text} onChange={set('intro_text')} rows={2} maxLength={300} previewLines={0} />
       </Field>
 
       <ImageUploadField label="Photo" value={content.photo_url} onChange={set('photo_url')} folder="faq" fallback={photo} />
@@ -29,8 +29,8 @@ export default function FaqEditor({ initialContent, initialVisible }) {
           moveHint="Use the arrows to reorder — only the first 6 questions appear on the public site."
           renderItem={(item, update) => (
             <>
-              <TextInput value={item.question} onChange={(v) => update({ question: v })} placeholder="Question" />
-              <TextArea value={item.answer} onChange={(v) => update({ answer: v })} rows={2} placeholder="Answer (leave blank to hide the answer on the public site)" />
+              <TextInput value={item.question} onChange={(v) => update({ question: v })} placeholder="Question" maxLength={50} />
+              <TextArea value={item.answer} onChange={(v) => update({ answer: v })} rows={2} placeholder="Answer (leave blank to hide the answer on the public site)" maxLength={100}  />
             </>
           )}
         />

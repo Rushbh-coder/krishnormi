@@ -1,15 +1,16 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import logoIcon from "../assets/header/logo-icon.png";
 import logoWordmark from "../assets/header/logo-wordmark.png";
 
 const NAV_LINKS = [
-  { label: "Home", href: "#" },
+  { label: "Home", href: "/" },
   { label: "About Us", href: "#about" },
   { label: "Treatments", href: "#treatments" },
   { label: "Gallery", href: "#gallery" },
   { label: "Blogs", href: "#blogs" },
-  { label: "Contact Us", href: "#contact" },
+  { label: "Contact Us", href: "/contact-us" },
 ];
 
 export default function Header() {
@@ -25,10 +26,10 @@ export default function Header() {
     <header className="sticky top-0 z-[100] w-full bg-white shadow-[0_1px_5px_rgba(0,0,0,0.12)]">
       <div className="container relative flex min-h-[92px] items-center justify-between gap-5 max-[1100px]:min-h-[74px] max-[560px]:min-h-[68px]">
         {/* LOGO */}
-        <a
-          href="#"
+        <Link
+          to="/"
           aria-label="Krishnormi home"
-          onClick={() => handleNavClick("#")}
+          onClick={() => handleNavClick("/")}
           className="flex min-w-0 flex-none items-center gap-3 max-[380px]:gap-2"
         >
           <img
@@ -47,7 +48,7 @@ export default function Header() {
             alt="Krishnormi"
             className="h-auto w-[168px] flex-none object-contain max-[1100px]:w-[150px] max-[560px]:w-[128px] max-[380px]:w-[112px]"
           />
-        </a>
+        </Link>
 
         {/* DESKTOP NAVIGATION */}
         <nav
@@ -58,19 +59,21 @@ export default function Header() {
             {NAV_LINKS.map((link) => {
               const isActive = activeLink === link.href;
 
+              const linkClassName = `inline-flex items-center justify-center whitespace-nowrap px-2.5 py-2 font-body text-[14px] transition-colors duration-200 hover:text-primary ${
+                isActive ? "font-semibold text-primary" : "font-normal text-text-dark"
+              }`;
+
               return (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    onClick={() => handleNavClick(link.href)}
-                    className={`inline-flex items-center justify-center whitespace-nowrap px-2.5 py-2 font-body text-[14px] transition-colors duration-200 hover:text-primary ${
-                      isActive
-                        ? "font-semibold text-primary"
-                        : "font-normal text-text-dark"
-                    }`}
-                  >
-                    {link.label}
-                  </a>
+                  {link.href.startsWith("/") ? (
+                    <Link to={link.href} onClick={() => handleNavClick(link.href)} className={linkClassName}>
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <a href={link.href} onClick={() => handleNavClick(link.href)} className={linkClassName}>
+                      {link.label}
+                    </a>
+                  )}
                 </li>
               );
             })}
@@ -152,20 +155,31 @@ export default function Header() {
             {NAV_LINKS.map((link) => {
               const isActive = activeLink === link.href;
 
+              const mobileLinkClassName = `flex w-full items-center py-3.5 font-body text-[15px] transition-colors hover:text-primary ${
+                isActive ? "font-semibold text-primary" : "font-normal text-text-dark"
+              }`;
+
               return (
                 <li key={link.label} className="border-b border-black/[0.07]">
-                  <a
-                    href={link.href}
-                    onClick={() => handleNavClick(link.href)}
-                    tabIndex={isMenuOpen ? 0 : -1}
-                    className={`flex w-full items-center py-3.5 font-body text-[15px] transition-colors hover:text-primary ${
-                      isActive
-                        ? "font-semibold text-primary"
-                        : "font-normal text-text-dark"
-                    }`}
-                  >
-                    {link.label}
-                  </a>
+                  {link.href.startsWith("/") ? (
+                    <Link
+                      to={link.href}
+                      onClick={() => handleNavClick(link.href)}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                      className={mobileLinkClassName}
+                    >
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <a
+                      href={link.href}
+                      onClick={() => handleNavClick(link.href)}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                      className={mobileLinkClassName}
+                    >
+                      {link.label}
+                    </a>
+                  )}
                 </li>
               );
             })}

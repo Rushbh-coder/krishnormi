@@ -1,15 +1,24 @@
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import Home from './pages/Home'
+import ContactUs from './pages/ContactUs'
 import AdminLogin from './pages/AdminLogin'
 import Dashboard from './pages/admin/Dashboard'
 import HomePageEditor from './pages/admin/HomePageEditor'
 import AdminSettings from './pages/admin/AdminSettings'
+import ContactPageEditor from './pages/admin/ContactPageEditor'
+import Appointments from './pages/admin/Appointments'
 import RequireAdminAuth from './components/RequireAdminAuth'
+import WhatsAppButton from './components/WhatsAppButton'
 
 function App() {
+  const location = useLocation()
+  const isAdminRoute = location.pathname.startsWith('/admin')
+
   return (
+    <>
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/contact-us" element={<ContactUs />} />
       <Route path="/admin" element={<AdminLogin />} />
       <Route
         path="/admin/dashboard"
@@ -35,7 +44,25 @@ function App() {
           </RequireAdminAuth>
         }
       />
+      <Route
+        path="/admin/contact-page"
+        element={
+          <RequireAdminAuth>
+            <ContactPageEditor />
+          </RequireAdminAuth>
+        }
+      />
+      <Route
+        path="/admin/appointments"
+        element={
+          <RequireAdminAuth>
+            <Appointments />
+          </RequireAdminAuth>
+        }
+      />
     </Routes>
+    {!isAdminRoute && <WhatsAppButton />}
+    </>
   )
 }
 

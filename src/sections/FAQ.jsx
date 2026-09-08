@@ -3,7 +3,7 @@ import { useState } from "react";
 import photo from "../assets/faq/photo.png";
 import { useSection } from "../context/HomepageContentContext";
 import { DEFAULT_CONTENT } from "../data/homepageDefaults";
-import ExpandableText from "../components/ExpandableText";
+import { useReducedMotion, useRevealOnce, revealClass } from "../hooks/useScrollReveal";
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(1);
@@ -12,6 +12,10 @@ export default function FAQ() {
   const content = row?.content ?? DEFAULT_CONTENT.faq;
   const visible = row?.visible ?? true;
   const faqs = (content.items ?? DEFAULT_CONTENT.faq.items).slice(0, 6);
+
+  const reducedMotion = useReducedMotion();
+  const [imageRef, imageVisible] = useRevealOnce(reducedMotion);
+  const [contentRef, contentVisible] = useRevealOnce(reducedMotion);
 
   if (!loading && !visible) return null;
 
@@ -29,14 +33,17 @@ export default function FAQ() {
       >
         {/* LEFT IMAGE */}
         <div
-          className="
+          ref={imageRef}
+          className={`
             h-full
             min-h-0
             overflow-hidden
             rounded-[10px]
 
             max-[900px]:h-[360px]
-          "
+
+            ${revealClass(imageVisible)}
+          `}
         >
           <img
             src={content.photo_url || photo}
@@ -51,29 +58,14 @@ export default function FAQ() {
         </div>
 
         {/* RIGHT FAQ CONTENT */}
-        <div className="flex h-full flex-col">
+        <div ref={contentRef} className={`flex h-full flex-col ${revealClass(contentVisible)}`}>
           <h2 className="section-title text-navy">
             Frequently Asked Questions
           </h2>
 
           <hr className="section-divider mb-6" />
           <div className="mb-8">
-            <ExpandableText
-              text={content.intro_text}
-              lines={2}
-              className="font-heading text-lg leading-[1.75] text-text"
-              toggleClassName="
-      !inline
-      !mt-0
-      ml-1
-      whitespace-nowrap
-      font-heading
-      text-sm
-      font-semibold
-      text-accent
-      hover:underline
-    "
-            />
+            <p className="font-heading text-lg leading-[1.75] text-text">{content.intro_text}</p>
           </div>
           <div className="mb-8 flex flex-col gap-4">
             {faqs.map((item, i) => {
@@ -110,11 +102,7 @@ export default function FAQ() {
 
                   {isOpen && item.answer && (
                     <div className="mb-[22px]">
-                      <ExpandableText
-                        text={item.answer}
-                        lines={4}
-                        className="font-heading text-[15px] leading-[1.85] text-text"
-                      />
+                      <p className="font-heading text-[15px] leading-[1.85] text-text">{item.answer}</p>
                     </div>
                   )}
                 </div>
