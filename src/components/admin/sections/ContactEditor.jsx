@@ -28,15 +28,6 @@ export default function ContactEditor({ initialContent, initialVisible }) {
         <TextArea value={content.banner_text} onChange={set('banner_text')} rows={2} />
       </Field>
 
-      <div className="flex gap-4 max-[900px]:flex-col">
-        <Field label="Clinic name">
-          <TextInput value={content.clinic_name} onChange={set('clinic_name')} />
-        </Field>
-        <Field label="Clinic subheading">
-          <TextInput value={content.clinic_subheading} onChange={set('clinic_subheading')} />
-        </Field>
-      </div>
-
       <Field label="Address" hint="Used for the live map, directions link and the contact details list">
         <TextArea value={content.address} onChange={set('address')} rows={2} />
       </Field>
@@ -59,7 +50,7 @@ export default function ContactEditor({ initialContent, initialVisible }) {
         </Field>
       </div>
 
-      <Field label="Appointment note" hint="Small pink pill shown under the contact details">
+      <Field label="Appointment note" hint="Small pink pill shown above the contact details list">
         <TextInput value={content.appointment_note} onChange={set('appointment_note')} />
       </Field>
 
@@ -71,21 +62,15 @@ export default function ContactEditor({ initialContent, initialVisible }) {
         </div>
       </Field>
 
-      <Field label="Connect section eyebrow">
-        <TextInput value={content.connect_eyebrow} onChange={set('connect_eyebrow')} />
-      </Field>
-      <Field label="Connect section heading">
-        <TextInput value={content.connect_heading} onChange={set('connect_heading')} />
-      </Field>
-      <Field label="Connect section text">
+      <Field label="Get in Touch intro text" hint="Paragraph shown under the 'Get in Touch' heading">
         <TextArea value={content.connect_text} onChange={set('connect_text')} rows={2} />
       </Field>
 
       <div className="flex gap-4 max-[900px]:flex-col">
-        <Field label="Form title">
+        <Field label="Appointment form heading">
           <TextInput value={content.form_title} onChange={set('form_title')} />
         </Field>
-        <Field label="Form subtitle">
+        <Field label="Appointment form subtitle">
           <TextInput value={content.form_subtitle} onChange={set('form_subtitle')} />
         </Field>
       </div>

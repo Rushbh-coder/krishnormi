@@ -64,7 +64,7 @@ export default function Treatments() {
           </button>
 
           <img
-            className="mix-blend-screen left-[50%] translate-x-[-10%] mt-15 mb-0 h-auto w-full max-w-[760px] max-[900px]:mb-[-10%] max-[900px]:mt-10 max-[900px]:w-full max-[900px]:max-w-[600px] max-[460px]:max-w-[400px]"
+            className="mix-blend-screen left-[50%] translate-x-[-3%] mt-15 mb-0 h-auto w-full max-w-[760px] max-[900px]:mb-[-10%] max-[900px]:mt-10 max-[900px]:w-full max-[900px]:max-w-[600px] max-[460px]:max-w-[400px]"
             src={content.hero_image_url || heroTreatment}
             width={1600}
             height={1200}

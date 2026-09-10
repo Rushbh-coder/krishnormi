@@ -11,13 +11,20 @@ export default function WhatsAppButton() {
 
   return (
     <a
-      href={`https://wa.me/${number}`}
+      href={`https://wa.me/${number}?text=${encodeURIComponent(
+        "Hello Dr. Deepa Bhatt, I am reaching out to book a consultation appointment, please share your upcoming availability so we can connect.",
+      )}`}
       target="_blank"
       rel="noreferrer"
       aria-label="Chat with us on WhatsApp"
       className="fixed right-5 bottom-5 z-[300] flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] shadow-[0_8px_24px_rgba(37,211,102,0.45)] transition-transform duration-200 hover:scale-110 max-[560px]:right-4 max-[560px]:bottom-4 max-[560px]:h-12 max-[560px]:w-12"
     >
-      <img src={iconWhatsapp} alt="" aria-hidden="true" className="h-7 w-7 brightness-0 invert max-[560px]:h-6 max-[560px]:w-6" />
+      <img
+        src={iconWhatsapp}
+        alt=""
+        aria-hidden="true"
+        className="h-7 w-7 brightness-0 invert max-[560px]:h-6 max-[560px]:w-6"
+      />
     </a>
   );
 }

@@ -52,7 +52,7 @@ export default function Hero() {
           z-0
 
           max-[960px]:relative
-          max-[960px]:order-2
+          max-[960px]:order-1
           max-[960px]:h-[500px]
 
           max-[560px]:h-[440px]
@@ -99,7 +99,7 @@ export default function Hero() {
           h-full
 
           max-[960px]:relative
-          max-[960px]:order-2
+          max-[960px]:order-1
           max-[960px]:inset-auto
           max-[960px]:h-[500px]
           max-[960px]:-mt-[500px]
@@ -134,7 +134,7 @@ export default function Hero() {
       max-[960px]:right-1/3
       max-[960px]:h-[94%]
       max-[960px]:max-w-[90%]
-      max-[960px]:translate-x-1/2
+      max-[960px]:translate-x-1/3
 
       max-[560px]:h-[88%]
       max-[560px]:max-w-[96%]
@@ -226,7 +226,7 @@ export default function Hero() {
 
           max-[1100px]:min-h-[620px]
 
-          max-[960px]:order-1
+          max-[960px]:order-2
           max-[960px]:min-h-0
           max-[960px]:py-14
         "

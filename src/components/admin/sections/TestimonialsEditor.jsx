@@ -47,7 +47,7 @@ export default function TestimonialsEditor({ initialContent, initialVisible }) {
             <>
               <TextInput value={item.name} onChange={(v) => update({ name: v })} placeholder="Patient name" />
               <ImageUploadField value={item.photo_url} onChange={(v) => update({ photo_url: v })} folder="testimonials" fallback={patientPhoto} />
-              <TextArea value={item.quote} onChange={(v) => update({ quote: v })} rows={3} placeholder="Quote" />
+              <TextArea value={item.quote} onChange={(v) => update({ quote: v })} rows={5} maxLength={256} previewLines={0} placeholder="Quote" />
             </>
           )}
         />

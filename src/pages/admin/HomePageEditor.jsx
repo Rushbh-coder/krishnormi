@@ -43,14 +43,55 @@ export default function HomePageEditor() {
 
   return (
     <AdminLayout activeNav="home-page" pageTitle="Content Management">
-      <div className="flex flex-col gap-[22px]">
-        <div className="flex min-h-16 flex-wrap items-center justify-between gap-4 bg-[#f7f9f8] max-[520px]:items-start">
+      <div className="flex h-[calc(100vh-90px)] min-h-0 flex-col overflow-hidden bg-[#f7f9f8]">
+        {/* =====================================================
+      TOP HEADER — FIXED
+  ====================================================== */}
+        <div
+          className="
+      relative
+      z-30
+      flex
+      flex-none
+      min-h-[100px]
+      items-center
+      justify-between
+      gap-4
+      border-b
+      border-[#e4eae7]
+      bg-[#f7f9f8]
+      px-1
+      py-4
+
+      max-[520px]:items-start
+    "
+        >
           <div>
-            <h1 className="font-heading text-[28px] font-bold text-[#101828]">Home Page</h1>
-            <p className="mt-1 font-body text-sm text-[#667085]">Edit the content shown on the public homepage.</p>
+            <h1 className="font-heading text-[28px] font-bold text-[#101828]">
+              Home Page
+            </h1>
+
+            <p className="mt-1 font-body text-sm text-[#667085]">
+              Edit the content shown on the public homepage.
+            </p>
           </div>
+
           <a
-            className="inline-flex items-center justify-center rounded-[10px] border border-[#dce4e0] bg-white px-[18px] py-[11px] font-heading text-sm font-semibold text-[#344054]"
+            className="
+        inline-flex
+        items-center
+        justify-center
+        rounded-[10px]
+        border
+        border-[#dce4e0]
+        bg-white
+        px-[18px]
+        py-[11px]
+        font-heading
+        text-sm
+        font-semibold
+        text-[#344054]
+      "
             href="/"
             target="_blank"
             rel="noreferrer"
@@ -59,39 +100,85 @@ export default function HomePageEditor() {
           </a>
         </div>
 
-        {loading ? (
-          <p className="font-body text-sm text-[#667085]">Loading…</p>
-        ) : (
-          <div className="flex items-start gap-[22px] max-[900px]:flex-col">
-            <nav
-              className="flex flex-none basis-[260px] flex-col gap-2 rounded-2xl border border-[#e4eae7] bg-white p-4 pt-[18px] shadow-[0_8px_24px_-8px_rgba(15,33,28,0.05)] max-[900px]:w-full max-[900px]:basis-auto"
-              aria-label="Homepage sections"
-            >
-              <p className="font-heading text-base font-semibold text-[#101828]">Homepage sections</p>
-              <p className="mb-1 font-body text-xs text-[#98a2b3]">Select a section to edit</p>
+        {/* =====================================================
+      BELOW HEADER
+      LEFT = FIXED
+      RIGHT = ONLY SCROLL AREA
+  ====================================================== */}
+        <div className="flex min-h-0 flex-1 gap-[22px] overflow-hidden pt-5">
+          {/* LEFT NAV — DOES NOT SCROLL WITH RIGHT CONTENT */}
+          <nav
+            className="
+        flex
+        h-[500px]
+        w-[260px]
+        flex-none
+        flex-col
+        gap-2
+        overflow-y-auto
 
-              {SECTIONS.map((section) => (
-                <button
-                  key={section.key}
-                  type="button"
-                  className={`flex h-[42px] items-center justify-between rounded-[9px] border border-transparent pr-2.5 pl-3 text-left font-body text-[13px] text-[#536660] ${
-                    section.key === activeSection
-                      ? 'border-[#d6ebe1] bg-[#edf7f2] font-heading font-semibold text-[#14733e]'
-                      : ''
-                  }`}
-                  onClick={() => selectSection(section.key)}
-                >
-                  <span>{section.label}</span>
-                  {sections[section.key]?.visible === false && (
-                    <span className="font-body text-[10px] text-[#a1aea9]">hidden</span>
-                  )}
-                </button>
-              ))}
-            </nav>
+        rounded-2xl
+        border
+        border-[#e4eae7]
+        bg-white
+        p-4
+        pt-[18px]
 
-            {active && <active.Editor key={activeSection} initialContent={initialContent} initialVisible={initialVisible} />}
+        shadow-[0_8px_24px_-8px_rgba(15,33,28,0.05)]
+      "
+            aria-label="Homepage sections"
+          >
+            <p className="font-heading text-base font-semibold text-[#101828]">
+              Homepage sections
+            </p>
+
+            <p className="mb-1 font-body text-xs text-[#98a2b3]">
+              Select a section to edit
+            </p>
+
+            {SECTIONS.map((section) => (
+              <button
+                key={section.key}
+                type="button"
+                className={`flex h-[42px] flex-none items-center justify-between rounded-[9px] border border-transparent pr-2.5 pl-3 text-left font-body text-[13px] text-[#536660] ${
+                  section.key === activeSection
+                    ? "border-[#d6ebe1] bg-[#edf7f2] font-heading font-semibold text-[#14733e]"
+                    : ""
+                }`}
+                onClick={() => selectSection(section.key)}
+              >
+                <span>{section.label}</span>
+
+                {sections[section.key]?.visible === false && (
+                  <span className="font-body text-[10px] text-[#a1aea9]">
+                    hidden
+                  </span>
+                )}
+              </button>
+            ))}
+          </nav>
+
+          {/* RIGHT EDITOR — ONLY THIS AREA SCROLLS */}
+          <div
+            className="
+        min-h-0
+        min-w-0
+        flex-1
+        overflow-y-auto
+        overflow-x-hidden
+        pr-2
+        pb-10
+      "
+          >
+            {active && (
+              <active.Editor
+                key={activeSection}
+                initialContent={initialContent}
+                initialVisible={initialVisible}
+              />
+            )}
           </div>
-        )}
+        </div>
       </div>
     </AdminLayout>
   );

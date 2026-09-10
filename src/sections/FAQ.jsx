@@ -35,37 +35,45 @@ export default function FAQ() {
         <div
           ref={imageRef}
           className={`
-            h-full
-            min-h-0
-            overflow-hidden
-            rounded-[10px]
+    h-[960px]
+    w-full
+    self-start
+    overflow-hidden
+    rounded-[10px]
 
-            max-[900px]:h-[360px]
+    max-[1100px]:h-[420px]
+    max-[900px]:h-[360px]
+    max-[560px]:h-[300px]
 
-            ${revealClass(imageVisible)}
-          `}
+    ${revealClass(imageVisible)}
+  `}
         >
           <img
             src={content.photo_url || photo}
             alt="Dermatologist consulting with a patient"
             className="
-              block
-              h-full
-              w-full
-              object-cover
-            "
+      block
+      h-full
+      w-full
+      object-cover
+      object-center
+    "
           />
         </div>
-
         {/* RIGHT FAQ CONTENT */}
-        <div ref={contentRef} className={`flex h-full flex-col ${revealClass(contentVisible)}`}>
+        <div
+          ref={contentRef}
+          className={`flex h-full flex-col ${revealClass(contentVisible)}`}
+        >
           <h2 className="section-title text-navy">
             Frequently Asked Questions
           </h2>
 
           <hr className="section-divider mb-6" />
           <div className="mb-8">
-            <p className="font-heading text-lg leading-[1.75] text-text">{content.intro_text}</p>
+            <p className="font-heading text-lg leading-[1.75] text-text">
+              {content.intro_text}
+            </p>
           </div>
           <div className="mb-8 flex flex-col gap-4">
             {faqs.map((item, i) => {
@@ -102,7 +110,9 @@ export default function FAQ() {
 
                   {isOpen && item.answer && (
                     <div className="mb-[22px]">
-                      <p className="font-heading text-[15px] leading-[1.85] text-text">{item.answer}</p>
+                      <p className="font-heading text-[15px] leading-[1.85] text-text">
+                        {item.answer}
+                      </p>
                     </div>
                   )}
                 </div>

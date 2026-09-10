@@ -1,6 +1,7 @@
 import logoIcon from "../assets/header/logo-icon.png";
 import logoWordmark from "../assets/header/logo-wordmark.png";
 import bgFull from "../assets/footer/bg-full.png";
+import bgMobile from "../assets/footer/bg-mobile.png";
 import decoration from "../assets/footer/decoration.svg";
 import { FaFacebookF, FaLinkedinIn, FaGoogle, FaWhatsapp, FaMapMarkerAlt, FaEnvelope, FaPhoneAlt } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
@@ -57,12 +58,20 @@ export default function Footer() {
 
   return (
     <footer className="relative overflow-hidden bg-[#e8e8e8] pt-16">
-      {/* Background */}
+      {/* Background — desktop */}
       <img
         src={bgFull}
         alt=""
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover object-center"
+        className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover object-center max-[900px]:hidden"
+      />
+
+      {/* Background — mobile only */}
+      <img
+        src={bgMobile}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-0 hidden h-full w-full object-cover object-center max-[900px]:block"
       />
 
       {/* Decoration */}

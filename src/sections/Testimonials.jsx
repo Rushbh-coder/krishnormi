@@ -8,7 +8,6 @@ import iconSkin from "../assets/testimonials/icon-skin.svg";
 import iconPatients1 from "../assets/testimonials/icon-patients-1.svg";
 import iconPatients2 from "../assets/testimonials/icon-patients-2.svg";
 import iconSatisfaction from "../assets/testimonials/icon-satisfaction.svg";
-import iconQuote from "../assets/testimonials/icon-quote.png";
 
 import { useSection } from "../context/HomepageContentContext";
 import { DEFAULT_CONTENT } from "../data/homepageDefaults";
@@ -191,13 +190,13 @@ function ArrowButton({ direction, onClick, className = "" }) {
         justify-center
         rounded-full
         border
-        border-[#eab308]
-        bg-[#15350e]
-        text-[#eab308]
+        border-white/60
+        bg-transparent
+        text-white
         transition-colors
         duration-200
-        hover:bg-[#eab308]
-        hover:text-[#15350e]
+        hover:bg-accent
+        hover:text-white
         ${className}
       `}
     >
@@ -221,6 +220,177 @@ function ArrowButton({ direction, onClick, className = "" }) {
 }
 
 /* =====================================================
+   DYNAMIC CARD SIZING
+   Cards are sized so exactly 3 of them (left + center +
+   right) fill the full measured width of the viewport —
+   nothing is ever permanently cropped. The centre slot is
+   a genuinely bigger box (not a CSS scale trick).
+===================================================== */
+
+const SIDE_TO_CENTER_RATIO = 0.84; // side card width as a fraction of the centre card's width
+const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+function getGap(containerWidth) {
+  if (containerWidth <= 520) return 10;
+  if (containerWidth <= 900) return 16;
+  if (containerWidth <= 1100) return 20;
+  return 28;
+}
+
+function useContainerWidth() {
+  const ref = useRef(null);
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    if (typeof ResizeObserver === "undefined") {
+      setWidth(el.clientWidth);
+      return;
+    }
+
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (entry) setWidth(entry.contentRect.width);
+    });
+
+    observer.observe(el);
+    setWidth(el.clientWidth);
+
+    return () => observer.disconnect();
+  }, []);
+
+  return [ref, width];
+}
+
+function useCardMetrics(containerWidth) {
+  const gap = getGap(containerWidth);
+
+  // side*2 + center + gap*2 = containerWidth, with side = center * RATIO
+  const denom = 2 * SIDE_TO_CENTER_RATIO + 1;
+  const rawCenterW = (containerWidth - gap * 2) / denom;
+  const centerW = containerWidth > 0 ? Math.max(rawCenterW, 0) : 0;
+  const sideW = centerW * SIDE_TO_CENTER_RATIO;
+
+  const centerH = clamp(centerW * 1.0, 260, 420);
+  const sideH = clamp(sideW * 1.0625, 240, 400);
+
+  return {
+    gap,
+    center: { w: centerW, h: centerH },
+    side: { w: sideW, h: sideH },
+  };
+}
+
+/* =====================================================
+   TESTIMONIAL CARD — the existing section background
+   and statistics are intentionally not changed.
+===================================================== */
+
+function TestimonialCard({
+  testimonial,
+  active = false,
+  onSelect,
+  width,
+  height,
+  hidden = false,
+}) {
+  const CardTag = active ? "article" : "button";
+
+  return (
+    <div
+      className="relative flex flex-none flex-col pb-[45px]"
+      style={{
+        width,
+        transition: "width 300ms ease, opacity 300ms ease",
+        opacity: hidden ? 0 : 1,
+        pointerEvents: hidden ? "none" : "auto",
+      }}
+      aria-hidden={hidden || undefined}
+    >
+      <CardTag
+        {...(!active
+          ? {
+              type: "button",
+              onClick: onSelect,
+              "aria-label": `Show testimonial from ${testimonial.name}`,
+            }
+          : {})}
+        className={`relative flex w-full flex-col items-center overflow-hidden rounded-[22px] border px-6 pt-8 pb-[66px] text-center ${
+          active
+            ? "border-transparent bg-[#E37383] text-white shadow-[0_20px_45px_rgba(0,34,97,0.18)]"
+            : "cursor-pointer border-primary/15 bg-white/30 text-text-dark shadow-[0_5px_20px_rgba(0,0,0,0.05)] hover:border-accent/40 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)]"
+        }`}
+        style={{ height, transition: "height 300ms ease" }}
+      >
+        {/* Quote mark with a short line on either side */}
+        <div className="mb-5 flex w-full max-w-[260px] items-center justify-center gap-5">
+          <span
+            className={`h-px min-w-0 flex-1 ${
+              active ? "bg-white/90" : "bg-accent/60"
+            }`}
+            aria-hidden="true"
+          />
+          <span
+            className={`font-serif text-[64px] leading-[0.65] mt-10 ${
+              active ? "text-white" : "text-accent"
+            }`}
+            aria-hidden="true"
+          >
+            "
+          </span>
+          <span
+            className={`h-px min-w-0 flex-1 ${
+              active ? "bg-white/90" : "bg-accent/60"
+            }`}
+            aria-hidden="true"
+          />
+        </div>
+
+        {/* Full CMS quote: no truncation or View More */}
+        <p
+          className={`m-0 font-heading leading-[1.8] ${
+            active
+              ? "text-[15px] text-white/95 max-[600px]:text-[14px]"
+              : "text-[14px] text-text"
+          }`}
+        >
+          {testimonial.quote}
+        </p>
+
+        <div className="mt-auto pt-6">
+          <img
+            className="mx-auto mb-3 h-[21px] w-auto"
+            src={stars}
+            alt="5 out of 5 stars"
+          />
+          <p
+            className={`m-0 font-heading text-[17px] font-bold ${
+              active ? "text-white" : "text-text-dark"
+            }`}
+          >
+            {testimonial.name}
+          </p>
+        </div>
+      </CardTag>
+
+      {/* Circular patient photo overlaps the bottom of the card */}
+      <div
+        className="  absolute bottom-0 left-1/2 h-[80px] w-[80px] -translate-x-1/2 -translate-y-[-3px] rounded-full border border-accent/60 bg-white p-[4px]"
+        aria-hidden="true"
+      >
+        <img
+          className=" h-full w-full rounded-full object-cover object-center"
+          src={testimonial.photo_url || patientPhoto}
+          alt=""
+        />
+      </div>
+    </div>
+  );
+}
+
+/* =====================================================
    TESTIMONIALS
 ===================================================== */
 
@@ -235,11 +405,10 @@ export default function Testimonials() {
   const testimonialList =
     content.testimonials ?? DEFAULT_CONTENT.testimonials.testimonials;
 
-  const [current, setCurrent] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [isInteracting, setIsInteracting] = useState(false);
-
   const reducedMotion = useReducedMotion();
+
+  const [viewportRef, containerWidth] = useContainerWidth();
+  const metrics = useCardMetrics(containerWidth);
 
   const [statsRef, statsVisible] = useRevealOnce(reducedMotion);
   const [contentRef, contentVisible] = useRevealOnce(reducedMotion);
@@ -271,7 +440,6 @@ export default function Testimonials() {
       const elapsed = time - startTime;
       const progress = Math.min(elapsed / duration, 1);
 
-      // Smooth ease-out: fast at first, slower near the final value.
       const eased = 1 - Math.pow(1 - progress, 3);
 
       setCountProgress(eased);
@@ -290,49 +458,85 @@ export default function Testimonials() {
   }, [statsVisible, reducedMotion]);
 
   /* ===================================================
-     CAROUSEL
+     CONTINUOUS BELT CAROUSEL
+     Cards are cloned at each end so the strip can loop
+     forever; when a clone finishes sliding fully into
+     view we silently snap back to the matching real card
+     with the transition switched off for one frame.
+     Card widths are sized (see useCardMetrics) so exactly
+     3 cards fill the measured container width — nothing
+     is ever permanently cropped.
   ==================================================== */
 
-  const hasMultiple = testimonialList.length > 1;
+  const N = testimonialList.length;
+  const hasMultiple = N > 1;
+
+  const extendedList = hasMultiple
+    ? [testimonialList[N - 1], ...testimonialList, testimonialList[0]]
+    : testimonialList;
+
+  // Extended index: 1..N are the real items, 0 and N+1 are clones.
+  const [extIndex, setExtIndex] = useState(hasMultiple ? 1 : 0);
+  const [noTransition, setNoTransition] = useState(false);
+  const [isInteracting, setIsInteracting] = useState(false);
+
+  // On first load, no card has been shown to the left yet — hide that slot
+  // until the very first navigation happens.
+  const [hasStarted, setHasStarted] = useState(false);
+
+  const realIndexOf = (j) => (((j - 1 + N) % N) + N) % N;
+  const activeIndex = hasMultiple ? realIndexOf(extIndex) : 0;
+
+  const goNext = () => {
+    setHasStarted(true);
+    setExtIndex((i) => i + 1);
+  };
+  const goPrev = () => {
+    setHasStarted(true);
+    setExtIndex((i) => i - 1);
+  };
+  const goTo = (targetRealIndex) => {
+    setHasStarted(true);
+    setExtIndex(targetRealIndex + 1);
+  };
+
+  const handleTransitionEnd = () => {
+    if (!hasMultiple) return;
+    if (extIndex === extendedList.length - 1) {
+      // Slid onto the clone of the first item — snap back to the real first item.
+      setNoTransition(true);
+      setExtIndex(1);
+    } else if (extIndex === 0) {
+      // Slid onto the clone of the last item — snap back to the real last item.
+      setNoTransition(true);
+      setExtIndex(N);
+    }
+  };
 
   useEffect(() => {
-    if (
-      !hasMultiple ||
-      !contentVisible ||
-      isPaused ||
-      isInteracting ||
-      reducedMotion
-    ) {
+    if (!noTransition) return;
+    const id = requestAnimationFrame(() => setNoTransition(false));
+    return () => cancelAnimationFrame(id);
+  }, [noTransition]);
+
+  // Autoplay — pauses while hovered/focused.
+  useEffect(() => {
+    if (!hasMultiple || !contentVisible || isInteracting || reducedMotion) {
       return;
     }
 
-    const id = setInterval(() => {
-      setCurrent((i) => (i + 1) % testimonialList.length);
-    }, 6000);
-
+    const id = setInterval(goNext, 6000);
     return () => clearInterval(id);
-  }, [
-    current,
-    hasMultiple,
-    testimonialList.length,
-    contentVisible,
-    isPaused,
-    isInteracting,
-    reducedMotion,
-  ]);
+  }, [hasMultiple, contentVisible, isInteracting, reducedMotion, extIndex]);
 
   if (!loading && !visible) return null;
   if (!testimonialList.length) return null;
 
-  const activeIndex = current % testimonialList.length;
-  const activeTestimonial = testimonialList[activeIndex];
-
-  const goPrev = () =>
-    setCurrent(
-      (i) => (i - 1 + testimonialList.length) % testimonialList.length,
-    );
-
-  const goNext = () => setCurrent((i) => (i + 1) % testimonialList.length);
+  // Track offset: distance from the strip's start to the current card's
+  // centre. Every card before the active one is a side-slot, so the sum
+  // is just index * (sideWidth + gap), plus half the active card's own width.
+  const offset =
+    extIndex * (metrics.side.w + metrics.gap) + metrics.center.w / 2;
 
   const revealClass = (isVisible) =>
     `
@@ -346,35 +550,11 @@ export default function Testimonials() {
   return (
     <section
       id="testimonials"
-      className="
-        relative
-        isolate
-        w-full
-        bg-[#15350e]
-        bg-cover
-        bg-center
-        pb-[60px]
-      "
+      className="relative isolate w-full bg-[#15350e] bg-cover bg-center pb-[60px]"
       style={{
         backgroundImage: `url(${content.background_image_url || bgImage})`,
       }}
     >
-      {/* Small animation used when the patient photo changes */}
-      <style>
-        {`
-          @keyframes testimonialImageIn {
-            from {
-              opacity: 0;
-              transform: scale(0.92);
-            }
-            to {
-              opacity: 1;
-              transform: scale(1);
-            }
-          }
-        `}
-      </style>
-
       {/* Background Overlay */}
       <div
         className="pointer-events-none absolute inset-0 bg-[rgba(21,53,14,0.82)] backdrop-blur-[2px]"
@@ -386,8 +566,7 @@ export default function Testimonials() {
       ====================================================== */}
 
       <div className="container relative z-20">
-        {/* Separate wrapper preserves the desktop overlap */}
-        <div className="-translate-y-1/2 max-[900px]:mt-5 max-[900px]:translate-y-0">
+        <div className="-translate-y-1/2 max-[900px]:mt-5 max-[900px]:translate-y-2">
           <div
             ref={statsRef}
             className={`
@@ -423,7 +602,7 @@ export default function Testimonials() {
 
                   max-[520px]:border-b
                   max-[520px]:border-black/10
-                  max-[520px]:py-5
+                  max-[520px]:py-6
                   max-[520px]:first:pt-0
                   max-[520px]:last:border-b-0
                   max-[520px]:last:pb-0
@@ -435,23 +614,12 @@ export default function Testimonials() {
                     statsVisible && !reducedMotion ? `${i * 110}ms` : "0ms",
                 }}
               >
-                {/* Icon */}
                 {STAT_ICONS[i] && (
-                  <div
-                    className="
-                      flex
-                      h-[60px]
-                      w-[60px]
-                      flex-none
-                      items-center
-                      justify-center
-                    "
-                  >
+                  <div className="flex h-[60px] w-[60px] flex-none items-center justify-center">
                     {STAT_ICONS[i]}
                   </div>
                 )}
 
-                {/* Number + Label */}
                 <div className="min-w-0">
                   <p className="m-0 font-heading text-[32px] leading-[1.2] font-bold text-primary max-[600px]:text-[28px]">
                     {formatCount(stat.value, countProgress)}
@@ -462,19 +630,9 @@ export default function Testimonials() {
                   </p>
                 </div>
 
-                {/* Desktop Divider */}
                 {i < stats.length - 1 && (
                   <span
-                    className="
-                      absolute
-                      top-1/2
-                      right-[-12px]
-                      h-[60px]
-                      w-px
-                      -translate-y-1/2
-                      bg-black/15
-                      max-[1100px]:hidden
-                    "
+                    className="absolute top-1/2 right-[-12px] h-[60px] w-px -translate-y-1/2 bg-black/15 max-[1100px]:hidden"
                     aria-hidden="true"
                   />
                 )}
@@ -498,23 +656,15 @@ export default function Testimonials() {
           </h2>
 
           <div className="mx-auto mb-14 max-w-[780px]">
-            <p className="font-heading text-lg leading-[1.8] text-white/90">{content.intro_text}</p>
+            <p className="font-heading text-lg leading-[1.8] text-white/90">
+              {content.intro_text}
+            </p>
           </div>
         </div>
 
-        {/* ===================================================
-            TESTIMONIAL CAROUSEL
-        ==================================================== */}
-
+        {/* Continuous belt carousel */}
         <div
-          className={`
-            relative
-            mx-auto
-            w-full
-            max-w-[960px]
-
-            ${revealClass(contentVisible)}
-          `}
+          className={`relative mx-auto w-full ${revealClass(contentVisible)}`}
           style={{
             transitionDelay: contentVisible && !reducedMotion ? "180ms" : "0ms",
           }}
@@ -527,191 +677,74 @@ export default function Testimonials() {
             }
           }}
         >
-          {/* Space for the patient photo */}
-          <div className="relative pt-12">
-            {/* Quote Decoration */}
-            <img
-              className="
-                pointer-events-none
-                absolute
-                top-[-6px]
-                left-2
-                z-[5]
-                h-[150px]
-                w-auto
+          {/* Viewport: full width of the section. Cards are sized (see
+              useCardMetrics) so exactly 3 of them fill this width exactly —
+              nothing is permanently cropped. overflow-hidden only clips the
+              extra clone cards that are sliding in/out during a transition. */}
+          <div
+            ref={viewportRef}
+            className="relative w-full overflow-hidden"
+            style={{ height: metrics.center.h + 52 }}
+          >
+            {/* Track: left:50% anchors its start to the viewport centre;
+                translateX(-offset) then pulls the active card's own centre
+                back onto that anchor point. */}
+            <div
+              className="absolute top-0 flex items-start"
+              style={{
+                left: "50%",
+                gap: metrics.gap,
+                transform: `translateX(-${offset}px)`,
+                transition:
+                  reducedMotion || noTransition
+                    ? "none"
+                    : "transform 300ms ease",
+              }}
+              onTransitionEnd={handleTransitionEnd}
+            >
+              {extendedList.map((testimonial, j) => {
+                const isActive = j === extIndex;
+                const realIndex = hasMultiple ? realIndexOf(j) : 0;
+                const isLeftNeighbor = j === extIndex - 1;
+                const hideForNow = !hasStarted && isLeftNeighbor;
 
-                max-[600px]:h-[65px]
-              "
-              src={iconQuote}
-              alt=""
-              aria-hidden="true"
-            />
-
-            {/* Patient Photo */}
-            <div className="absolute top-12 left-1/2 z-[6] -translate-x-1/2 -translate-y-1/2">
-              <img
-                key={activeIndex}
-                className="
-                  h-20
-                  w-20
-                  rounded-full
-                  border-[3px]
-                  border-[#eab308]
-                  bg-white
-                  object-cover
-                  object-center
-
-                  animate-[testimonialImageIn_500ms_ease-out_both]
-                  motion-reduce:animate-none
-
-                  max-[600px]:h-16
-                  max-[600px]:w-16
-                "
-                src={activeTestimonial.photo_url || patientPhoto}
-                alt={activeTestimonial.name}
-              />
+                return (
+                  <TestimonialCard
+                    key={`card-${j}`}
+                    testimonial={testimonial}
+                    active={isActive}
+                    onSelect={() => goTo(realIndex)}
+                    width={isActive ? metrics.center.w : metrics.side.w}
+                    height={isActive ? metrics.center.h : metrics.side.h}
+                    hidden={hideForNow}
+                  />
+                );
+              })}
             </div>
-
-            {/* Sliding Viewport */}
-            <div className="overflow-hidden rounded">
-              <div
-                className="
-                  flex
-                  w-full
-                  items-stretch
-                  transition-transform
-                  duration-500
-                  ease-in-out
-                  motion-reduce:transition-none
-                "
-                style={{
-                  transform: `translateX(-${activeIndex * 100}%)`,
-                }}
-              >
-                {testimonialList.map((testimonial, i) => (
-                  <div
-                    key={i}
-                    className="w-full flex-none"
-                    aria-hidden={i !== activeIndex}
-                    inert={i !== activeIndex ? "" : undefined}
-                  >
-                    <div
-                      className="
-                        relative
-                        flex
-                        h-full
-                        min-h-[230px]
-                        flex-col
-                        items-center
-                        justify-center
-
-                        rounded
-                        border
-                        border-[#eab308]
-
-                        p-[60px_48px_40px]
-
-                        max-[600px]:min-h-0
-                        max-[600px]:p-[50px_24px_28px]
-                      "
-                    >
-                      <p className="m-0 mb-4 font-heading text-[23px] font-medium text-white max-[600px]:text-lg">
-                        {testimonial.name}
-                      </p>
-
-                      <div className="mx-auto mb-5 max-w-[1026px]">
-                        <p className="font-heading text-base leading-[2] text-white/90">{testimonial.quote}</p>
-                      </div>
-
-                      <img
-                        className="mx-auto h-[21px] w-auto"
-                        src={stars}
-                        alt="5 out of 5 stars"
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Desktop Previous */}
-            {hasMultiple && (
-              <ArrowButton
-                direction="previous"
-                onClick={goPrev}
-                className="absolute top-1/2 left-0 z-10 -translate-x-1/2 -translate-y-1/2 max-[860px]:hidden"
-              />
-            )}
-
-            {/* Desktop Next */}
-            {hasMultiple && (
-              <ArrowButton
-                direction="next"
-                onClick={goNext}
-                className="absolute top-1/2 right-0 z-10 translate-x-1/2 -translate-y-1/2 max-[860px]:hidden"
-              />
-            )}
           </div>
 
-          {/* =================================================
-              CAROUSEL CONTROLS
-          ================================================== */}
-
           {hasMultiple && (
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
-              {/* Mobile Previous */}
-              <ArrowButton
-                direction="previous"
-                onClick={goPrev}
-                className="hidden max-[860px]:flex"
-              />
+            <div className="mt-7 flex flex-wrap items-center justify-center gap-4">
+              <ArrowButton direction="previous" onClick={goPrev} />
 
-              {/* Dots */}
               <div className="flex items-center justify-center gap-2">
                 {testimonialList.map((_, i) => (
                   <button
                     key={i}
                     type="button"
-                    onClick={() => setCurrent(i)}
+                    onClick={() => goTo(i)}
                     aria-label={`Show testimonial ${i + 1}`}
                     aria-current={i === activeIndex ? "true" : undefined}
                     className={`h-2.5 rounded-full transition-all duration-200 ${
                       i === activeIndex
-                        ? "w-6 bg-[#eab308]"
-                        : "w-2.5 bg-white/30 hover:bg-white/50"
+                        ? "w-6 bg-accent"
+                        : "w-2.5 bg-white/40 hover:bg-white/70"
                     }`}
                   />
                 ))}
               </div>
 
-              {/* Mobile Next */}
-              <ArrowButton
-                direction="next"
-                onClick={goNext}
-                className="hidden max-[860px]:flex"
-              />
-
-              {/* Pause / Resume automatic carousel */}
-              <button
-                type="button"
-                onClick={() => setIsPaused((paused) => !paused)}
-                className="
-                  rounded-full
-                  border
-                  border-white/30
-                  px-4
-                  py-2
-                  font-body
-                  text-xs
-                  font-medium
-                  text-white/80
-                  transition-colors
-                  hover:border-[#eab308]
-                  hover:text-[#eab308]
-                "
-              >
-                {isPaused ? "Resume" : "Pause"}
-              </button>
+              <ArrowButton direction="next" onClick={goNext} />
             </div>
           )}
         </div>
