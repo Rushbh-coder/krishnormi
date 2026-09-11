@@ -300,7 +300,7 @@ function TestimonialCard({
 
   return (
     <div
-      className="relative flex flex-none flex-col pb-[45px]"
+      className="relative flex flex-none flex-col pb-[45px] gap-2"
       style={{
         width,
         transition: "width 300ms ease, opacity 300ms ease",
@@ -317,7 +317,7 @@ function TestimonialCard({
               "aria-label": `Show testimonial from ${testimonial.name}`,
             }
           : {})}
-        className={`relative flex w-full flex-col items-center overflow-hidden rounded-[22px] border px-6 pt-8 pb-[66px] text-center ${
+        className={`relative flex w-full flex-col items-center overflow-hidden rounded-[22px] border px-2 pt-8 pb-[66px] text-center ${
           active
             ? "border-transparent bg-[#E37383] text-white shadow-[0_20px_45px_rgba(0,34,97,0.18)]"
             : "cursor-pointer border-primary/15 bg-white/30 text-text-dark shadow-[0_5px_20px_rgba(0,0,0,0.05)] hover:border-accent/40 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)]"
@@ -325,7 +325,7 @@ function TestimonialCard({
         style={{ height, transition: "height 300ms ease" }}
       >
         {/* Quote mark with a short line on either side */}
-        <div className="mb-5 flex w-full max-w-[260px] items-center justify-center gap-5">
+        <div className="mb-5 flex w-full max-w-[260px] items-center justify-center gap-2">
           <span
             className={`h-px min-w-0 flex-1 ${
               active ? "bg-white/90" : "bg-accent/60"

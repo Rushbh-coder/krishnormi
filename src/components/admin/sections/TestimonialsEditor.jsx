@@ -15,7 +15,7 @@ export default function TestimonialsEditor({ initialContent, initialVisible }) {
   return (
     <SectionPanel title="Testimonials" description="Stat bar and patient testimonials" visible={visible} onVisibleChange={setVisible} lastSaved={lastSaved}>
       <Field label="Section title">
-        <TextInput value={content.title} onChange={set('title')} />
+        <TextInput value={content.title} onChange={set('title')} maxLength={15} />
       </Field>
       <Field label="Intro text">
         <TextArea value={content.intro_text} onChange={set('intro_text')} rows={2} />
@@ -45,7 +45,7 @@ export default function TestimonialsEditor({ initialContent, initialVisible }) {
           newItem={() => ({ name: '', photo_url: null, quote: '' })}
           renderItem={(item, update) => (
             <>
-              <TextInput value={item.name} onChange={(v) => update({ name: v })} placeholder="Patient name" />
+              <TextInput value={item.name} onChange={(v) => update({ name: v })} maxLength={20} placeholder="Patient name" />
               <ImageUploadField value={item.photo_url} onChange={(v) => update({ photo_url: v })} folder="testimonials" fallback={patientPhoto} />
               <TextArea value={item.quote} onChange={(v) => update({ quote: v })} rows={5} maxLength={256} previewLines={0} placeholder="Quote" />
             </>

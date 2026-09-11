@@ -57,7 +57,7 @@ export function TextArea({ value, onChange, rows = 3, maxLength = 500, previewLi
       <p className={`self-end font-body text-[11px] ${overLimit ? 'text-[#df2759]' : 'text-[#98a2b3]'}`}>
         {charCount}/{maxLength}
       </p>
-      {text && previewLines > 0 && (
+      {/* {text && previewLines > 0 && (
         <div className="rounded-[8px] border border-dashed border-[#dce4e0] bg-[#fafcfb] px-3 py-2">
           <p className="mb-1 font-body text-[10px] font-semibold tracking-[0.04em] text-[#98a2b3] uppercase">
             Live page preview
@@ -69,7 +69,7 @@ export function TextArea({ value, onChange, rows = 3, maxLength = 500, previewLi
             toggleClassName="mt-0.5 block font-heading text-xs font-semibold text-[#14733e] hover:underline"
           />
         </div>
-      )}
+      )} */}
     </div>
   );
 }

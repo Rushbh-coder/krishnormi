@@ -19,36 +19,13 @@ import { DEFAULT_CONTENT } from "../data/homepageDefaults";
 import { supabase } from "../lib/supabaseClient";
 import { HiH2 } from "react-icons/hi2";
 
-const TREATMENT_OPTIONS = {
-  "Clinical Dermatology": [
-    "Acne Treatment",
-    "Pigmentation Treatment",
-    "Skin Allergy",
-    "Skin Infection",
-    "Mole & Wart Removal",
-  ],
-  "Hair & Scalp Care": [
-    "Hair Fall Treatment",
-    "PRP Therapy",
-    "GFC Therapy",
-    "Mesotherapy",
-    "Dandruff & Scalp Treatment",
-    "Hair Transplant Consultation",
-  ],
-  "Laser Dermatology": [
-    "Laser Hair Removal",
-    "Laser Skin Resurfacing",
-    "Pigmentation Laser",
-    "Scar Reduction Laser",
-  ],
-  "Aesthetic Dermatology": [
-    "Botox Treatment",
-    "Dermal Fillers",
-    "Anti Aging Treatment",
-    "Skin Rejuvenation",
-  ],
-  Other: ["General Consultation"],
-};
+const TREATMENT_OPTIONS = [
+  "Clinical Dermatology",
+  "Hair & Scalp Care",
+  "Laser Dermatology",
+  "Aesthetic Dermatology",
+  "Other",
+];
 
 const inputClasses =
   "contact-input h-14 rounded-[6px] border border-[#c7c7c7] px-3.5 font-heading text-[15px] text-text-dark placeholder:text-[#98a2b3] focus:outline-2 focus:-outline-offset-1 focus:outline-primary";
@@ -207,8 +184,26 @@ const CONTACT_ANIMATION_CSS = `
 `;
 
 export default function ContactUs() {
-  const { row } = useSection("contact");
-  const content = row?.content ?? DEFAULT_CONTENT.contact;
+ const { row } = useSection("contact");
+
+ const previewMode =
+   new URLSearchParams(window.location.search).get("preview") === "true";
+
+ let previewData = null;
+
+ if (previewMode) {
+   try {
+     previewData = JSON.parse(
+       sessionStorage.getItem("contact_preview") || "null",
+     );
+   } catch {
+     previewData = null;
+   }
+ }
+
+ const content = previewData?.content
+   ? previewData.content
+   : (row?.content ?? DEFAULT_CONTENT.contact);
 
   const { row: footerRow } = useSection("footer");
   const footerContent = footerRow?.content ?? DEFAULT_CONTENT.footer;
@@ -234,7 +229,8 @@ export default function ContactUs() {
 
   const [status, setStatus] = useState("idle");
   const [errorMessage, setErrorMessage] = useState("");
-  const [selectedTreatmentCategory, setSelectedTreatmentCategory] = useState("");
+ const [isVerified, setIsVerified] = useState(false);
+ const [verificationLoading, setVerificationLoading] = useState(false);
   const [showLocationCard, setShowLocationCard] = useState(false);
   const [showHaritJewellers, setShowHaritJewellers] = useState(false);
 
@@ -257,6 +253,11 @@ export default function ContactUs() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!isVerified) {
+      setErrorMessage("Please complete verification before submitting.");
+      return;
+    }
+
     setStatus("submitting");
     setErrorMessage("");
 
@@ -268,13 +269,14 @@ export default function ContactUs() {
       .filter(Boolean)
       .join("\n");
 
-    const { error } = await supabase.from("contact_enquiries").insert({
-      name: form.name,
-      email: form.email,
-      phone: form.phone,
-      message,
-    });
-
+   const { error } = await supabase.from("contact_enquiries").insert({
+     name: form.name,
+     email: form.email,
+     phone: form.phone,
+     treatment: form.treatment,
+     appointment_date: form.date,
+     message: form.message,
+   });
     if (error) {
       setStatus("error");
       setErrorMessage(error.message);
@@ -307,7 +309,7 @@ export default function ContactUs() {
       date: "",
       message: "",
     });
-    setSelectedTreatmentCategory("");
+    setIsVerified(false);
   };
 
   const contactDetails = [
@@ -576,25 +578,21 @@ export default function ContactUs() {
                       <select
                         id="contact-treatment"
                         required
-                        value={selectedTreatmentCategory}
-                        onChange={(e) => {
-                          setSelectedTreatmentCategory(e.target.value);
-                          setForm((f) => ({ ...f, treatment: "" }));
-                        }}
+                        value={form.treatment}
+                        onChange={set("treatment")}
                         className={`${inputClasses} w-full appearance-none bg-white pr-10`}
                       >
                         <option value="" disabled>
                           Select a treatment
                         </option>
 
-                        {Object.keys(TREATMENT_OPTIONS).map((category) => (
-                          <option key={category} value={category}>
-                            {category}
+                        {TREATMENT_OPTIONS.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
                           </option>
                         ))}
                       </select>
 
-                      {/* Right-side dropdown arrow */}
                       <svg
                         className="pointer-events-none absolute right-4 top-1/2 h-6 w-6 -translate-y-1/2 text-[#A9A9A9]"
                         viewBox="0 0 24 24"
@@ -610,20 +608,6 @@ export default function ContactUs() {
                         />
                       </svg>
                     </div>
-
-                    {selectedTreatmentCategory && (
-                      <select
-                        required
-                        value={form.treatment}
-                        onChange={set("treatment")}
-                        className={`${inputClasses} mt-3 w-full appearance-none bg-white`}
-                      >
-                        <option value="" disabled>Select specific treatment</option>
-                        {TREATMENT_OPTIONS[selectedTreatmentCategory].map((item) => (
-                          <option key={item} value={item}>{item}</option>
-                        ))}
-                      </select>
-                    )}
                   </div>
 
                   <div className="flex flex-col gap-1.5">
@@ -673,6 +657,57 @@ export default function ContactUs() {
                   </p>
                 )}
 
+                {/* Verification */}
+                <div className="mb-5 rounded-[6px] border border-[#d0d5dd] bg-[#f9fafb] p-4">
+                  <div className="flex items-center gap-3">
+                    <input
+                      id="verification-check"
+                      type="checkbox"
+                      checked={isVerified}
+                      disabled={verificationLoading}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setVerificationLoading(true);
+
+                          setTimeout(() => {
+                            setVerificationLoading(false);
+                            setIsVerified(true);
+                          }, 5000);
+                        } else {
+                          setIsVerified(false);
+                        }
+                      }}
+                      className="
+      h-5
+      w-5
+      cursor-pointer
+      accent-[#25D366]
+      "
+                    />
+
+                    <label
+                      htmlFor="verification-check"
+                      className="font-heading text-sm text-[#344054]"
+                    >
+                      {verificationLoading
+                        ? "Verifying..."
+                        : "I am not a robot"}
+                    </label>
+                  </div>
+
+                  {verificationLoading && (
+                    <p className="mt-2 text-xs text-[#667085]">
+                      Security verification in progress. Please wait...
+                    </p>
+                  )}
+
+                  {isVerified && !verificationLoading && (
+                    <p className="mt-2 text-xs font-semibold text-green-600">
+                      ✓ Verification completed
+                    </p>
+                  )}
+                </div>
+
                 {/* Submit */}
                 <ContactReveal delay={620}>
                   <button
@@ -680,13 +715,16 @@ export default function ContactUs() {
                     disabled={status === "submitting"}
                     className="contact-submit btn-primary disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    {status === "submitting"
-                      ? "Submitting…"
-                      : status === "success"
-                        ? "Thank you — we’ll be in touch"
-                        : "Submit Request"}
+                    {status === "submitting" ? "Submitting…" : "Submit Request"}
                   </button>
                 </ContactReveal>
+
+                {status === "success" && (
+                  <p className="mt-4 font-heading text-sm font-semibold text-green-600">
+                    Thank you! Your appointment request has been submitted
+                    successfully. We’ll be in touch soon.
+                  </p>
+                )}
               </form>
             </ContactReveal>
           </div>
