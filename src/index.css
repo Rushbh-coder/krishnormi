@@ -267,3 +267,44 @@
     animation: none;
   }
 }
+
+.whatsapp-floating-btn {
+  animation: whatsappBounce 1.4s ease-in-out infinite;
+}
+
+.whatsapp-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: #25D366;
+  z-index: 0;
+}
+
+@keyframes whatsappBounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+
+  40% {
+    transform: translateY(-12px);
+  }
+
+  60% {
+    transform: translateY(-6px);
+  }
+}
+
+.whatsapp-floating-btn:hover {
+  animation-play-state: paused;
+  transform: scale(1.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .whatsapp-floating-btn {
+    animation: none;
+  }
+}

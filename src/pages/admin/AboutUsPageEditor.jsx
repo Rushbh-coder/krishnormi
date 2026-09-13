@@ -1,18 +1,17 @@
 import AdminLayout from "./AdminLayout";
 import { useHomepageContent } from "../../context/HomepageContentContext";
 import { DEFAULT_CONTENT } from "../../data/homepageDefaults";
-import ContactEditor from "../../components/admin/sections/ContactEditor";
+import AboutUsContentEditor from "../../components/admin/sections/AboutUsContentEditor";
 
-export default function ContactPageEditor() {
+export default function AboutUsPageEditor() {
   const { sections, loading } = useHomepageContent();
 
-  const initialContent = sections.contact?.content ?? DEFAULT_CONTENT.contact;
-
-  const initialVisible = sections.contact?.visible ?? true;
+  const initialContent = sections.about_page?.content ?? DEFAULT_CONTENT.about_page;
+  const initialVisible = sections.about_page?.visible ?? true;
 
   const handlePreview = ({ content, visible }) => {
     sessionStorage.setItem(
-      "contact_preview",
+      "about_page_preview",
       JSON.stringify({
         content,
         visible,
@@ -20,18 +19,19 @@ export default function ContactPageEditor() {
       }),
     );
 
-    window.location.href = "/contact-us?preview=true";
+    window.location.href = "/about-us?preview=true";
   };
+
   return (
-    <AdminLayout activeNav="contact-us" pageTitle="Contact Us Page">
-      <div className="w-[1100px] flex flex-col gap-[22px]">
+    <AdminLayout activeNav="about-us" pageTitle="About Us Page">
+      <div className="flex w-[1100px] flex-col gap-[22px]">
         <div>
           <h1 className="font-heading text-[28px] font-bold text-[#101828]">
-            Contact Us Page
+            About Us Page
           </h1>
 
           <p className="mt-1 font-body text-sm text-[#667085]">
-            Edit the content shown on the public /contact-us page.
+            Edit the content shown on the public /about-us page.
           </p>
         </div>
 
@@ -39,7 +39,7 @@ export default function ContactPageEditor() {
           <p className="font-body text-sm text-[#667085]">Loading…</p>
         ) : (
           <div className="max-w-[1100px]">
-            <ContactEditor
+            <AboutUsContentEditor
               key={loading}
               initialContent={initialContent}
               initialVisible={initialVisible}

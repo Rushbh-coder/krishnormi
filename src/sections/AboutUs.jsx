@@ -149,9 +149,23 @@ export default function AboutUs() {
                 type="button"
                 key={i}
                 onClick={() => setActiveFocus(i)}
-                className={`rounded-[10px] border-x border-y-[3px] border-x-[#e9e9e9] px-7 py-8 text-left transition-colors duration-200 ${
-                  isActive ? "border-y-accent" : "border-y-[#e9e9e9]"
-                }`}
+                className={`
+    group
+    rounded-[10px]
+    border-x
+    border-y-[3px]
+    border-x-[#e9e9e9]
+    px-7
+    py-8
+    text-left
+    transition-all
+    duration-300
+    ease-out
+    hover:-translate-y-1
+    hover:border-y-accent
+    hover:shadow-[0_10px_25px_rgba(0,0,0,0.08)]
+    ${isActive ? "border-y-accent" : "border-y-[#e9e9e9]"}
+  `}
               >
                 <img
                   className="mx-auto mb-[26px] block object-contain"
@@ -165,7 +179,16 @@ export default function AboutUs() {
                   aria-hidden="true"
                 />
                 <h3
-                  className={`mb-3.5 line-clamp-1 font-heading text-xl font-semibold ${isActive ? "text-accent" : "text-navy"}`}
+                  className={`
+    mb-3.5
+    line-clamp-1
+    font-heading
+    text-xl
+    font-semibold
+    transition-colors
+    duration-300
+    ${isActive ? "text-accent" : "text-navy group-hover:text-accent"}
+  `}
                 >
                   {item.title}
                 </h3>

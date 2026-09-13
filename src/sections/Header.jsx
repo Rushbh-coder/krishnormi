@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import logoIcon from "../assets/header/logo-icon.png";
 import logoWordmark from "../assets/header/logo-wordmark.png";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
-  { label: "About Us", href: "#about" },
+  { label: "About Us", href: "/about-us" },
   { label: "Treatments", href: "#treatments" },
   { label: "Gallery", href: "#gallery" },
   { label: "Blogs", href: "#blogs" },
@@ -15,10 +15,16 @@ const NAV_LINKS = [
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState("#");
+  const [activeHash, setActiveHash] = useState("");
+  const location = useLocation();
+
+  const isLinkActive = (href) =>
+    href.startsWith("/")
+      ? location.pathname === href
+      : location.pathname === "/" && activeHash === href;
 
   const handleNavClick = (href) => {
-    setActiveLink(href);
+    setActiveHash(href.startsWith("/") ? "" : href);
     setIsMenuOpen(false);
   };
 
@@ -57,7 +63,7 @@ export default function Header() {
         >
           <ul className="m-0 flex list-none items-center gap-1 p-0">
             {NAV_LINKS.map((link) => {
-              const isActive = activeLink === link.href;
+              const isActive = isLinkActive(link.href);
 
               const linkClassName = `inline-flex items-center justify-center whitespace-nowrap px-2.5 py-2 font-body text-[14px] transition-colors duration-200 hover:text-primary ${
                 isActive ? "font-semibold text-primary" : "font-normal text-text-dark"
@@ -153,7 +159,7 @@ export default function Header() {
         >
           <ul className="m-0 list-none p-0">
             {NAV_LINKS.map((link) => {
-              const isActive = activeLink === link.href;
+              const isActive = isLinkActive(link.href);
 
               const mobileLinkClassName = `flex w-full items-center py-3.5 font-body text-[15px] transition-colors hover:text-primary ${
                 isActive ? "font-semibold text-primary" : "font-normal text-text-dark"

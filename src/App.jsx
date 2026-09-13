@@ -1,11 +1,13 @@
 import { Route, Routes, useLocation } from 'react-router-dom'
 import Home from './pages/Home'
 import ContactUs from './pages/ContactUs'
+import AboutUsPage from './pages/AboutUsPage'
 import AdminLogin from './pages/AdminLogin'
 import Dashboard from './pages/admin/Dashboard'
 import HomePageEditor from './pages/admin/HomePageEditor'
 import AdminSettings from './pages/admin/AdminSettings'
 import ContactPageEditor from './pages/admin/ContactPageEditor'
+import AboutUsPageEditor from './pages/admin/AboutUsPageEditor'
 import Appointments from './pages/admin/Appointments'
 import RequireAdminAuth from './components/RequireAdminAuth'
 import WhatsAppButton from './components/WhatsAppButton'
@@ -19,6 +21,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/contact-us" element={<ContactUs />} />
+      <Route path="/about-us" element={<AboutUsPage />} />
       <Route path="/admin" element={<AdminLogin />} />
       <Route
         path="/admin/dashboard"
@@ -49,6 +52,14 @@ function App() {
         element={
           <RequireAdminAuth>
             <ContactPageEditor />
+          </RequireAdminAuth>
+        }
+      />
+      <Route
+        path="/admin/about-page"
+        element={
+          <RequireAdminAuth>
+            <AboutUsPageEditor />
           </RequireAdminAuth>
         }
       />

@@ -1,11 +1,15 @@
-import iconWhatsapp from '../assets/footer/icon-whatsapp.svg';
-import { useSection } from '../context/HomepageContentContext';
-import { DEFAULT_CONTENT } from '../data/homepageDefaults';
+import iconWhatsapp from "../assets/footer/icon-whatsapp.svg";
+import { useSection } from "../context/HomepageContentContext";
+import { DEFAULT_CONTENT } from "../data/homepageDefaults";
 
 export default function WhatsAppButton() {
-  const { row } = useSection('footer');
+  const { row } = useSection("footer");
   const content = row?.content ?? DEFAULT_CONTENT.footer;
-  const number = (content.whatsapp_number || DEFAULT_CONTENT.footer.whatsapp_number || '').replace(/[^\d]/g, '');
+  const number = (
+    content.whatsapp_number ||
+    DEFAULT_CONTENT.footer.whatsapp_number ||
+    ""
+  ).replace(/[^\d]/g, "");
 
   if (!number) return null;
 

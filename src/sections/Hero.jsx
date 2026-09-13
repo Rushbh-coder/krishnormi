@@ -295,7 +295,7 @@ export default function Hero() {
 
           <a
             href={content.button_link || "#contact"}
-            className="btn-primary mt-7"
+            className="mt-5 flex w-[200px] items-center justify-center rounded-full border border-accent bg-white px-5 py-3.5 font-body text-sm font-semibold text-accent transition-colors duration-200 hover:bg-accent hover:text-white"
           >
             {content.button_label}
           </a>

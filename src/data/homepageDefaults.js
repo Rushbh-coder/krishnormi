@@ -206,4 +206,18 @@ export const DEFAULT_CONTENT = {
     form_title: 'Book a Consultation',
     form_subtitle: 'Share your details and our team will contact you.',
   },
+  about_page: {
+    banner_eyebrow: 'ABOUT US',
+    banner_heading: 'About Krishnormi',
+    banner_text: 'Expert Dermatology Guided by Experience, Evidence and Individual Care.',
+    story_heading: 'Our Story',
+    story_text:
+      'KRISHNORMI is a dermatology and aesthetics practice led by Dr. Deepa K. Bhatt, bringing together clinical dermatology, hair and scalp care, laser procedures and aesthetic dermatology within one professional setting.',
+    story_image_url: null,
+    doctor_bio:
+      'Dr. Deepa K. Bhatt brings decades of dermatological experience across skin, hair, clinical procedures, lasers and aesthetic dermatology. Every consultation begins with understanding the patient — their concern, medical history and expectations — before any treatment option is considered.',
+    mission_heading: 'Our Approach',
+    mission_text:
+      'We believe responsible dermatology should be evidence-informed, transparent, ethical and personalised. Every treatment plan is considered according to individual requirements and suitability rather than following a one-treatment-fits-all approach.',
+  },
 };

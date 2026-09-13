@@ -17,7 +17,7 @@ import iconSettings from '../../assets/admin/icon-settings.svg';
 const NAV_ITEMS = [
   { key: 'dashboard', label: 'Dashboard', icon: iconDashboard, to: '/admin/dashboard' },
   { key: 'home-page', label: 'Home Page', icon: iconHomePage, to: '/admin/home-page' },
-  { key: 'about-us', label: 'About Us', icon: iconAboutUs },
+  { key: 'about-us', label: 'About Us', icon: iconAboutUs, to: '/admin/about-page' },
   { key: 'our-doctor', label: 'Our Doctor', icon: iconOurDoctor },
   { key: 'areas-of-care', label: 'Areas of Care', icon: iconAreasOfCare },
   { key: 'treatments', label: 'Treatments', icon: iconTreatments },
