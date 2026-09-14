@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SectionPanel from "../SectionPanel";
 import { Field, TextInput, TextArea } from "../fields";
 import { useSaveSection } from "../../../hooks/useSaveSection";
@@ -11,6 +11,12 @@ export default function ContactEditor({
   const [content, setContent] = useState(initialContent);
 
   const [visible, setVisible] = useState(initialVisible);
+  const [savedVisible, setSavedVisible] = useState(initialVisible);
+
+  useEffect(() => {
+    setVisible(initialVisible);
+    setSavedVisible(initialVisible);
+  }, [initialVisible]);
 
   const { save, saving, lastSaved, error } = useSaveSection("contact");
 
@@ -20,11 +26,20 @@ export default function ContactEditor({
       [key]: value,
     }));
 
+  const handleSave = async () => {
+    const saved = await save(content, visible);
+
+    if (saved) {
+      setSavedVisible(visible);
+    }
+  };
+
   return (
     <SectionPanel
       title="Contact Us page"
       description="Banner, clinic details and enquiry form copy on /contact-us"
       visible={visible}
+      savedVisible={savedVisible}
       onVisibleChange={setVisible}
       lastSaved={lastSaved}
     >
@@ -130,7 +145,7 @@ export default function ContactEditor({
       <div className="flex gap-3">
         <button
           type="button"
-          onClick={() => save(content, visible)}
+          onClick={handleSave}
           disabled={saving}
           className="
           rounded-[10px]

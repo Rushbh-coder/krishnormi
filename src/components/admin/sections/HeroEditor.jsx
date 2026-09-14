@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SectionPanel from '../SectionPanel';
 import { Field, TextInput, TextArea, ImageUploadField } from '../fields';
 import { useSaveSection } from '../../../hooks/useSaveSection';
@@ -7,9 +7,23 @@ import heroBackground from '../../../assets/hero/hero-background.png';
 export default function HeroEditor({ initialContent, initialVisible }) {
   const [content, setContent] = useState(initialContent);
   const [visible, setVisible] = useState(initialVisible);
+  const [savedVisible, setSavedVisible] = useState(initialVisible);
   const { save, saving, lastSaved, error } = useSaveSection('hero');
 
+  useEffect(() => {
+    setVisible(initialVisible);
+    setSavedVisible(initialVisible);
+  }, [initialVisible]);
+
   const set = (key) => (value) => setContent((c) => ({ ...c, [key]: value }));
+
+  const handleSave = async () => {
+    const saved = await save(content, visible);
+
+    if (saved) {
+      setSavedVisible(visible);
+    }
+  };
 
   const setHeadingWords = (raw) => {
     const chunks = raw.match(/\S+\s*/g) || [];
@@ -17,7 +31,7 @@ export default function HeroEditor({ initialContent, initialVisible }) {
   };
 
   return (
-    <SectionPanel title="Hero banner" description="Primary message visitors see first" visible={visible} onVisibleChange={setVisible} lastSaved={lastSaved}>
+    <SectionPanel title="Hero banner" description="Primary message visitors see first" visible={visible} savedVisible={savedVisible} onVisibleChange={setVisible} lastSaved={lastSaved}>
       <Field label="Heading" hint="Up to 30 words">
         <TextInput value={content.heading} onChange={setHeadingWords} />
       </Field>

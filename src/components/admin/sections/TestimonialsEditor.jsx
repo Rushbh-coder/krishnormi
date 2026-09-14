@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SectionPanel from '../SectionPanel';
 import { Field, TextInput, TextArea, ImageUploadField, ListEditor } from '../fields';
 import { useSaveSection } from '../../../hooks/useSaveSection';
@@ -8,12 +8,26 @@ import patientPhoto from '../../../assets/testimonials/patient-photo.png';
 export default function TestimonialsEditor({ initialContent, initialVisible }) {
   const [content, setContent] = useState(initialContent);
   const [visible, setVisible] = useState(initialVisible);
+  const [savedVisible, setSavedVisible] = useState(initialVisible);
   const { save, saving, lastSaved, error } = useSaveSection('testimonials');
+
+  useEffect(() => {
+    setVisible(initialVisible);
+    setSavedVisible(initialVisible);
+  }, [initialVisible]);
 
   const set = (key) => (value) => setContent((c) => ({ ...c, [key]: value }));
 
+  const handleSave = async () => {
+    const saved = await save(content, visible);
+
+    if (saved) {
+      setSavedVisible(visible);
+    }
+  };
+
   return (
-    <SectionPanel title="Testimonials" description="Stat bar and patient testimonials" visible={visible} onVisibleChange={setVisible} lastSaved={lastSaved}>
+    <SectionPanel title="Testimonials" description="Stat bar and patient testimonials" visible={visible} savedVisible={savedVisible} onVisibleChange={setVisible} lastSaved={lastSaved}>
       <Field label="Section title">
         <TextInput value={content.title} onChange={set('title')} maxLength={15} />
       </Field>
@@ -57,7 +71,7 @@ export default function TestimonialsEditor({ initialContent, initialVisible }) {
 
       <button
         type="button"
-        onClick={() => save(content, visible)}
+        onClick={handleSave}
         disabled={saving}
         className="self-start rounded-[10px] bg-[#df2759] px-5 py-2.5 font-heading text-sm font-semibold text-white shadow-[0_6px_14px_-4px_rgba(224,38,89,0.16)] disabled:opacity-60"
       >

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SectionPanel from '../SectionPanel';
 import { Field, TextInput, TextArea, ImageUploadField, ListEditor } from '../fields';
 import { useSaveSection } from '../../../hooks/useSaveSection';
@@ -7,12 +7,26 @@ import photo from '../../../assets/faq/photo.png';
 export default function FaqEditor({ initialContent, initialVisible }) {
   const [content, setContent] = useState(initialContent);
   const [visible, setVisible] = useState(initialVisible);
+  const [savedVisible, setSavedVisible] = useState(initialVisible);
   const { save, saving, lastSaved, error } = useSaveSection('faq');
+
+  useEffect(() => {
+    setVisible(initialVisible);
+    setSavedVisible(initialVisible);
+  }, [initialVisible]);
 
   const set = (key) => (value) => setContent((c) => ({ ...c, [key]: value }));
 
+  const handleSave = async () => {
+    const saved = await save(content, visible);
+
+    if (saved) {
+      setSavedVisible(visible);
+    }
+  };
+
   return (
-    <SectionPanel title="FAQ" description="Frequently asked questions accordion" visible={visible} onVisibleChange={setVisible} lastSaved={lastSaved}>
+    <SectionPanel title="FAQ" description="Frequently asked questions accordion" visible={visible} savedVisible={savedVisible} onVisibleChange={setVisible} lastSaved={lastSaved}>
       <Field label="Intro text">
         <TextArea value={content.intro_text} onChange={set('intro_text')} rows={2} maxLength={300} previewLines={0} />
       </Field>
@@ -40,7 +54,7 @@ export default function FaqEditor({ initialContent, initialVisible }) {
 
       <button
         type="button"
-        onClick={() => save(content, visible)}
+        onClick={handleSave}
         disabled={saving}
         className="self-start rounded-[10px] bg-[#df2759] px-5 py-2.5 font-heading text-sm font-semibold text-white shadow-[0_6px_14px_-4px_rgba(224,38,89,0.16)] disabled:opacity-60"
       >

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef } from "react";
 
 import SectionPanel from "../SectionPanel";
 
@@ -379,6 +379,7 @@ export default function AboutUsContentEditor({
   const [content, setContent] = useState(normalizeContent(initialContent));
 
   const [visible, setVisible] = useState(initialVisible ?? true);
+  const [savedVisible, setSavedVisible] = useState(initialVisible ?? true);
 
   const [fieldErrors, setFieldErrors] = useState({});
 
@@ -392,6 +393,7 @@ export default function AboutUsContentEditor({
     setContent(normalizeContent(initialContent));
 
     setVisible(initialVisible ?? true);
+    setSavedVisible(initialVisible ?? true);
   }, [initialContent, initialVisible]);
 
   /* =======================================================
@@ -502,7 +504,11 @@ export default function AboutUsContentEditor({
       return;
     }
 
-    await save(content, visible);
+    const saved = await save(content, visible);
+
+    if (saved) {
+      setSavedVisible(visible);
+    }
   };
 
   /* =======================================================
@@ -542,6 +548,7 @@ export default function AboutUsContentEditor({
       "
        className="max-w-[1200px] w-100"
       visible={visible}
+      savedVisible={savedVisible}
       onVisibleChange={setVisible}
       lastSaved={lastSaved}
     >
@@ -550,8 +557,10 @@ export default function AboutUsContentEditor({
       =================================================== */}
 
       <div
+        id="banner"
         className="
           mb-8
+          scroll-mt-[100px]
           border-b
           border-[#eaecf0]
           pb-8
@@ -622,8 +631,10 @@ export default function AboutUsContentEditor({
       =================================================== */}
 
       <div
+        id="modern-practice"
         className="
           mb-8
+          scroll-mt-[100px]
           border-b
           border-[#eaecf0]
           pb-8
@@ -785,8 +796,10 @@ export default function AboutUsContentEditor({
       =================================================== */}
 
       <div
+        id="whatsapp"
         className="
           mb-8
+          scroll-mt-[100px]
           border-b
           border-[#eaecf0]
           pb-8
@@ -831,8 +844,10 @@ export default function AboutUsContentEditor({
       =================================================== */}
 
       <div
+        id="doctors"
         className="
           mb-8
+          scroll-mt-[100px]
           border-b
           border-[#eaecf0]
           pb-8
@@ -1026,8 +1041,10 @@ export default function AboutUsContentEditor({
       =================================================== */}
 
       <div
+        id="what-guides-us"
         className="
           mb-8
+          scroll-mt-[100px]
           border-b
           border-[#eaecf0]
           pb-8
