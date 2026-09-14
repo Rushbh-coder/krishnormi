@@ -109,40 +109,245 @@ function DoctorCard({ photo, name, badge, role, bio, cardTextureUrl }) {
   return (
     <Reveal
       delay={120}
-      className="kr-doctor-card relative min-w-0 flex-1 basis-[560px]"
-    >
-      <div
-        className="
+      className="
+        kr-doctor-card
         relative
         w-full
-        [aspect-ratio:665/460]
-        max-[1200px]:aspect-auto
-        max-[1200px]:min-h-[460px]
-        max-[640px]:min-h-[660px]
+        min-w-0
       "
+    >
+      {/* =====================================================
+          MOBILE CARD
+          Below 640px
+      ====================================================== */}
+      <div
+        className="
+          relative
+          w-full
+          overflow-hidden
+          rounded-[26px]
+          bg-[#15350e]
+          shadow-[0_18px_45px_rgba(0,0,0,0.20)]
+          sm:hidden
+        "
       >
+        <img
+          src={cardTextureUrl || cardTexture}
+          alt=""
+          aria-hidden="true"
+          className="
+            absolute
+            inset-0
+            h-full
+            w-full
+            object-cover
+            opacity-[0.20]
+          "
+        />
+
         <div
           className="
-          absolute
-          inset-0
-          [filter:drop-shadow(0_18px_32px_rgba(0,0,0,0.28))]
-        "
+            pointer-events-none
+            absolute
+            inset-0
+            bg-[linear-gradient(to_bottom,rgba(45,82,28,0.45)_0%,#15350e_52%,#102b0b_100%)]
+          "
+        />
+
+        <div
+          className="
+            relative
+            z-[1]
+            flex
+            h-[300px]
+            w-full
+            items-end
+            justify-center
+            overflow-hidden
+            max-[430px]:h-[285px]
+            max-[375px]:h-[260px]
+          "
         >
           <div
             className="
+              pointer-events-none
+              absolute
+              bottom-[20px]
+              left-1/2
+              h-[230px]
+              w-[230px]
+              -translate-x-1/2
+              rounded-full
+              border
+              border-white/10
+              bg-white/[0.05]
+              max-[430px]:h-[210px]
+              max-[430px]:w-[210px]
+            "
+          />
+
+          <img
+            src={photo}
+            alt={name}
+            className="
+              relative
+              z-[2]
+              h-[96%]
+              w-auto
+              max-w-[94%]
+              object-contain
+              object-bottom
+              drop-shadow-[0_18px_28px_rgba(0,0,0,0.35)]
+            "
+          />
+        </div>
+
+        <div
+          className="
+            relative
+            z-[3]
+            px-5
+            pt-5
+            pb-7
+            text-center
+            min-[430px]:px-7
+          "
+        >
+          <span
+            className="
+              mb-4
+              inline-flex
+              w-fit
+              items-center
+              justify-center
+              rounded-full
+              bg-[#5d8648]
+              px-4
+              py-[9px]
+              font-heading
+              text-[12px]
+              leading-none
+              font-semibold
+              text-white
+              min-[430px]:px-5
+              min-[430px]:text-[13px]
+            "
+          >
+            {badge}
+          </span>
+
+          <h3
+            className="
+              m-0
+              font-heading
+              text-[22px]
+              leading-[1.3]
+              font-bold
+              text-white
+              min-[430px]:text-[24px]
+            "
+          >
+            {name}
+          </h3>
+
+          <p
+            className="
+              mx-auto
+              mt-2
+              mb-4
+              max-w-[330px]
+              font-heading
+              text-[13px]
+              leading-[1.55]
+              text-white/80
+              italic
+              min-[430px]:text-[14px]
+            "
+          >
+            {role}
+          </p>
+
+          {bio && (
+            <p
+              className="
+                mx-auto
+                mt-0
+                mb-6
+                max-w-[360px]
+                font-body
+                text-[13px]
+                leading-[1.7]
+                text-white/80
+              "
+            >
+              {bio}
+            </p>
+          )}
+
+          <a
+            href="/our-doctor"
+            className="
+              kr-btn
+              inline-flex
+              h-[44px]
+              min-w-[150px]
+              items-center
+              justify-center
+              rounded-full
+              bg-accent
+              px-7
+              font-heading
+              text-[13px]
+              font-semibold
+              text-white
+              transition-all
+              duration-300
+              hover:bg-accent-dark
+            "
+          >
+            View Profile
+          </a>
+        </div>
+      </div>
+
+      {/* =====================================================
+          TABLET + DESKTOP CARD
+          640px and above
+      ====================================================== */}
+      <div
+        className="
+          relative
+          hidden
+          w-full
+          sm:block
+          sm:min-h-[430px]
+          md:min-h-[450px]
+          xl:min-h-0
+          xl:aspect-[665/460]
+        "
+      >
+        <div
+          className="
             absolute
             inset-0
-            overflow-hidden
-            [clip-path:polygon(17.75%_0,100%_0,100%_100%,0_100%)]
-            max-[640px]:[clip-path:none]
+            [filter:drop-shadow(0_18px_32px_rgba(0,0,0,0.28))]
           "
+        >
+          <div
+            className="
+              absolute
+              inset-0
+              overflow-hidden
+              rounded-[24px]
+              xl:rounded-none
+              xl:[clip-path:polygon(17.75%_0,100%_0,100%_100%,0_100%)]
+            "
           >
             <img
               src={cardTextureUrl || cardTexture}
               alt=""
               aria-hidden="true"
               className="
-                kr-hero-image
                 absolute
                 inset-0
                 h-full
@@ -154,10 +359,10 @@ function DoctorCard({ photo, name, badge, role, bio, cardTextureUrl }) {
 
             <div
               className="
-              absolute
-              inset-0
-              bg-[linear-gradient(to_left,rgba(36,71,17,0.72)_0%,#15350e_6%)]
-            "
+                absolute
+                inset-0
+                bg-[linear-gradient(to_left,rgba(36,71,17,0.72)_0%,#15350e_12%,#15350e_100%)]
+              "
             />
           </div>
         </div>
@@ -169,122 +374,128 @@ function DoctorCard({ photo, name, badge, role, bio, cardTextureUrl }) {
             kr-doctor-photo
             absolute
             bottom-0
-            left-[-11%]
             z-[1]
-            h-[96%]
+            h-[92%]
             w-auto
             max-w-none
             object-contain
             object-bottom
             drop-shadow-[0_25px_35px_rgba(0,0,0,0.4)]
-            max-[640px]:top-2
-            max-[640px]:bottom-auto
-            max-[640px]:left-1/2
-            max-[640px]:h-[40%]
-            max-[640px]:-translate-x-1/2
+            sm:left-[-3%]
+            md:left-[-4%]
+            md:h-[94%]
+            xl:left-[-11%]
+            xl:h-[96%]
           "
         />
 
         <div
           className="
-          relative
-          z-[2]
-          flex
-          h-full
-          flex-col
-          justify-center
-          py-[7%]
-          pr-[6%]
-          pl-[41.5%]
-          max-[640px]:px-6
-          max-[640px]:py-80
-          max-[640px]:pt-[-300px]
-          max-[640px]:pb-0
-          max-[640px]:mt-15
-          
-        "
+            relative
+            z-[2]
+            flex
+            min-h-[430px]
+            flex-col
+            justify-center
+            py-10
+            pr-8
+            pl-[44%]
+            md:min-h-[450px]
+            md:pr-10
+            xl:h-full
+            xl:min-h-0
+            xl:py-[7%]
+            xl:pr-[6%]
+            xl:pl-[41.5%]
+          "
         >
           <span
             className="
-            mb-3.5
-            inline-flex
-            w-fit
-            items-center
-            rounded-full
-            bg-[#5d8648]
-            px-5
-            py-[9px]
-            font-heading
-            text-[15px]
-            leading-none
-            font-semibold
-            text-white
-          "
+              mb-3.5
+              inline-flex
+              w-fit
+              items-center
+              rounded-full
+              bg-[#5d8648]
+              px-5
+              py-[9px]
+              font-heading
+              text-[13px]
+              leading-none
+              font-semibold
+              text-white
+              lg:text-[14px]
+              xl:text-[15px]
+            "
           >
             {badge}
           </span>
 
-          <p
+          <h3
             className="
-            m-0
-            font-heading
-            text-[20px]
-            leading-[1.3]
-            font-semibold
-            text-white
-            max-[1400px]:text-[22px]
-          "
+              m-0
+              font-heading
+              text-[20px]
+              leading-[1.3]
+              font-semibold
+              text-white
+              lg:text-[21px]
+              xl:text-[22px]
+            "
           >
             {name}
-          </p>
+          </h3>
 
           <p
             className="
-            mt-1
-            mb-4
-            font-heading
-            text-sm
-            leading-[1.5]
-            text-white/85
-            italic
-          "
+              mt-1
+              mb-4
+              font-heading
+              text-[13px]
+              leading-[1.5]
+              text-white/85
+              italic
+              lg:text-sm
+            "
           >
             {role}
           </p>
 
-          <p
-            className="
-            m-0
-            mb-6
-            font-body
-            text-xs
-            leading-[1.6]
-            text-white/85
-          "
-          >
-            {bio}
-          </p>
+          {bio && (
+            <p
+              className="
+                m-0
+                mb-6
+                font-body
+                text-xs
+                leading-[1.65]
+                text-white/85
+              "
+            >
+              {bio}
+            </p>
+          )}
 
           <a
             href="/our-doctor"
             className="
               kr-btn
               inline-flex
-              w-fit
               h-10
+              w-fit
               items-center
               justify-center
               rounded-full
               bg-accent
               px-8
-              py-[10px]
               font-heading
-              text-[14px]
+              text-[13px]
               font-semibold
               text-white
               transition-colors
               duration-200
               hover:bg-accent-dark
+              lg:text-[14px]
             "
           >
             View Profile
@@ -429,9 +640,7 @@ export default function AboutUsPage() {
   const liveContent = aboutRow?.content ?? DEFAULT_CONTENT.about_page;
 
   const rawContent =
-    previewMode && previewData?.content
-      ? previewData.content
-      : liveContent;
+    previewMode && previewData?.content ? previewData.content : liveContent;
 
   /*
    * Supabase stores About Us content in nested JSON:
@@ -465,9 +674,7 @@ export default function AboutUsPage() {
       DEFAULT_CONTENT.about_page.banner_text,
 
     banner_image_url:
-      rawContent?.banner?.image_url ??
-      rawContent?.banner_image_url ??
-      "",
+      rawContent?.banner?.image_url ?? rawContent?.banner_image_url ?? "",
 
     // Modern practice
     modern_practice_heading:
@@ -500,12 +707,11 @@ export default function AboutUsPage() {
       rawContent?.core_values_heading ??
       "Core values",
 
-    core_values:
-      Array.isArray(rawContent?.modern_practice?.core_values)
-        ? rawContent.modern_practice.core_values
-        : Array.isArray(rawContent?.core_values)
-          ? rawContent.core_values
-          : CORE_VALUES,
+    core_values: Array.isArray(rawContent?.modern_practice?.core_values)
+      ? rawContent.modern_practice.core_values
+      : Array.isArray(rawContent?.core_values)
+        ? rawContent.core_values
+        : CORE_VALUES,
 
     // Experience
     experience_number:
@@ -603,9 +809,7 @@ export default function AboutUsPage() {
       "What Guides Us",
 
     guides_text:
-      rawContent?.what_guides_us?.description ??
-      rawContent?.guides_text ??
-      "",
+      rawContent?.what_guides_us?.description ?? rawContent?.guides_text ?? "",
 
     vision_title:
       rawContent?.what_guides_us?.vision?.title ??
@@ -613,9 +817,7 @@ export default function AboutUsPage() {
       "Our Vision",
 
     vision_text:
-      rawContent?.what_guides_us?.vision?.text ??
-      rawContent?.vision_text ??
-      "",
+      rawContent?.what_guides_us?.vision?.text ?? rawContent?.vision_text ?? "",
 
     vision_image_url:
       rawContent?.what_guides_us?.vision?.image_url ??
@@ -643,9 +845,7 @@ export default function AboutUsPage() {
       "Our Goals",
 
     goals_text:
-      rawContent?.what_guides_us?.goals?.text ??
-      rawContent?.goals_text ??
-      "",
+      rawContent?.what_guides_us?.goals?.text ?? rawContent?.goals_text ?? "",
 
     goals_image_url:
       rawContent?.what_guides_us?.goals?.image_url ??
@@ -1182,13 +1382,19 @@ export default function AboutUsPage() {
 
         <section
           className="
-          relative
-          w-[1200]
-          overflow-x-clip
-          bg-white
-          pb-[100px]
-          max-[700px]:pb-14
-        "
+            relative
+            overflow-x-clip
+            bg-white
+            pb-[100px]
+            max-[900px]:pb-[80px]
+            max-[640px]:pb-[60px]
+          "
+          style={{
+            width: "100vw",
+            maxWidth: "100vw",
+            marginLeft: "calc(50% - 50vw)",
+            marginRight: "calc(50% - 50vw)",
+          }}
         >
           <style>{`
             .doctors-band {
@@ -1197,11 +1403,18 @@ export default function AboutUsPage() {
 
             @media (max-width: 900px) {
               .doctors-band {
-                border-radius: 50% / 26px;
+                border-radius: 38px 38px 0 0;
+              }
+            }
+
+            @media (max-width: 640px) {
+              .doctors-band {
+                border-radius: 28px 28px 0 0;
               }
             }
           `}</style>
 
+          {/* FULL WIDTH DOCTORS BACKGROUND */}
           <div
             className="
               doctors-band
@@ -1210,8 +1423,11 @@ export default function AboutUsPage() {
               top-[120px]
               bottom-0
               z-0
+              w-full
               bg-cover
               bg-center
+              max-[900px]:top-[150px]
+              max-[640px]:top-[210px]
             "
             style={{
               backgroundImage: `url(${content.doctors_background_image_url || doctorsBg})`,
@@ -1220,32 +1436,48 @@ export default function AboutUsPage() {
           />
 
           {/* FLOATING STATS */}
-
           <div
             className="
-            container
-            relative
-            z-10
-            mb-16
-            pt-16
-          "
+              relative
+              z-10
+              mx-auto
+              w-full
+              max-w-[1450px]
+              px-4
+              pt-16
+              pb-14
+              sm:px-6
+              lg:px-10
+              max-[900px]:pt-12
+              max-[640px]:pt-7
+              max-[640px]:pb-10
+            "
           >
             <Reveal
               className="
-              kr-stat-card
-              grid
-              grid-cols-4
-              items-center
-              gap-6
-              rounded-[20px]
-              bg-white
-              px-10
-              py-8
-              shadow-[0_2px_80px_rgba(0,0,0,0.12)]
-              max-[1100px]:grid-cols-2
-              max-[520px]:grid-cols-1
-              max-[520px]:px-7 max-[520px]:mt-18
-            "
+                kr-stat-card
+                mx-auto
+                grid
+                w-full
+                grid-cols-4
+                items-center
+                gap-6
+                rounded-[22px]
+                bg-white
+                px-10
+                py-8
+                shadow-[0_15px_60px_rgba(0,0,0,0.15)]
+                max-[1100px]:grid-cols-2
+                max-[1100px]:gap-y-6
+                max-[640px]:grid-cols-2
+                max-[640px]:gap-2
+                max-[640px]:rounded-[20px]
+                max-[640px]:px-4
+                max-[640px]:py-5
+                max-[420px]:grid-cols-1
+                max-[420px]:gap-0
+                max-[420px]:px-5
+              "
             >
               {stats.map((stat, i) => (
                 <div
@@ -1257,24 +1489,32 @@ export default function AboutUsPage() {
                     min-w-0
                     items-center
                     gap-4
-                    max-[520px]:border-b
-                    max-[520px]:border-black/10
-                    max-[520px]:py-5
-                    max-[520px]:first:pt-0
-                    max-[520px]:last:border-b-0
-                    max-[520px]:last:pb-0
+                    max-[640px]:gap-3
+                    max-[640px]:rounded-xl
+                    max-[640px]:px-1
+                    max-[640px]:py-3
+                    max-[420px]:border-b
+                    max-[420px]:border-black/10
+                    max-[420px]:py-4
+                    max-[420px]:first:pt-0
+                    max-[420px]:last:border-b-0
+                    max-[420px]:last:pb-0
                   "
                 >
                   <div
                     className="
-                    kr-stat-icon
-                    flex
-                    h-[62px]
-                    w-[62px]
-                    flex-none
-                    items-center
-                    justify-center
-                  "
+                      kr-stat-icon
+                      flex
+                      h-[62px]
+                      w-[62px]
+                      flex-none
+                      items-center
+                      justify-center
+                      max-[640px]:h-[44px]
+                      max-[640px]:w-[44px]
+                      max-[420px]:h-[52px]
+                      max-[420px]:w-[52px]
+                    "
                   >
                     {STAT_ICONS[i]}
                   </div>
@@ -1282,26 +1522,30 @@ export default function AboutUsPage() {
                   <div className="min-w-0">
                     <p
                       className="
-                      m-0
-                      font-heading
-                      text-[35px]
-                      leading-[1.15]
-                      font-bold
-                      text-primary
-                      max-[600px]:text-[28px]
-                    "
+                        m-0
+                        font-heading
+                        text-[35px]
+                        leading-[1.15]
+                        font-bold
+                        text-primary
+                        max-[640px]:text-[24px]
+                        max-[420px]:text-[28px]
+                      "
                     >
                       {stat.value}
                     </p>
 
                     <p
                       className="
-                      m-0
-                      font-heading
-                      text-base
-                      leading-[1.4]
-                      text-black
-                    "
+                        m-0
+                        font-heading
+                        text-base
+                        leading-[1.4]
+                        text-black
+                        max-[640px]:text-[10px]
+                        max-[640px]:leading-[1.25]
+                        max-[420px]:text-[13px]
+                      "
                     >
                       {stat.label}
                     </p>
@@ -1328,44 +1572,56 @@ export default function AboutUsPage() {
           </div>
 
           {/* MEET OUR DOCTORS */}
-
           <div
             className="
-            container
-            relative
-            z-10
-            text-center
-          "
+              relative
+              z-10
+              mx-auto
+              w-full
+              max-w-[1450px]
+              px-4
+              text-center
+              sm:px-6
+              lg:px-10
+            "
           >
             <Reveal>
               <h2
                 className="
-                section-title
-                text-navy
-              "
+                  section-title
+                  text-navy
+                  max-[640px]:text-[30px]
+                  max-[640px]:leading-[1.2]
+                  max-[380px]:text-[27px]
+                "
               >
                 {content.doctors_title || "Meet Our Doctors"}
               </h2>
 
               <hr
                 className="
-                section-divider
-                mx-auto
-                mb-6
-              "
+                  section-divider
+                  mx-auto
+                  mb-6
+                  max-[640px]:mb-5
+                "
               />
 
               <p
                 className="
-                mx-auto
-                mb-3
-                max-w-[780px]
-                font-heading
-                text-sm
-                leading-[1.8]
-                font-semibold
-                text-black
-              "
+                  mx-auto
+                  mb-3
+                  max-w-[780px]
+                  font-heading
+                  text-sm
+                  leading-[1.8]
+                  font-semibold
+                  text-black
+                  max-[640px]:max-w-[350px]
+                  max-[640px]:px-2
+                  max-[640px]:text-[14px]
+                  max-[640px]:leading-[1.65]
+                "
               >
                 {content.doctors_subtitle ||
                   "Expert Dermatology Guided by Experience, Evidence and Individual Care."}
@@ -1373,13 +1629,19 @@ export default function AboutUsPage() {
 
               <p
                 className="
-                mx-auto
-                mb-12
-                max-w-[900px]
-                font-body
-                text-sm
-                text-text
-              "
+                  mx-auto
+                  mb-12
+                  max-w-[900px]
+                  font-body
+                  text-sm
+                  leading-[1.75]
+                  text-text
+                  max-[640px]:mb-8
+                  max-[640px]:max-w-[355px]
+                  max-[640px]:px-2
+                  max-[640px]:text-[13px]
+                  max-[640px]:leading-[1.7]
+                "
               >
                 {content.doctors_description ||
                   "A shared commitment to thoughtful assessment, clear communication and individualized dermatology care."}
@@ -1388,14 +1650,20 @@ export default function AboutUsPage() {
 
             <div
               className="
-              flex
-              flex-wrap
-              gap-[65px]
-              pl-[45px]
-              text-left
-              max-[1200px]:gap-10
-              max-[1200px]:pl-0
-            "
+                mx-auto
+                grid
+                w-full
+                max-w-[1450px]
+                grid-cols-2
+                items-stretch
+                gap-[55px]
+                text-left
+                max-[1280px]:gap-10
+                max-[1200px]:grid-cols-1
+                max-[1200px]:max-w-[760px]
+                max-[640px]:max-w-[430px]
+                max-[640px]:gap-7
+              "
             >
               {doctors.map((doctor) => (
                 <DoctorCard key={doctor.name} {...doctor} />
