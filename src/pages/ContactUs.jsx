@@ -17,7 +17,6 @@ import iconLocation from "../assets/footer/icon-location.svg";
 import { useSection } from "../context/HomepageContentContext";
 import { DEFAULT_CONTENT } from "../data/homepageDefaults";
 import { supabase } from "../lib/supabaseClient";
-import { HiH2 } from "react-icons/hi2";
 
 const TREATMENT_OPTIONS = [
   "Clinical Dermatology",
@@ -32,6 +31,11 @@ const inputClasses =
 
 const labelClasses = "font-heading text-[15px] font-medium text-[#444]";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+const PHONE_REGEX = /^[6-9]\d{9}$/;
+
+const errorClasses =
+  "mt-1 font-heading text-[12px] leading-[1.4] text-[#df2759]";
 
 /*
  * Scroll reveals run once. Content remains visible when IntersectionObserver
@@ -44,6 +48,7 @@ function ContactReveal({
   delay = 700,
 }) {
   const elementRef = useRef(null);
+
   const [revealed, setRevealed] = useState(
     () =>
       typeof window === "undefined" ||
@@ -58,6 +63,7 @@ function ContactReveal({
     if (!element) return;
 
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+
     const show = () => setRevealed(true);
 
     if (media.matches || !("IntersectionObserver" in window)) {
@@ -72,7 +78,10 @@ function ContactReveal({
           observer.disconnect();
         }
       },
-      { threshold: 0, rootMargin: "0px 0px -32px 0px" },
+      {
+        threshold: 0,
+        rootMargin: "0px 0px -32px 0px",
+      },
     );
 
     const onMotionChange = (event) => {
@@ -93,7 +102,9 @@ function ContactReveal({
       ref={elementRef}
       className={`contact-reveal ${revealed ? "is-visible" : ""} ${className}`}
       data-reveal={variant}
-      style={{ "--contact-delay": `${delay}ms` }}
+      style={{
+        "--contact-delay": `${delay}ms`,
+      }}
     >
       {children}
     </div>
@@ -104,66 +115,105 @@ const CONTACT_ANIMATION_CSS = `
   .contact-page .contact-reveal {
     opacity: 0;
     transform: translate3d(0, 24px, 0);
-    transition: opacity 700ms ease, transform 700ms cubic-bezier(.22,1,.36,1);
+    transition: opacity 700ms ease,
+      transform 700ms cubic-bezier(.22,1,.36,1);
     transition-delay: var(--contact-delay, 0ms);
   }
+
   .contact-page .contact-reveal[data-reveal="left"] {
     transform: translate3d(-24px, 0, 0);
   }
+
   .contact-page .contact-reveal[data-reveal="right"] {
     transform: translate3d(24px, 0, 0);
   }
+
   .contact-page .contact-reveal[data-reveal="fade"] {
     transform: none;
   }
+
   .contact-page .contact-reveal.is-visible {
     opacity: 1;
     transform: none;
   }
+
   .contact-page .contact-accent-line {
     transform: scaleX(0);
     transform-origin: left center;
     transition: transform 650ms cubic-bezier(.22,1,.36,1);
   }
-  .contact-page .contact-reveal.is-visible .contact-accent-line {
+
+  .contact-page .contact-reveal.is-visible
+  .contact-accent-line {
     transform: scaleX(1);
   }
+
   @keyframes contactBannerIn {
-    from { opacity: .8; transform: scale(1.04); }
-    to { opacity: 1; transform: scale(1); }
+    from {
+      opacity: .8;
+      transform: scale(1.04);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
+
   @keyframes contactBannerZoom {
-    from { transform: scale(1); }
-    to { transform: scale(1.08); }
+    from {
+      transform: scale(1);
+    }
+
+    to {
+      transform: scale(1.08);
+    }
   }
+
   .contact-page .contact-banner-image {
     animation:
       contactBannerIn 1100ms ease-out both,
       contactBannerZoom 14s ease-in-out 1100ms infinite alternate;
   }
+
   .contact-page .contact-interactive {
-    transition: transform 250ms ease, box-shadow 250ms ease;
+    transition:
+      transform 250ms ease,
+      box-shadow 250ms ease;
   }
+
   .contact-page .contact-detail-icon {
     transition: transform 250ms ease;
   }
+
   .contact-page .contact-input {
-    transition: border-color 200ms ease, box-shadow 200ms ease;
+    transition:
+      border-color 200ms ease,
+      box-shadow 200ms ease;
   }
+
   .contact-page .contact-input:focus {
-    box-shadow: 0 0 0 3px rgba(23,119,63,.10);
+    box-shadow:
+      0 0 0 3px rgba(23,119,63,.10);
   }
+
   @media (hover: hover) and (pointer: fine) {
     .contact-page .contact-interactive:hover {
       transform: translateY(-3px);
     }
-    .contact-page .contact-interactive:hover .contact-detail-icon {
+
+    .contact-page
+    .contact-interactive:hover
+    .contact-detail-icon {
       transform: scale(1.06);
     }
-    .contact-page .contact-submit:hover:not(:disabled) {
+
+    .contact-page
+    .contact-submit:hover:not(:disabled) {
       transform: translateY(-2px);
     }
   }
+
   @media (prefers-reduced-motion: reduce) {
     .contact-page .contact-reveal,
     .contact-page .contact-reveal[data-reveal],
@@ -177,6 +227,7 @@ const CONTACT_ANIMATION_CSS = `
       transition: none !important;
       transform: none !important;
     }
+
     .contact-page .contact-reveal {
       opacity: 1 !important;
     }
@@ -184,28 +235,29 @@ const CONTACT_ANIMATION_CSS = `
 `;
 
 export default function ContactUs() {
- const { row } = useSection("contact");
+  const { row } = useSection("contact");
 
- const previewMode =
-   new URLSearchParams(window.location.search).get("preview") === "true";
+  const previewMode =
+    new URLSearchParams(window.location.search).get("preview") === "true";
 
- let previewData = null;
+  let previewData = null;
 
- if (previewMode) {
-   try {
-     previewData = JSON.parse(
-       sessionStorage.getItem("contact_preview") || "null",
-     );
-   } catch {
-     previewData = null;
-   }
- }
+  if (previewMode) {
+    try {
+      previewData = JSON.parse(
+        sessionStorage.getItem("contact_preview") || "null",
+      );
+    } catch {
+      previewData = null;
+    }
+  }
 
- const content = previewData?.content
-   ? previewData.content
-   : (row?.content ?? DEFAULT_CONTENT.contact);
+  const content = previewData?.content
+    ? previewData.content
+    : (row?.content ?? DEFAULT_CONTENT.contact);
 
   const { row: footerRow } = useSection("footer");
+
   const footerContent = footerRow?.content ?? DEFAULT_CONTENT.footer;
 
   const whatsappDigits = (footerContent.whatsapp_number || "").replace(
@@ -228,89 +280,272 @@ export default function ContactUs() {
   });
 
   const [status, setStatus] = useState("idle");
+
   const [errorMessage, setErrorMessage] = useState("");
- const [isVerified, setIsVerified] = useState(false);
- const [verificationLoading, setVerificationLoading] = useState(false);
+
+  const [formErrors, setFormErrors] = useState({});
+
+  const [confirmationEmailStatus, setConfirmationEmailStatus] =
+    useState("idle");
+
+  const [isVerified, setIsVerified] = useState(false);
+
+  const [verificationLoading, setVerificationLoading] = useState(false);
+
   const [showLocationCard, setShowLocationCard] = useState(false);
+
   const [showHaritJewellers, setShowHaritJewellers] = useState(false);
 
   const today = new Date();
+
   const minDate = today.toISOString().split("T")[0];
 
   const maxDateObj = new Date();
+
   maxDateObj.setMonth(maxDateObj.getMonth() + 3);
+
   const maxDate = maxDateObj.toISOString().split("T")[0];
 
   const activeMapQuery = showHaritJewellers
     ? "Harit Jewellers, Ahmedabad, Gujarat"
     : mapQuery;
 
-  const set = (key) => (event) =>
-    setForm((f) => ({
-      ...f,
-      [key]: event.target.value,
+  const set = (key) => (event) => {
+    const value = event.target.value;
+
+    setForm((current) => ({
+      ...current,
+      [key]: value,
     }));
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!isVerified) {
-      setErrorMessage("Please complete verification before submitting.");
-      return;
+    setFormErrors((current) => ({
+      ...current,
+      [key]: "",
+    }));
+
+    if (errorMessage) {
+      setErrorMessage("");
     }
-
-    setStatus("submitting");
-    setErrorMessage("");
-
-    const message = [
-      form.treatment && `Treatment: ${form.treatment}`,
-      form.date && `Preferred appointment date: ${form.date}`,
-      form.message,
-    ]
-      .filter(Boolean)
-      .join("\n");
-
-   const { error } = await supabase.from("contact_enquiries").insert({
-     name: form.name,
-     email: form.email,
-     phone: form.phone,
-     treatment: form.treatment,
-     appointment_date: form.date,
-     message: form.message,
-   });
-    if (error) {
-      setStatus("error");
-      setErrorMessage(error.message);
-      return;
-    }
-
-    // The enquiry is already saved at this point, so a confirmation-email
-    // hiccup shouldn't block the success state the visitor sees.
-    supabase.functions
-      .invoke("send-appointment-emails", {
-        body: {
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
-          treatment: form.treatment,
-          date: form.date,
-          message: form.message,
-        },
-      })
-      .catch((emailError) => {
-        console.error("send-appointment-emails failed:", emailError);
-      });
-
-    setStatus("success");
-    setForm({
-      name: "",
-      email: "",
-      phone: "",
-      treatment: "",
-      date: "",
-      message: "",
-    });
-    setIsVerified(false);
   };
+
+  const setPhone = (event) => {
+    const value = event.target.value.replace(/\D/g, "").slice(0, 10);
+
+    setForm((current) => ({
+      ...current,
+      phone: value,
+    }));
+
+    setFormErrors((current) => ({
+      ...current,
+      phone: "",
+    }));
+
+    if (errorMessage) {
+      setErrorMessage("");
+    }
+  };
+
+  const validateForm = () => {
+    const errors = {};
+
+    const name = form.name.trim();
+
+    const email = form.email.trim();
+
+    const phone = form.phone.trim();
+
+    if (!name) {
+      errors.name = "Please enter your full name.";
+    } else if (name.length < 2) {
+      errors.name = "Please enter a valid full name.";
+    }
+
+    if (!email) {
+      errors.email = "Please enter your email address.";
+    } else if (!EMAIL_REGEX.test(email)) {
+      errors.email =
+        "Please enter a valid email address, for example name@example.com.";
+    }
+
+    if (!phone) {
+      errors.phone = "Please enter your mobile number.";
+    } else if (!PHONE_REGEX.test(phone)) {
+      errors.phone = "Please enter a valid 10-digit Indian mobile number.";
+    }
+
+    if (!form.treatment) {
+      errors.treatment = "Please select a treatment.";
+    }
+
+    if (!form.date) {
+      errors.date = "Please select your preferred appointment date.";
+    } else if (form.date < minDate || form.date > maxDate) {
+      errors.date =
+        "Please select a date within the available appointment range.";
+    }
+
+    setFormErrors(errors);
+
+    return Object.keys(errors).length === 0;
+  };
+
+const handleSubmit = async (event) => {
+  event.preventDefault();
+
+  setErrorMessage("");
+
+  /*
+   * =====================================================
+   * VALIDATE FORM
+   * =====================================================
+   */
+
+  if (!validateForm()) {
+    setStatus("idle");
+    return;
+  }
+
+  /*
+   * =====================================================
+   * CHECK SECURITY VERIFICATION
+   * =====================================================
+   */
+
+  if (!isVerified) {
+    setStatus("idle");
+
+    setErrorMessage("Please complete verification before submitting.");
+
+    return;
+  }
+
+  /*
+   * =====================================================
+   * START SUBMISSION
+   * =====================================================
+   */
+
+  setStatus("submitting");
+
+  setConfirmationEmailStatus("idle");
+
+  /*
+   * =====================================================
+   * CLEAN FORM VALUES
+   * =====================================================
+   */
+
+  const cleanForm = {
+    name: form.name.trim(),
+
+    email: form.email.trim().toLowerCase(),
+
+    phone: form.phone.trim(),
+
+    treatment: form.treatment,
+
+    date: form.date,
+
+    message: form.message.trim(),
+  };
+
+  /*
+   * =====================================================
+   * SAVE APPOINTMENT TO SUPABASE DATABASE
+   * =====================================================
+   */
+
+  const { error } = await supabase.from("contact_enquiries").insert({
+    name: cleanForm.name,
+
+    email: cleanForm.email,
+
+    phone: cleanForm.phone,
+
+    treatment: cleanForm.treatment,
+
+    appointment_date: cleanForm.date,
+
+    message: cleanForm.message,
+  });
+
+  /*
+   * =====================================================
+   * DATABASE FAILURE
+   * =====================================================
+   */
+
+  if (error) {
+    console.error("Appointment submission failed:", error);
+
+    setStatus("error");
+
+    setErrorMessage(
+      "We could not submit your appointment request. Please try again.",
+    );
+
+    return;
+  }
+
+  /*
+   * =====================================================
+   * SEND EMAILS
+   * =====================================================
+   */
+
+  setConfirmationEmailStatus("sending");
+
+  try {
+    const emailResponse = await fetch(
+      "https://lnetznzqwwrvvugycdae.supabase.co/functions/v1/send-appointment-emails",
+      {
+        method: "POST",
+        body: JSON.stringify(cleanForm),
+      },
+    );
+
+    const emailData = await emailResponse.json().catch(() => null);
+
+    if (!emailResponse.ok || !emailData?.customerEmailSent) {
+      console.error(
+        "Customer confirmation email failed:",
+        emailData || `HTTP ${emailResponse.status}`,
+      );
+
+      setConfirmationEmailStatus("failed");
+    } else {
+      setConfirmationEmailStatus("sent");
+    }
+  } catch (emailException) {
+    console.error("Customer confirmation email exception:", emailException);
+
+    setConfirmationEmailStatus("failed");
+  }
+
+  /*
+   * =====================================================
+   * SHOW THANK-YOU SCREEN
+   * =====================================================
+   */
+
+  /*
+   * Keep submitted values so they can be displayed in
+   * the confirmation panel.
+   */
+
+  setForm(cleanForm);
+
+  setStatus("success");
+
+  /*
+   * Reset verification.
+   */
+
+  setIsVerified(false);
+
+  setVerificationLoading(false);
+};
 
   const contactDetails = [
     {
@@ -338,9 +573,11 @@ export default function ContactUs() {
 
       <main className="contact-page">
         <style>{CONTACT_ANIMATION_CSS}</style>
+
         {/* =====================================================
             BANNER
         ====================================================== */}
+
         <section className="relative min-h-[560px] overflow-hidden bg-white max-[960px]:flex max-[960px]:min-h-0 max-[960px]:flex-col">
           <div
             className="absolute inset-0 z-0 max-[960px]:relative max-[960px]:order-2 max-[960px]:h-[300px] max-[560px]:h-[240px]"
@@ -363,14 +600,17 @@ export default function ContactUs() {
                   <span className="text-text-dark">Us</span>
                 </h3>
               </ContactReveal>
+
               <ContactReveal delay={100}>
                 <hr className="section-divider contact-accent-line w-45" />
               </ContactReveal>
+
               <ContactReveal delay={180}>
                 <p className="mt-6 font-heading text-2xl font-semibold text-text-dark max-[420px]:text-xl">
                   {content.banner_heading}
                 </p>
               </ContactReveal>
+
               <ContactReveal delay={280}>
                 <p className="mt-4 max-w-[420px] font-heading text-sm leading-[1.6] text-text">
                   {content.banner_text}
@@ -384,6 +624,7 @@ export default function ContactUs() {
             GET IN TOUCH + APPOINTMENT
             Single white panel overlapping the banner
         ====================================================== */}
+
         <section className="relative z-10 -mt-[120px] bg-transparent pb-[90px] max-[960px]:-mt-16 max-[700px]:pb-14">
           <div className="container max-[560px]:px-2">
             <ContactReveal
@@ -406,25 +647,24 @@ export default function ContactUs() {
               {/* =================================================
                   LEFT — GET IN TOUCH
               ================================================== */}
+
               <div className="min-w-0">
                 <ContactReveal variant="left" delay={-20}>
                   <h2 className="section-title text-navy">Get in Touch</h2>
                 </ContactReveal>
+
                 <ContactReveal delay={120}>
                   <hr className="section-divider contact-accent-line mb-6" />
                 </ContactReveal>
+
                 <ContactReveal delay={180}>
                   <p className="mb-7 font-heading text-sm leading-[1.7] text-text">
                     {content.connect_text}
                   </p>
                 </ContactReveal>
-                {/* {content.appointment_note && (
-                  <p className="mb-6 inline-block rounded-[10px] bg-[#fff7f9] px-4 py-2.5 font-heading text-[13px] font-semibold text-accent">
-                    {content.appointment_note}
-                  </p>
-                )} */}
 
                 {/* Contact Details */}
+
                 <div className="flex flex-col gap-6">
                   {contactDetails.map(({ Icon, label, value, href }, i) => (
                     <ContactReveal
@@ -453,6 +693,7 @@ export default function ContactUs() {
                 </div>
 
                 {/* WhatsApp Helpline */}
+
                 <ContactReveal
                   delay={550}
                   className="contact-interactive mt-7 flex items-center gap-4 rounded-[6px] bg-[#e8f5f5] p-[18px_22px]"
@@ -471,7 +712,6 @@ export default function ContactUs() {
                     <FaWhatsapp size={46} aria-hidden="true" />
                   </a>
 
-                  {/* Vertical divider */}
                   <span
                     className="h-[50px] w-px flex-none bg-[#137979]/25"
                     aria-hidden="true"
@@ -481,9 +721,11 @@ export default function ContactUs() {
                     <p className="m-0 mb-1 font-heading text-lg font-semibold text-[#137979]">
                       WhatsApp Helpline
                     </p>
+
                     <p className="m-0 font-heading text-[15px] text-[#444]">
                       Quick Appointment Booking via Whatsapp
                     </p>
+
                     <p className="m-0 font-heading text-[15px] text-green-600 font-semibold">
                       Message Us
                     </p>
@@ -493,239 +735,583 @@ export default function ContactUs() {
 
               {/* =================================================
                   RIGHT — REQUEST AN APPOINTMENT
-                  No separate card background/border/shadow
               ================================================== */}
-              <form onSubmit={handleSubmit} className="w-full min-w-0">
-                <ContactReveal variant="right" delay={140}>
-                  <p className="mb-1.5 font-heading text-[27px] font-bold text-navy">
-                    {content.form_title}
-                  </p>
-                </ContactReveal>
-                <ContactReveal delay={220}>
-                  <p className="mb-6 font-heading text-xs text-accent italic-[0.95]">
-                    {content.form_subtitle}
-                  </p>
-                </ContactReveal>
-                {/* Full Name */}
-                <ContactReveal
-                  delay={300}
-                  className="mb-4 flex flex-col gap-1.5"
-                >
-                  <label className={labelClasses} htmlFor="contact-name">
-                    Full Name *
-                  </label>
 
-                  <input
-                    id="contact-name"
-                    type="text"
-                    required
-                    value={form.name}
-                    onChange={set("name")}
-                    placeholder="Enter your name"
-                    className={inputClasses}
-                  />
-                </ContactReveal>
-
-                {/* Email + Mobile */}
-                <ContactReveal
-                  delay={380}
-                  className="mb-4 grid grid-cols-2 gap-4 max-[500px]:grid-cols-1"
+              {status !== "success" ? (
+                <form
+                  onSubmit={handleSubmit}
+                  className="w-full min-w-0"
+                  noValidate
                 >
-                  <div className="flex flex-col gap-1.5">
-                    <label className={labelClasses} htmlFor="contact-email">
-                      Email *
+                  <ContactReveal variant="right" delay={140}>
+                    <p className="mb-1.5 font-heading text-[27px] font-bold text-navy">
+                      {content.form_title}
+                    </p>
+                  </ContactReveal>
+
+                  <ContactReveal delay={220}>
+                    <p className="mb-6 font-heading text-xs text-accent italic-[0.95]">
+                      {content.form_subtitle}
+                    </p>
+                  </ContactReveal>
+
+                  {/* Full Name */}
+
+                  <ContactReveal
+                    delay={300}
+                    className="mb-4 flex flex-col gap-1.5"
+                  >
+                    <label className={labelClasses} htmlFor="contact-name">
+                      Full Name *
                     </label>
 
                     <input
-                      id="contact-email"
-                      type="email"
+                      id="contact-name"
+                      type="text"
                       required
-                      value={form.email}
-                      onChange={set("email")}
-                      placeholder="Enter your email"
-                      className={inputClasses}
+                      autoComplete="name"
+                      maxLength={80}
+                      value={form.name}
+                      onChange={set("name")}
+                      placeholder="Enter your full name"
+                      aria-invalid={Boolean(formErrors.name)}
+                      aria-describedby={
+                        formErrors.name ? "contact-name-error" : undefined
+                      }
+                      className={`${inputClasses} ${
+                        formErrors.name
+                          ? "border-[#df2759] focus:outline-[#df2759]"
+                          : ""
+                      }`}
                     />
-                  </div>
 
-                  <div className="flex flex-col gap-1.5">
-                    <label className={labelClasses} htmlFor="contact-phone">
-                      Mobile Number *
-                    </label>
+                    {formErrors.name && (
+                      <p
+                        id="contact-name-error"
+                        className={errorClasses}
+                        role="alert"
+                      >
+                        {formErrors.name}
+                      </p>
+                    )}
+                  </ContactReveal>
 
-                    <input
-                      id="contact-phone"
-                      type="tel"
-                      required
-                      value={form.phone}
-                      onChange={set("phone")}
-                      placeholder="Enter your phone number"
-                      className={inputClasses}
-                    />
-                  </div>
-                </ContactReveal>
+                  {/* Email + Mobile */}
 
-                {/* Treatment + Date */}
-                <ContactReveal
-                  delay={460}
-                  className="mb-4 grid grid-cols-2 gap-4 max-[500px]:grid-cols-1"
-                >
-                  <div className="flex flex-col gap-1.5">
-                    <label className={labelClasses} htmlFor="contact-treatment">
-                      Select Treatment *
-                    </label>
+                  <ContactReveal
+                    delay={380}
+                    className="mb-4 grid grid-cols-2 gap-4 max-[500px]:grid-cols-1"
+                  >
+                    <div className="flex flex-col gap-1.5">
+                      <label className={labelClasses} htmlFor="contact-email">
+                        Email *
+                      </label>
 
-                    <div className="relative">
-                      <select
-                        id="contact-treatment"
+                      <input
+                        id="contact-email"
+                        type="email"
                         required
-                        value={form.treatment}
-                        onChange={set("treatment")}
-                        className={`${inputClasses} w-full appearance-none bg-white pr-10`}
-                      >
-                        <option value="" disabled>
-                          Select a treatment
-                        </option>
+                        inputMode="email"
+                        autoComplete="email"
+                        maxLength={120}
+                        value={form.email}
+                        onChange={set("email")}
+                        placeholder="name@example.com"
+                        aria-invalid={Boolean(formErrors.email)}
+                        aria-describedby={
+                          formErrors.email ? "contact-email-error" : undefined
+                        }
+                        className={`${inputClasses} ${
+                          formErrors.email
+                            ? "border-[#df2759] focus:outline-[#df2759]"
+                            : ""
+                        }`}
+                      />
 
-                        {TREATMENT_OPTIONS.map((option) => (
-                          <option key={option} value={option}>
-                            {option}
+                      {formErrors.email && (
+                        <p
+                          id="contact-email-error"
+                          className={errorClasses}
+                          role="alert"
+                        >
+                          {formErrors.email}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className={labelClasses} htmlFor="contact-phone">
+                        Mobile Number *
+                      </label>
+
+                      <input
+                        id="contact-phone"
+                        type="tel"
+                        required
+                        inputMode="numeric"
+                        autoComplete="tel"
+                        pattern="[6-9][0-9]{9}"
+                        minLength={10}
+                        maxLength={10}
+                        value={form.phone}
+                        onChange={setPhone}
+                        placeholder="10-digit mobile number"
+                        aria-invalid={Boolean(formErrors.phone)}
+                        aria-describedby={
+                          formErrors.phone ? "contact-phone-error" : undefined
+                        }
+                        className={`${inputClasses} ${
+                          formErrors.phone
+                            ? "border-[#df2759] focus:outline-[#df2759]"
+                            : ""
+                        }`}
+                      />
+
+                      <p className="mt-1 font-heading text-[11px] leading-[1.4] text-[#7b8d84]">
+                        Enter a 10-digit Indian mobile number without +91.
+                      </p>
+
+                      {formErrors.phone && (
+                        <p
+                          id="contact-phone-error"
+                          className={errorClasses}
+                          role="alert"
+                        >
+                          {formErrors.phone}
+                        </p>
+                      )}
+                    </div>
+                  </ContactReveal>
+
+                  {/* Treatment + Date */}
+
+                  <ContactReveal
+                    delay={460}
+                    className="mb-4 grid grid-cols-2 gap-4 max-[500px]:grid-cols-1"
+                  >
+                    <div className="flex flex-col gap-1.5">
+                      <label
+                        className={labelClasses}
+                        htmlFor="contact-treatment"
+                      >
+                        Select Treatment *
+                      </label>
+
+                      <div className="relative">
+                        <select
+                          id="contact-treatment"
+                          required
+                          value={form.treatment}
+                          onChange={set("treatment")}
+                          aria-invalid={Boolean(formErrors.treatment)}
+                          aria-describedby={
+                            formErrors.treatment
+                              ? "contact-treatment-error"
+                              : undefined
+                          }
+                          className={`${inputClasses} w-full appearance-none bg-white pr-10 ${
+                            formErrors.treatment
+                              ? "border-[#df2759] focus:outline-[#df2759]"
+                              : ""
+                          }`}
+                        >
+                          <option value="" disabled>
+                            Select a treatment
                           </option>
-                        ))}
-                      </select>
 
-                      <svg
-                        className="pointer-events-none absolute right-4 top-1/2 h-6 w-6 -translate-y-1/2 text-[#A9A9A9]"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        aria-hidden="true"
+                          {TREATMENT_OPTIONS.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+
+                        <svg
+                          className="pointer-events-none absolute right-4 top-1/2 h-6 w-6 -translate-y-1/2 text-[#A9A9A9]"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="m6 9 6 6 6-6"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </div>
+
+                      {formErrors.treatment && (
+                        <p
+                          id="contact-treatment-error"
+                          className={errorClasses}
+                          role="alert"
+                        >
+                          {formErrors.treatment}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className={labelClasses} htmlFor="contact-date">
+                        Preferred Appointment Date *
+                      </label>
+
+                      <input
+                        id="contact-date"
+                        type="date"
+                        required
+                        value={form.date}
+                        min={minDate}
+                        max={maxDate}
+                        onChange={set("date")}
+                        aria-invalid={Boolean(formErrors.date)}
+                        aria-describedby={
+                          formErrors.date ? "contact-date-error" : undefined
+                        }
+                        className={`${inputClasses} ${
+                          formErrors.date
+                            ? "border-[#df2759] focus:outline-[#df2759]"
+                            : ""
+                        }`}
+                      />
+
+                      {formErrors.date && (
+                        <p
+                          id="contact-date-error"
+                          className={errorClasses}
+                          role="alert"
+                        >
+                          {formErrors.date}
+                        </p>
+                      )}
+                    </div>
+                  </ContactReveal>
+
+                  {/* Message */}
+
+                  <ContactReveal
+                    delay={540}
+                    className="mb-5 flex flex-col gap-1.5"
+                  >
+                    <label className={labelClasses} htmlFor="contact-message">
+                      Message
+                    </label>
+
+                    <textarea
+                      id="contact-message"
+                      rows={3}
+                      maxLength={1000}
+                      value={form.message}
+                      onChange={set("message")}
+                      placeholder="Briefly describe how we can help"
+                      className="contact-input resize-none rounded-[6px] border border-[#c7c7c7] px-3.5 py-3 font-heading text-[15px] text-text-dark placeholder:text-[#98a2b3] focus:outline-2 focus:-outline-offset-1 focus:outline-primary"
+                    />
+
+                    <p className="mt-1 text-right font-heading text-[11px] text-[#98a2b3]">
+                      {form.message.length}
+                      /1000
+                    </p>
+                  </ContactReveal>
+
+                  {/* Verification */}
+
+                  <div className="mb-5 rounded-[6px] border border-[#d0d5dd] bg-[#f9fafb] p-4">
+                    <div className="flex items-center gap-3">
+                      <input
+                        id="verification-check"
+                        type="checkbox"
+                        checked={isVerified}
+                        disabled={verificationLoading}
+                        onChange={(event) => {
+                          if (event.target.checked) {
+                            setVerificationLoading(true);
+
+                            setErrorMessage("");
+
+                            setTimeout(() => {
+                              setVerificationLoading(false);
+
+                              setIsVerified(true);
+                            }, 1500);
+                          } else {
+                            setIsVerified(false);
+                          }
+                        }}
+                        className="h-5 w-5 cursor-pointer accent-[#25D366]"
+                      />
+
+                      <label
+                        htmlFor="verification-check"
+                        className="font-heading text-sm text-[#344054]"
                       >
-                        <path
-                          d="m6 9 6 6 6-6"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
+                        {verificationLoading
+                          ? "Verifying..."
+                          : "I am not a robot"}
+                      </label>
+                    </div>
+
+                    {verificationLoading && (
+                      <p className="mt-2 text-xs text-[#667085]">
+                        Security verification in progress. Please wait...
+                      </p>
+                    )}
+
+                    {isVerified && !verificationLoading && (
+                      <p className="mt-2 text-xs font-semibold text-green-600">
+                        ✓ Verification completed
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Global error */}
+
+                  {errorMessage && (
+                    <div
+                      className="mb-4 rounded-[8px] border border-[#f1c7d1] bg-[#fff7f9] px-4 py-3"
+                      role="alert"
+                    >
+                      <p className="m-0 font-heading text-[13px] leading-[1.5] text-[#b4234d]">
+                        {errorMessage}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Submit */}
+
+                  <ContactReveal delay={620}>
+                    <button
+                      type="submit"
+                      disabled={status === "submitting" || verificationLoading}
+                      className="contact-submit btn-primary disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {status === "submitting"
+                        ? "Submitting…"
+                        : "Submit Request"}
+                    </button>
+                  </ContactReveal>
+                </form>
+              ) : (
+                /* =====================================================
+                    THANK-YOU CONFIRMATION
+                ====================================================== */
+
+                <div className="w-full min-w-0">
+                  <div
+                    className="
+                      overflow-hidden
+                      rounded-[18px]
+                      border
+                      border-[#cfe4d6]
+                      bg-white
+                      shadow-[0_18px_50px_rgba(23,119,63,0.12)]
+                    "
+                    role="status"
+                    aria-live="polite"
+                  >
+                    <div
+                      className="
+                        relative
+                        overflow-hidden
+                        bg-[#f0f8f3]
+                        px-7
+                        py-8
+                        text-center
+                        max-[560px]:px-5
+                      "
+                    >
+                      <div
+                        className="
+                          pointer-events-none
+                          absolute
+                          -right-12
+                          -top-12
+                          h-36
+                          w-36
+                          rounded-full
+                          bg-[#17773f]/[0.06]
+                        "
+                      />
+
+                      <div
+                        className="
+                          pointer-events-none
+                          absolute
+                          -bottom-14
+                          -left-10
+                          h-40
+                          w-40
+                          rounded-full
+                          bg-[#df2759]/[0.05]
+                        "
+                      />
+
+                      <div
+                        className="
+                          relative
+                          mx-auto
+                          flex
+                          h-[66px]
+                          w-[66px]
+                          items-center
+                          justify-center
+                          rounded-full
+                          bg-[#17773f]
+                          text-white
+                          shadow-[0_10px_26px_rgba(23,119,63,0.25)]
+                        "
+                      >
+                        <svg
+                          width="32"
+                          height="32"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M5 12.5 9.2 17 19 7"
+                            stroke="currentColor"
+                            strokeWidth="2.4"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </div>
+
+                      <p className="relative mt-5 mb-1 font-heading text-[12px] font-bold uppercase tracking-[0.14em] text-[#17773f]">
+                        Request Submitted
+                      </p>
+
+                      <h3 className="relative m-0 font-heading text-[27px] leading-[1.25] font-bold text-[#173f30] max-[560px]:text-[23px]">
+                        Thank You, {form.name}!
+                      </h3>
+
+                      <p className="relative mx-auto mt-3 mb-0 max-w-[470px] font-heading text-[14px] leading-[1.7] text-[#52645b]">
+                        We have received your appointment request successfully.
+                        Our clinic team will contact you to confirm the
+                        appointment based on availability.
+                      </p>
+
+                    </div>
+
+                    {/* Submitted details */}
+
+                    <div className="px-7 py-7 max-[560px]:px-5">
+                      <p className="mb-4 font-heading text-[16px] font-bold text-[#173f30]">
+                        Your Request Details
+                      </p>
+
+                      <div className="overflow-hidden rounded-[11px] border border-[#e1ebe5] bg-[#f8faf9]">
+                        <div className="grid grid-cols-[145px_1fr] gap-4 border-b border-[#e1ebe5] px-4 py-3 max-[480px]:grid-cols-1 max-[480px]:gap-1">
+                          <span className="font-heading text-[12px] font-medium text-[#7b8d84]">
+                            Email
+                          </span>
+
+                          <span className="break-all font-heading text-[13px] font-semibold text-[#344054]">
+                            {form.email}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-[145px_1fr] gap-4 border-b border-[#e1ebe5] px-4 py-3 max-[480px]:grid-cols-1 max-[480px]:gap-1">
+                          <span className="font-heading text-[12px] font-medium text-[#7b8d84]">
+                            Mobile Number
+                          </span>
+
+                          <span className="font-heading text-[13px] font-semibold text-[#344054]">
+                            {form.phone}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-[145px_1fr] gap-4 border-b border-[#e1ebe5] px-4 py-3 max-[480px]:grid-cols-1 max-[480px]:gap-1">
+                          <span className="font-heading text-[12px] font-medium text-[#7b8d84]">
+                            Treatment
+                          </span>
+
+                          <span className="font-heading text-[13px] font-semibold text-[#344054]">
+                            {form.treatment}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-[145px_1fr] gap-4 px-4 py-3 max-[480px]:grid-cols-1 max-[480px]:gap-1">
+                          <span className="font-heading text-[12px] font-medium text-[#7b8d84]">
+                            Preferred Date
+                          </span>
+
+                          <span className="font-heading text-[13px] font-semibold text-[#344054]">
+                            {form.date}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="mt-5 rounded-[9px] border-l-4 border-[#df2759] bg-[#fff7f9] px-4 py-3.5">
+                        <p className="m-0 font-heading text-[12px] leading-[1.65] text-[#624d54]">
+                          <strong>Please Note:</strong> Submitting this request
+                          does not automatically confirm your appointment. Your
+                          appointment is confirmed only after communication from
+                          the KRISHNORMI clinic team.
+                        </p>
+                      </div>
+
+                      <p className="mx-auto mt-5 mb-0 max-w-[430px] text-center font-heading text-[13px] leading-[1.65] text-[#667085]">
+                        Thank you for choosing KRISHNORMI.
+                        <br />
+                        We look forward to assisting you.
+                      </p>
+
+                      <div className="mt-6 flex justify-center">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setStatus("idle");
+
+                            setForm({
+                              name: "",
+                              email: "",
+                              phone: "",
+                              treatment: "",
+                              date: "",
+                              message: "",
+                            });
+
+                            setFormErrors({});
+
+                            setErrorMessage("");
+
+                            setConfirmationEmailStatus("idle");
+
+                            setIsVerified(false);
+
+                            setVerificationLoading(false);
+                          }}
+                          className="
+                            inline-flex
+                            min-h-[44px]
+                            items-center
+                            justify-center
+                            rounded-full
+                            border
+                            border-primary
+                            bg-white
+                            px-7
+                            py-2.5
+                            font-heading
+                            text-[13px]
+                            font-semibold
+                            text-primary
+                            transition-all
+                            duration-300
+                            hover:bg-primary
+                            hover:text-white
+                          "
+                        >
+                          Submit Another Request
+                        </button>
+                      </div>
                     </div>
                   </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label className={labelClasses} htmlFor="contact-date">
-                      Preferred Appointment Date *
-                    </label>
-
-                    <input
-                      id="contact-date"
-                      type="date"
-                      required
-                      value={form.date}
-                      min={minDate}
-                      max={maxDate}
-                      onChange={set("date")}
-                      className={inputClasses}
-                    />
-                  </div>
-                </ContactReveal>
-
-                {/* Message */}
-                <ContactReveal
-                  delay={540}
-                  className="mb-5 flex flex-col gap-1.5"
-                >
-                  <label className={labelClasses} htmlFor="contact-message">
-                    Message
-                  </label>
-
-                  <textarea
-                    id="contact-message"
-                    rows={3}
-                    value={form.message}
-                    onChange={set("message")}
-                    placeholder="Briefly describe how we can help"
-                    className="contact-input resize-none rounded-[6px] border border-[#c7c7c7] px-3.5 py-3 font-heading text-[15px] text-text-dark placeholder:text-[#98a2b3] focus:outline-2 focus:-outline-offset-1 focus:outline-primary"
-                  />
-                </ContactReveal>
-
-                {/* Error Message */}
-                {status === "error" && (
-                  <p
-                    className="mb-3 font-heading text-sm text-[#df2759]"
-                    role="alert"
-                  >
-                    {errorMessage || "Something went wrong. Please try again."}
-                  </p>
-                )}
-
-                {/* Verification */}
-                <div className="mb-5 rounded-[6px] border border-[#d0d5dd] bg-[#f9fafb] p-4">
-                  <div className="flex items-center gap-3">
-                    <input
-                      id="verification-check"
-                      type="checkbox"
-                      checked={isVerified}
-                      disabled={verificationLoading}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setVerificationLoading(true);
-
-                          setTimeout(() => {
-                            setVerificationLoading(false);
-                            setIsVerified(true);
-                          }, 5000);
-                        } else {
-                          setIsVerified(false);
-                        }
-                      }}
-                      className="
-      h-5
-      w-5
-      cursor-pointer
-      accent-[#25D366]
-      "
-                    />
-
-                    <label
-                      htmlFor="verification-check"
-                      className="font-heading text-sm text-[#344054]"
-                    >
-                      {verificationLoading
-                        ? "Verifying..."
-                        : "I am not a robot"}
-                    </label>
-                  </div>
-
-                  {verificationLoading && (
-                    <p className="mt-2 text-xs text-[#667085]">
-                      Security verification in progress. Please wait...
-                    </p>
-                  )}
-
-                  {isVerified && !verificationLoading && (
-                    <p className="mt-2 text-xs font-semibold text-green-600">
-                      ✓ Verification completed
-                    </p>
-                  )}
                 </div>
-
-                {/* Submit */}
-                <ContactReveal delay={620}>
-                  <button
-                    type="submit"
-                    disabled={status === "submitting"}
-                    className="contact-submit btn-primary disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    {status === "submitting" ? "Submitting…" : "Submit Request"}
-                  </button>
-                </ContactReveal>
-
-                {status === "success" && (
-                  <p className="mt-4 font-heading text-sm font-semibold text-green-600">
-                    Thank you! Your appointment request has been submitted
-                    successfully. We’ll be in touch soon.
-                  </p>
-                )}
-              </form>
+              )}
             </ContactReveal>
           </div>
         </section>
@@ -733,9 +1319,9 @@ export default function ContactUs() {
         {/* =====================================================
             MAP
         ====================================================== */}
-        {/* Map */}
+
         <section className="w-full bg-[#f9fcfb] pb-[90px] max-[700px]:pb-14">
-          <ContactReveal className="relative h-[520px] w-full overflow-hidden  border border-[#c6c6c6] max-[900px]:h-[400px] max-[560px]:h-[300px]">
+          <ContactReveal className="relative h-[520px] w-full overflow-hidden border border-[#c6c6c6] max-[900px]:h-[400px] max-[560px]:h-[300px]">
             <iframe
               title={
                 showHaritJewellers
@@ -751,10 +1337,12 @@ export default function ContactUs() {
             />
 
             {/* Location Toggle */}
+
             <button
               type="button"
               onClick={() => {
                 setShowHaritJewellers((v) => !v);
+
                 setShowLocationCard(true);
               }}
               aria-expanded={showLocationCard}
@@ -776,6 +1364,7 @@ export default function ContactUs() {
             </button>
 
             {/* Location Details Card */}
+
             <div
               className={`absolute top-6 left-6 w-[280px] max-w-[80%] origin-top-left rounded-[15px] border border-[#d6e3dd] bg-white p-[18px_22px] shadow-[0_10px_24px_-6px_rgba(13,38,33,0.13)] transition-[opacity,transform] duration-300 ease-out ${
                 showLocationCard
@@ -840,6 +1429,7 @@ export default function ContactUs() {
         <ContactReveal variant="fade">
           <FAQ />
         </ContactReveal>
+
         <ContactReveal variant="fade">
           <Testimonials />
         </ContactReveal>
