@@ -59,7 +59,7 @@ export default function Treatments() {
             <p className="font-heading text-[17px] leading-[1.7] text-white/90">{content.body_text}</p>
           </div>
 
-          <button type="button" className="btn-primary">
+          <button type="button" className="btn-hero">
             {content.button_label}
           </button>
 

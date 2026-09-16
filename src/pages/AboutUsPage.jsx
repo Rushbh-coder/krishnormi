@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { FaWhatsapp, FaEye, FaBullseye, FaFlagCheckered } from "react-icons/fa";
 import { FiArrowUpRight } from "react-icons/fi";
 
@@ -17,7 +18,7 @@ import missionPhoto from "../assets/about-page/mission-photo.jpg";
 import goalsPhoto from "../assets/about-page/goals-photo.jpg";
 
 import iconYear from "../assets/testimonials/icon-years.svg";
-import iconSkin from "../assets/testimonials/icon-skin.svg";
+import iconSkin from "../assets/testimonials/skin.png";
 import iconPatients1 from "../assets/testimonials/icon-patients-1.svg";
 import iconPatients2 from "../assets/testimonials/icon-patients-2.svg";
 import iconSatisfaction from "../assets/testimonials/icon-satisfaction.svg";
@@ -48,6 +49,52 @@ function Reveal({ children, className = "", delay = 0 }) {
   );
 }
 
+function formatStatValue(value, progress) {
+  const text = String(value ?? "");
+
+  if (progress >= 1) return text;
+
+  const match = text.match(/^(\s*[^0-9+-]*)([+-]?\d[\d,]*(?:\.\d+)?)(.*)$/);
+
+  if (!match) return text;
+
+  const [, prefix, numericText, suffix] = match;
+  const target = Number(numericText.replace(/,/g, ""));
+
+  if (!Number.isFinite(target)) return text;
+
+  const decimals = Math.min(numericText.split(".")[1]?.length ?? 0, 6);
+  const currentValue = decimals
+    ? Number((target * progress).toFixed(decimals))
+    : Math.round(target * progress);
+
+  return `${prefix}${new Intl.NumberFormat("en-US", {
+    useGrouping: numericText.includes(","),
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  }).format(currentValue)}${suffix}`;
+}
+
+function toSentenceCase(value) {
+  const text = String(value ?? "").trim().toLowerCase();
+  return text ? `${text.charAt(0).toUpperCase()}${text.slice(1)}` : "";
+}
+
+function AboutHeading({ value }) {
+  const text = toSentenceCase(value || "About Krishnormi");
+  const brandStart = text.toLowerCase().indexOf("krishnormi");
+
+  if (brandStart === -1) return text;
+
+  return (
+    <>
+      {text.slice(0, brandStart)}
+      <span className="text-primary">Krishnormi</span>
+      {text.slice(brandStart + "krishnormi".length)}
+    </>
+  );
+}
+
 const CORE_VALUES = [
   "Patient first",
   "Evidence informed",
@@ -69,19 +116,19 @@ const STAT_ICONS = [
     src={iconYear}
     alt=""
     aria-hidden="true"
-    className="h-full w-full object-contain"
+    className="h-[44px] w-[44px] object-contain [filter:brightness(0)_saturate(100%)_invert(83%)_sepia(17%)_saturate(704%)_hue-rotate(34deg)_brightness(96%)_contrast(87%)]"
   />,
 
-  <span key="patients" className="relative block h-full w-full">
+  <span key="patients" className="relative block h-[48px] w-[48px] flex-none">
     <img
-      className="absolute inset-[24.76%_0_8.74%_0] h-auto w-full object-contain"
+      className="absolute inset-[24.76%_0_8.74%_0] h-auto w-full object-contain [filter:brightness(0)_saturate(100%)_invert(83%)_sepia(17%)_saturate(704%)_hue-rotate(34deg)_brightness(96%)_contrast(87%)]"
       src={iconPatients1}
       alt=""
       aria-hidden="true"
     />
 
     <img
-      className="absolute inset-[8.74%_29.47%_76.26%_55.54%] h-auto w-auto object-contain"
+      className="absolute inset-[8.74%_29.47%_76.26%_55.54%] h-auto w-auto object-contain [filter:brightness(0)_saturate(100%)_invert(83%)_sepia(17%)_saturate(704%)_hue-rotate(34deg)_brightness(96%)_contrast(87%)]"
       src={iconPatients2}
       alt=""
       aria-hidden="true"
@@ -93,7 +140,7 @@ const STAT_ICONS = [
     src={iconSkin}
     alt=""
     aria-hidden="true"
-    className="h-full w-full object-contain"
+    className="h-[44px] w-[44px] object-contain [filter:brightness(0)_saturate(100%)_invert(83%)_sepia(17%)_saturate(704%)_hue-rotate(34deg)_brightness(96%)_contrast(87%)]"
   />,
 
   <img
@@ -101,7 +148,7 @@ const STAT_ICONS = [
     src={iconSatisfaction}
     alt=""
     aria-hidden="true"
-    className="h-full w-full object-contain"
+    className="h-[44px] w-[44px] object-contain [filter:brightness(0)_saturate(100%)_invert(83%)_sepia(17%)_saturate(704%)_hue-rotate(34deg)_brightness(96%)_contrast(87%)]"
   />,
 ];
 
@@ -269,7 +316,7 @@ function DoctorCard({ photo, name, badge, role, bio, cardTextureUrl }) {
 
           {bio && (
             <p
-              className="
+              className={`
                 mx-auto
                 mt-0
                 mb-6
@@ -278,33 +325,13 @@ function DoctorCard({ photo, name, badge, role, bio, cardTextureUrl }) {
                 text-[13px]
                 leading-[1.7]
                 text-white/80
-              "
+              `}
             >
               {bio}
             </p>
           )}
 
-          <a
-            href="/our-doctor"
-            className="
-              kr-btn
-              inline-flex
-              h-[44px]
-              min-w-[150px]
-              items-center
-              justify-center
-              rounded-full
-              bg-accent
-              px-7
-              font-heading
-              text-[13px]
-              font-semibold
-              text-white
-              transition-all
-              duration-300
-              hover:bg-accent-dark
-            "
-          >
+          <a href="/our-doctor" className="btn-hero mt-5 max-[460px]:w-[100px]">
             View Profile
           </a>
         </div>
@@ -479,23 +506,11 @@ function DoctorCard({ photo, name, badge, role, bio, cardTextureUrl }) {
           <a
             href="/our-doctor"
             className="
+              btn-hero
               kr-btn
+              text-sm
               inline-flex
-              h-10
-              w-fit
-              items-center
-              justify-center
-              rounded-full
-              bg-accent
-              px-8
-              font-heading
-              text-[13px]
-              font-semibold
-              text-white
-              transition-colors
-              duration-200
-              hover:bg-accent-dark
-              lg:text-[14px]
+              lg:w-[150px]
             "
           >
             View Profile
@@ -559,6 +574,9 @@ function GuideCard({ label, icon: Icon, photo, text }) {
           absolute
           inset-x-0
           bottom-0
+          flex
+          h-[39%]
+          flex-col
           px-[7.3%]
           pb-[4.5%]
           text-left
@@ -573,7 +591,9 @@ function GuideCard({ label, icon: Icon, photo, text }) {
             leading-[36px]
             font-semibold
             text-white
+            min-[901px]:min-h-[36px]
             max-[1200px]:text-[22px]
+            max-[1200px]:leading-[30px]
           "
           >
             {label}
@@ -864,6 +884,45 @@ export default function AboutUsPage() {
 
   const stats = testimonialsContent.stats ?? DEFAULT_CONTENT.testimonials.stats;
 
+  const reducedMotion = useReducedMotion();
+  const [statsRef, statsVisible] = useRevealOnce(reducedMotion);
+  const [statsProgress, setStatsProgress] = useState(0);
+  const statsCountCompleted = useRef(false);
+
+  useEffect(() => {
+    if (!statsVisible || statsCountCompleted.current) return undefined;
+
+    if (reducedMotion) {
+      setStatsProgress(1);
+      statsCountCompleted.current = true;
+      return undefined;
+    }
+
+    let frameId;
+    let startTime = null;
+    const duration = 1500;
+
+    const animateStats = (time) => {
+      if (startTime === null) startTime = time;
+
+      const progress = Math.min((time - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+
+      setStatsProgress(eased);
+
+      if (progress < 1) {
+        frameId = requestAnimationFrame(animateStats);
+      } else {
+        setStatsProgress(1);
+        statsCountCompleted.current = true;
+      }
+    };
+
+    frameId = requestAnimationFrame(animateStats);
+
+    return () => cancelAnimationFrame(frameId);
+  }, [reducedMotion, statsVisible]);
+
   const whatsappNumber = DEFAULT_CONTENT.footer.whatsapp_number.replace(
     /\D/g,
     "",
@@ -926,16 +985,15 @@ export default function AboutUsPage() {
         @keyframes krHeroContent { 0% { opacity:0; transform:translate3d(-45px,25px,0) scale(.96); } 70% { opacity:1; transform:translate3d(8px,-3px,0) scale(1.01); } 100% { opacity:1; transform:translate3d(0,0,0) scale(1); } }
         @keyframes krFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
         @keyframes krPulse { 0%,100% { box-shadow:0 0 0 0 rgba(37,211,102,.22); } 50% { box-shadow:0 0 0 14px rgba(37,211,102,0); } }
-        @keyframes krGlow { 0%,100% { box-shadow:0 0 0 rgba(223,39,89,0); } 50% { box-shadow:0 0 32px rgba(223,39,89,.16); } }
+        @keyframes krGlow { 0%,100% { box-shadow:0 0 0 rgba(23,119,63,0); } 50% { box-shadow:0 0 32px rgba(23,119,63,.18); } }
         @keyframes krShimmer { 0% { background-position:-220% 0; } 100% { background-position:220% 0; } }
         @keyframes krRevealUp { from { opacity:0; transform:translate3d(0,55px,0) scale(.97); filter:blur(5px); } to { opacity:1; transform:translate3d(0,0,0) scale(1); filter:blur(0); } }
         .kr-reveal-hidden { opacity:0; }
         .kr-reveal-visible { animation:krRevealUp .9s cubic-bezier(.2,.75,.2,1) var(--reveal-delay,0ms) both; }
         .kr-hero-image { animation:krHeroZoom 1.8s cubic-bezier(.2,.7,.2,1) both; transform-origin:center; }
         .kr-hero-content { animation:krHeroContent 1.15s cubic-bezier(.2,.75,.2,1) .25s both; }
-        .kr-hero-content h1 { background:linear-gradient(90deg,#101828 0%,#df2759 35%,#101828 55%,#df2759 75%,#101828 100%); background-size:250% 100%; -webkit-background-clip:text; background-clip:text; color:transparent; animation:krShimmer 5s linear infinite; }
         .kr-orbit { animation:krFloat 5s ease-in-out infinite; }
-        .kr-stat-card { animation:krGlow 4s ease-in-out infinite; transition:transform .35s ease,box-shadow .35s ease; }
+        .kr-stat-card { transition:transform .35s ease,box-shadow .35s ease; }
         .kr-stat-card:hover { transform:translateY(-9px) scale(1.025); box-shadow:0 18px 55px rgba(0,0,0,.14); }
         .kr-stat-item { transition:transform .35s ease; }
         .kr-stat-item:hover { transform:translateY(-6px); }
@@ -1029,7 +1087,7 @@ export default function AboutUsPage() {
                 max-[560px]:text-[30px]
               "
               >
-                {content.banner_eyebrow || "About Krishnormi"}
+                <AboutHeading value={content.banner_eyebrow} />
               </h1>
 
               <hr
@@ -1093,7 +1151,7 @@ export default function AboutUsPage() {
           w-full
           bg-white
           pt-[100px]
-          pb-[120px]
+          pb-[40px]
           max-[900px]:py-14
         "
         >
@@ -1442,7 +1500,7 @@ export default function AboutUsPage() {
               z-10
               mx-auto
               w-full
-              max-w-[1450px]
+              max-w-[1240px]
               px-4
               pt-16
               pb-14
@@ -1453,67 +1511,68 @@ export default function AboutUsPage() {
               max-[640px]:pb-10
             "
           >
-            <Reveal
-              className="
-                kr-stat-card
-                mx-auto
-                grid
-                w-full
-                grid-cols-4
-                items-center
-                gap-6
-                rounded-[22px]
-                bg-white
-                px-10
-                py-8
-                shadow-[0_15px_60px_rgba(0,0,0,0.15)]
-                max-[1100px]:grid-cols-2
-                max-[1100px]:gap-y-6
-                max-[640px]:grid-cols-2
-                max-[640px]:gap-2
-                max-[640px]:rounded-[20px]
-                max-[640px]:px-4
-                max-[640px]:py-5
-                max-[420px]:grid-cols-1
-                max-[420px]:gap-0
-                max-[420px]:px-5
-              "
+            <div
+              ref={statsRef}
+              className={`
+    mx-auto
+    grid
+    w-full
+    grid-cols-2
+    items-center
+    gap-2
+    overflow-hidden
+    rounded-[14px]
+    bg-[#082D70]
+    px-4
+    py-5
+    shadow-none
+    sm:gap-3
+    sm:rounded-[14px]
+    sm:px-5
+    sm:py-6
+    md:rounded-[14px]
+    md:px-8
+    md:py-8
+    lg:grid-cols-4
+    lg:gap-0
+    transition-all
+    duration-700
+    ease-out
+    motion-reduce:transition-none
+    ${statsVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}
+  `}
             >
+              <div
+                className="pointer-events-none absolute inset-0 opacity-50"
+                style={{
+                  background:
+                    "radial-gradient(circle at 15% 20%, rgba(214,179,117,.20), transparent 32%), radial-gradient(circle at 90% 90%, rgba(117,167,139,.24), transparent 34%)",
+                }}
+                aria-hidden="true"
+              />
+
               {stats.map((stat, i) => (
                 <div
                   key={`${stat.label}-${i}`}
-                  className="
-                    kr-stat-item
-                    relative
-                    flex
-                    min-w-0
-                    items-center
-                    gap-4
-                    max-[640px]:gap-3
-                    max-[640px]:rounded-xl
-                    max-[640px]:px-1
-                    max-[640px]:py-3
-                    max-[420px]:border-b
-                    max-[420px]:border-black/10
-                    max-[420px]:py-4
-                    max-[420px]:first:pt-0
-                    max-[420px]:last:border-b-0
-                    max-[420px]:last:pb-0
-                  "
+                  className={`relative flex min-w-0 items-center gap-2 px-1 py-3 sm:gap-4 sm:px-3 sm:py-4 lg:px-7 lg:py-3 ${i !== stats.length - 1 ? "lg:border-r lg:border-white/[0.12]" : ""}`}
+                  style={{
+                    transitionDelay:
+                      statsVisible && !reducedMotion ? `${i * 90}ms` : "0ms",
+                  }}
                 >
                   <div
                     className="
-                      kr-stat-icon
                       flex
-                      h-[62px]
-                      w-[62px]
+                      h-[46px]
+                      w-[46px]
                       flex-none
                       items-center
                       justify-center
-                      max-[640px]:h-[44px]
-                      max-[640px]:w-[44px]
-                      max-[420px]:h-[52px]
-                      max-[420px]:w-[52px]
+                      rounded-none
+                      shadow-[0_8px_30px_rgba(0,0,0,0.12)]
+                      sm:h-[60px]
+                      sm:w-[60px]
+                      sm:rounded-2xl
                     "
                   >
                     {STAT_ICONS[i]}
@@ -1524,51 +1583,35 @@ export default function AboutUsPage() {
                       className="
                         m-0
                         font-heading
-                        text-[35px]
-                        leading-[1.15]
+                        text-[21px]
+                        leading-none
                         font-bold
-                        text-primary
-                        max-[640px]:text-[24px]
-                        max-[420px]:text-[28px]
+                        text-white
+                        sm:text-[29px]
+                        md:text-[32px]
                       "
                     >
-                      {stat.value}
+                      {formatStatValue(stat.value, statsProgress)}
                     </p>
 
                     <p
                       className="
-                        m-0
+                        mt-2
+                        mb-0
                         font-heading
-                        text-base
-                        leading-[1.4]
-                        text-black
-                        max-[640px]:text-[10px]
-                        max-[640px]:leading-[1.25]
-                        max-[420px]:text-[13px]
+                        text-[9px]
+                        leading-[1.3]
+                        text-white/70
+                        sm:text-[12px]
+                        md:text-[13px]
                       "
                     >
                       {stat.label}
                     </p>
                   </div>
-
-                  {i < stats.length - 1 && (
-                    <span
-                      className="
-                        absolute
-                        top-1/2
-                        right-[-12px]
-                        h-[80px]
-                        w-px
-                        -translate-y-1/2
-                        bg-black/15
-                        max-[1100px]:hidden
-                      "
-                      aria-hidden="true"
-                    />
-                  )}
                 </div>
               ))}
-            </Reveal>
+            </div>
           </div>
 
           {/* MEET OUR DOCTORS */}

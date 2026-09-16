@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 
 import bgImage from "../assets/testimonials/bg.png";
-import leafBg from "../assets/testimonials/leave.jpg";
-import l1 from "../assets/testimonials/l1.jpg";
+import leafBg from "../assets/testimonials/testimonial.png";
+
 import patientPhoto from "../assets/testimonials/patient-photo.png";
 import stars from "../assets/testimonials/stars.svg";
 import iconyear from "../assets/testimonials/icon-years.svg";
-import iconSkin from "../assets/testimonials/icon-skin.svg";
+import iconSkin from "../assets/testimonials/skin.png";
 import iconPatients1 from "../assets/testimonials/icon-patients-1.svg";
 import iconPatients2 from "../assets/testimonials/icon-patients-2.svg";
 import iconSatisfaction from "../assets/testimonials/icon-satisfaction.svg";
@@ -30,7 +30,7 @@ const STAT_ICONS = [
     src={iconyear}
     alt=""
     aria-hidden="true"
-    className="h-[44px] w-[44px] object-contain"
+    className="h-[44px] w-[44px] object-contain [filter:brightness(0)_saturate(100%)_invert(83%)_sepia(17%)_saturate(704%)_hue-rotate(34deg)_brightness(96%)_contrast(87%)]"
   />,
 
   <span
@@ -53,6 +53,7 @@ const STAT_ICONS = [
         h-auto
         w-full
         object-contain
+         [filter:brightness(0)_saturate(100%)_invert(83%)_sepia(17%)_saturate(704%)_hue-rotate(34deg)_brightness(96%)_contrast(87%)]
       "
     />
 
@@ -66,6 +67,7 @@ const STAT_ICONS = [
         h-auto
         w-auto
         object-contain
+         [filter:brightness(0)_saturate(100%)_invert(83%)_sepia(17%)_saturate(704%)_hue-rotate(34deg)_brightness(96%)_contrast(87%)]
       "
     />
   </span>,
@@ -75,7 +77,7 @@ const STAT_ICONS = [
     src={iconSkin}
     alt=""
     aria-hidden="true"
-    className="h-[44px] w-[44px] object-contain"
+    className="h-[44px] w-[44px] object-contain [filter:brightness(0)_saturate(100%)_invert(83%)_sepia(17%)_saturate(704%)_hue-rotate(34deg)_brightness(96%)_contrast(87%)]"
   />,
 
   <img
@@ -83,7 +85,7 @@ const STAT_ICONS = [
     src={iconSatisfaction}
     alt=""
     aria-hidden="true"
-    className="h-[44px] w-[44px] object-contain"
+    className="h-[44px] w-[44px] object-contain [filter:brightness(0)_saturate(100%)_invert(83%)_sepia(17%)_saturate(704%)_hue-rotate(34deg)_brightness(96%)_contrast(87%)]"
   />,
 ];
 
@@ -272,17 +274,17 @@ function TestimonialCard({ testimonial, active }) {
         className={`
           relative
           flex
-          min-h-[340px]
+          min-h-[300px]
           w-full
           flex-col
           overflow-hidden
 
-          rounded-[26px]
+          rounded-[22px]
           border
 
           px-6
           pt-7
-          pb-[68px]
+          pb-[62px]
 
           transition-all
           duration-700
@@ -290,22 +292,20 @@ function TestimonialCard({ testimonial, active }) {
           sm:px-7
           sm:pt-8
 
-          lg:min-h-[355px]
+          lg:min-h-[320px]
 
           ${
             active
               ? `
-                border-primary
-                bg-primary
-
-                shadow-[0_26px_70px_rgba(21,61,46,0.24)]
-              `
+      border-[#39591B]
+      bg-[#39591B]
+      shadow-none
+    `
               : `
-                border-[#D8E6DC]
-                bg-white/95
-
-                shadow-[0_14px_38px_rgba(23,63,48,0.08)]
-              `
+      border-[#E4EFD9]
+      bg-[#E4EFD9]
+      shadow-none
+    `
           }
         `}
       >
@@ -328,7 +328,7 @@ function TestimonialCard({ testimonial, active }) {
 
             blur-[55px]
 
-            ${active ? "bg-[#D7B274]/15" : "bg-[#DDECE2]/55"}
+            bg-transparent
           `}
           aria-hidden="true"
         />
@@ -356,23 +356,23 @@ function TestimonialCard({ testimonial, active }) {
 
               sm:w-[62px]
 
-              ${active ? "bg-white/50" : "bg-[#DF2759]/50"}
+              ${active ? "bg-white/55" : "bg-[#ED2759]/70"}
             `}
           />
 
           <span
             className={`
               block
-              translate-y-[5px]
+              translate-y-[18px]
 
               font-serif
 
-              text-[72px]
+              text-[100px]
               leading-[0.45]
 
               sm:text-[80px]
 
-              ${active ? "text-white" : "text-[#DF2759]"}
+              ${active ? "text-white" : "text-[#ED2759]"}
             `}
             aria-hidden="true"
           >
@@ -386,7 +386,7 @@ function TestimonialCard({ testimonial, active }) {
 
               sm:w-[62px]
 
-              ${active ? "bg-white/50" : "bg-[#DF2759]/50"}
+              ${active ? "bg-white/55" : "bg-[#ED2759]/70"}
             `}
           />
         </div>
@@ -436,7 +436,7 @@ function TestimonialCard({ testimonial, active }) {
                   `
                   : `
                     text-[#53675C]
-                    opacity-50
+                    opacity-100
                   `
               }
             `}
@@ -470,7 +470,7 @@ function TestimonialCard({ testimonial, active }) {
               transition-opacity
               duration-700
 
-              ${active ? "opacity-100" : "opacity-65"}
+              ${active ? "opacity-100" : "opacity-100"}
             `}
           />
         </div>
@@ -506,7 +506,7 @@ function TestimonialCard({ testimonial, active }) {
                   opacity-100
                 `
                 : `
-                  text-[#173F30]
+                  text-[#111111]
                   opacity-70
                 `
             }
@@ -533,7 +533,7 @@ function TestimonialCard({ testimonial, active }) {
               bg-gradient-to-r
 
               from-transparent
-              via-[#D7B274]
+              via-transparent
               to-transparent
             "
             aria-hidden="true"
@@ -575,7 +575,7 @@ function TestimonialCard({ testimonial, active }) {
           ${
             active
               ? `
-                border-[#E5C17E]
+                border-white
                 opacity-100
               `
               : `
@@ -883,7 +883,7 @@ export default function Testimonials() {
 
         overflow-visible
 
-        bg-[#F3F6F1]
+        bg-white
 
         pb-[70px]
 
@@ -972,9 +972,9 @@ export default function Testimonials() {
             position: relative;
 
             width: 100%;
-            max-width: 1180px;
+            max-width: 1165px;
 
-            height: 475px;
+            height: 410px;
 
             margin-left: auto;
             margin-right: auto;
@@ -987,7 +987,7 @@ export default function Testimonials() {
 
             top: 0;
 
-            width: 44%;
+            width: 42%;
 
             will-change:
               left,
@@ -1026,7 +1026,7 @@ export default function Testimonials() {
           ================================================= */
 
           .kr-testimonial-center {
-            left: 28%;
+            left: 29%;
 
             z-index: 30;
 
@@ -1034,7 +1034,7 @@ export default function Testimonials() {
 
             transform:
               translateY(0)
-              scale(1.02);
+              scale(1);
           }
 
           /* ================================================
@@ -1044,7 +1044,7 @@ export default function Testimonials() {
           ================================================= */
 
           .kr-testimonial-right {
-            left: 56%;
+            left: 58%;
 
             z-index: 10;
 
@@ -1283,7 +1283,7 @@ export default function Testimonials() {
             absolute
             inset-0
 
-            bg-[#F3F6F1]
+            bg-white
           "
         />
 
@@ -1297,7 +1297,7 @@ export default function Testimonials() {
             bg-cover
             bg-center
 
-            opacity-[0.04]
+            opacity-0
 
             mix-blend-multiply
           "
@@ -1321,52 +1321,15 @@ export default function Testimonials() {
             object-cover
             object-center
 
-            opacity-[0.08]
+            opacity-100
 
-            mix-blend-multiply
+            mix-blend-normal
           "
         />
 
         {/* ==============================================
             LEFT DECORATIVE LEAF
         =============================================== */}
-
-        <img
-          src={l1}
-          alt=""
-          className="
-            absolute
-
-            left-[-75px]
-            top-[60px]
-
-            z-[1]
-
-            w-[240px]
-
-            object-contain
-
-            opacity-30
-
-            mix-blend-multiply
-
-            sm:w-[280px]
-
-            md:left-[-55px]
-            md:w-[320px]
-
-            lg:left-[-4%]
-            lg:top-[70px]
-            lg:w-[390px]
-          "
-          style={{
-            animation: reducedMotion
-              ? "none"
-              : "testimonialLeafIn 1.5s cubic-bezier(.22,.8,.25,1) both",
-
-            transform: reducedMotion ? "rotate(130deg)" : undefined,
-          }}
-        />
 
         {/* LEFT GLOW */}
 
@@ -1382,7 +1345,7 @@ export default function Testimonials() {
 
             rounded-full
 
-            bg-[#DDE9E1]/55
+            bg-[#E2F0DD]/55
 
             blur-[80px]
           "
@@ -1402,7 +1365,7 @@ export default function Testimonials() {
 
             rounded-full
 
-            bg-[#E8DCC7]/40
+            bg-[#EEF5E9]/55
 
             blur-[100px]
           "
@@ -1483,20 +1446,20 @@ export default function Testimonials() {
 
               overflow-hidden
 
-              rounded-[24px]
+              rounded-[14px]
 
-              bg-primary
+              bg-[#082D70]
 
               px-4
               py-5
 
-              shadow-[0_28px_80px_rgba(21,61,46,0.20)]
+              shadow-none
 
-              sm:rounded-[26px]
+              sm:rounded-[14px]
               sm:px-5
               sm:py-6
 
-              md:rounded-[30px]
+              md:rounded-[14px]
               md:px-8
               md:py-8
             `}
@@ -1514,7 +1477,7 @@ export default function Testimonials() {
               "
               style={{
                 background:
-                  "radial-gradient(circle at 15% 20%, rgba(214,179,117,.20), transparent 32%), radial-gradient(circle at 90% 90%, rgba(117,167,139,.24), transparent 34%)",
+                  "radial-gradient(circle at 15% 20%, rgba(220,240,211,.18), transparent 32%), radial-gradient(circle at 90% 90%, rgba(152,197,135,.20), transparent 34%)",
               }}
             />
 
@@ -1581,13 +1544,13 @@ export default function Testimonials() {
                         w-[46px]
 
                         flex-none
-
+                        
                         items-center
                         justify-center
 
-                        rounded-xl
+                        rounded-none
 
-                        bg-white
+                       
 
                         shadow-[0_8px_30px_rgba(0,0,0,0.12)]
 
@@ -1688,13 +1651,13 @@ export default function Testimonials() {
 
               tracking-[-0.025em]
 
-              text-[#173F30]
+              text-[#111111]
 
               sm:text-[40px]
 
-              md:text-[46px]
+              md:text-[40px]
 
-              lg:text-[54px]
+              lg:text-[42px]
             "
           >
             {content.title}
@@ -1707,7 +1670,7 @@ export default function Testimonials() {
               mt-4
               mb-0
 
-              max-w-[820px]
+              max-w-[920px]
 
               px-3
 
@@ -1716,13 +1679,13 @@ export default function Testimonials() {
               text-[14px]
               leading-[1.75]
 
-              text-[#607368]
+              text-[#444444]
 
               sm:text-[15px]
 
-              md:text-[17px]
+              md:text-[15px]
 
-              lg:text-[18px]
+              lg:text-[15px]
             "
           >
             {content.intro_text}
@@ -1743,7 +1706,7 @@ export default function Testimonials() {
 
             md:mt-14
 
-            lg:mt-16
+            lg:mt-10
 
             ${revealClass(contentVisible)}
           `}
@@ -1875,14 +1838,14 @@ export default function Testimonials() {
                             ? `
                               w-9
 
-                              bg-[#DF2759]
+                              bg-[#ED2759]
                             `
                             : `
                               w-3
 
-                              bg-[#9DB8C1]
+                              bg-[#93AFBC]
 
-                              hover:bg-[#7898A3]
+                              hover:bg-[#93AFBC]
                             `
                         }
                       `}
@@ -1896,7 +1859,7 @@ export default function Testimonials() {
 
                               origin-left
 
-                              bg-[#DF2759]
+                              bg-[#ED2759]
                             "
                         style={{
                           animation: `testimonialProgress ${SLIDE_INTERVAL}ms linear forwards`,

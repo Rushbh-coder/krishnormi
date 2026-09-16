@@ -74,7 +74,7 @@ function App() {
       </Routes>
       {!isAdminRoute && <WhatsAppButton />}
     </>
-  );
+  )
 }
 
 export default App;

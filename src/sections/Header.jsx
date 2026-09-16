@@ -90,28 +90,7 @@ export default function Header() {
         <a
           href="#contact"
           onClick={() => handleNavClick("#contact")}
-          className="
-    inline-flex
-    flex-none
-    items-center
-    justify-center
-    whitespace-nowrap
-    rounded-full
-    border
-    border-accent
-    bg-accent/5
-    px-5
-    py-3
-    font-body
-    text-sm
-    font-semibold
-    text-accent
-    transition-colors
-    duration-200
-    hover:bg-accent
-    hover:text-white
-    max-[1100px]:hidden
-  "
+          className="btn-hero flex-none max-[1100px]:hidden"
         >
           Book Appointment
         </a>
@@ -196,7 +175,7 @@ export default function Header() {
             href="#contact"
             onClick={() => handleNavClick("#contact")}
             tabIndex={isMenuOpen ? 0 : -1}
-            className="mt-5 flex w-full items-center justify-center rounded-full border border-accent bg-white px-5 py-3.5 font-body text-sm font-semibold text-accent transition-colors duration-200 hover:bg-accent hover:text-white"
+            className="btn-hero mt-5 w-full"
           >
             Book Appointment
           </a>

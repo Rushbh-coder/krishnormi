@@ -294,7 +294,28 @@ export default function ContactUs() {
 
   const [showLocationCard, setShowLocationCard] = useState(false);
 
-  const [showHaritJewellers, setShowHaritJewellers] = useState(false);
+  useEffect(() => {
+    if (status !== "success") return undefined;
+
+    const resetTimer = window.setTimeout(() => {
+      setStatus("idle");
+      setForm({
+        name: "",
+        email: "",
+        phone: "",
+        treatment: "",
+        date: "",
+        message: "",
+      });
+      setFormErrors({});
+      setErrorMessage("");
+      setConfirmationEmailStatus("idle");
+      setIsVerified(false);
+      setVerificationLoading(false);
+    }, 5000);
+
+    return () => window.clearTimeout(resetTimer);
+  }, [status]);
 
   const today = new Date();
 
@@ -305,10 +326,6 @@ export default function ContactUs() {
   maxDateObj.setMonth(maxDateObj.getMonth() + 3);
 
   const maxDate = maxDateObj.toISOString().split("T")[0];
-
-  const activeMapQuery = showHaritJewellers
-    ? "Harit Jewellers, Ahmedabad, Gujarat"
-    : mapQuery;
 
   const set = (key) => (event) => {
     const value = event.target.value;
@@ -528,13 +545,6 @@ const handleSubmit = async (event) => {
    * SHOW THANK-YOU SCREEN
    * =====================================================
    */
-
-  /*
-   * Keep submitted values so they can be displayed in
-   * the confirmation panel.
-   */
-
-  setForm(cleanForm);
 
   setStatus("success");
 
@@ -1093,223 +1103,38 @@ const handleSubmit = async (event) => {
                   </ContactReveal>
                 </form>
               ) : (
-                /* =====================================================
-                    THANK-YOU CONFIRMATION
-                ====================================================== */
-
-                <div className="w-full min-w-0">
-                  <div
-                    className="
-                      overflow-hidden
-                      rounded-[18px]
-                      border
-                      border-[#cfe4d6]
-                      bg-white
-                      shadow-[0_18px_50px_rgba(23,119,63,0.12)]
-                    "
-                    role="status"
-                    aria-live="polite"
-                  >
-                    <div
-                      className="
-                        relative
-                        overflow-hidden
-                        bg-[#f0f8f3]
-                        px-7
-                        py-8
-                        text-center
-                        max-[560px]:px-5
-                      "
+                <div
+                  className="flex min-h-[360px] w-full min-w-0 flex-col items-center justify-center rounded-[18px] border border-[#cfe4d6] bg-[#f0f8f3] px-7 py-12 text-center shadow-[0_18px_50px_rgba(23,119,63,0.12)] max-[560px]:px-5"
+                  role="status"
+                  aria-live="polite"
+                >
+                  <div className="flex h-[66px] w-[66px] items-center justify-center rounded-full bg-[#17773f] text-white shadow-[0_10px_26px_rgba(23,119,63,0.25)]">
+                    <svg
+                      width="32"
+                      height="32"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      aria-hidden="true"
                     >
-                      <div
-                        className="
-                          pointer-events-none
-                          absolute
-                          -right-12
-                          -top-12
-                          h-36
-                          w-36
-                          rounded-full
-                          bg-[#17773f]/[0.06]
-                        "
+                      <path
+                        d="M5 12.5 9.2 17 19 7"
+                        stroke="currentColor"
+                        strokeWidth="2.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
-
-                      <div
-                        className="
-                          pointer-events-none
-                          absolute
-                          -bottom-14
-                          -left-10
-                          h-40
-                          w-40
-                          rounded-full
-                          bg-[#df2759]/[0.05]
-                        "
-                      />
-
-                      <div
-                        className="
-                          relative
-                          mx-auto
-                          flex
-                          h-[66px]
-                          w-[66px]
-                          items-center
-                          justify-center
-                          rounded-full
-                          bg-[#17773f]
-                          text-white
-                          shadow-[0_10px_26px_rgba(23,119,63,0.25)]
-                        "
-                      >
-                        <svg
-                          width="32"
-                          height="32"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          aria-hidden="true"
-                        >
-                          <path
-                            d="M5 12.5 9.2 17 19 7"
-                            stroke="currentColor"
-                            strokeWidth="2.4"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </div>
-
-                      <p className="relative mt-5 mb-1 font-heading text-[12px] font-bold uppercase tracking-[0.14em] text-[#17773f]">
-                        Request Submitted
-                      </p>
-
-                      <h3 className="relative m-0 font-heading text-[27px] leading-[1.25] font-bold text-[#173f30] max-[560px]:text-[23px]">
-                        Thank You, {form.name}!
-                      </h3>
-
-                      <p className="relative mx-auto mt-3 mb-0 max-w-[470px] font-heading text-[14px] leading-[1.7] text-[#52645b]">
-                        We have received your appointment request successfully.
-                        Our clinic team will contact you to confirm the
-                        appointment based on availability.
-                      </p>
-
-                    </div>
-
-                    {/* Submitted details */}
-
-                    <div className="px-7 py-7 max-[560px]:px-5">
-                      <p className="mb-4 font-heading text-[16px] font-bold text-[#173f30]">
-                        Your Request Details
-                      </p>
-
-                      <div className="overflow-hidden rounded-[11px] border border-[#e1ebe5] bg-[#f8faf9]">
-                        <div className="grid grid-cols-[145px_1fr] gap-4 border-b border-[#e1ebe5] px-4 py-3 max-[480px]:grid-cols-1 max-[480px]:gap-1">
-                          <span className="font-heading text-[12px] font-medium text-[#7b8d84]">
-                            Email
-                          </span>
-
-                          <span className="break-all font-heading text-[13px] font-semibold text-[#344054]">
-                            {form.email}
-                          </span>
-                        </div>
-
-                        <div className="grid grid-cols-[145px_1fr] gap-4 border-b border-[#e1ebe5] px-4 py-3 max-[480px]:grid-cols-1 max-[480px]:gap-1">
-                          <span className="font-heading text-[12px] font-medium text-[#7b8d84]">
-                            Mobile Number
-                          </span>
-
-                          <span className="font-heading text-[13px] font-semibold text-[#344054]">
-                            {form.phone}
-                          </span>
-                        </div>
-
-                        <div className="grid grid-cols-[145px_1fr] gap-4 border-b border-[#e1ebe5] px-4 py-3 max-[480px]:grid-cols-1 max-[480px]:gap-1">
-                          <span className="font-heading text-[12px] font-medium text-[#7b8d84]">
-                            Treatment
-                          </span>
-
-                          <span className="font-heading text-[13px] font-semibold text-[#344054]">
-                            {form.treatment}
-                          </span>
-                        </div>
-
-                        <div className="grid grid-cols-[145px_1fr] gap-4 px-4 py-3 max-[480px]:grid-cols-1 max-[480px]:gap-1">
-                          <span className="font-heading text-[12px] font-medium text-[#7b8d84]">
-                            Preferred Date
-                          </span>
-
-                          <span className="font-heading text-[13px] font-semibold text-[#344054]">
-                            {form.date}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="mt-5 rounded-[9px] border-l-4 border-[#df2759] bg-[#fff7f9] px-4 py-3.5">
-                        <p className="m-0 font-heading text-[12px] leading-[1.65] text-[#624d54]">
-                          <strong>Please Note:</strong> Submitting this request
-                          does not automatically confirm your appointment. Your
-                          appointment is confirmed only after communication from
-                          the KRISHNORMI clinic team.
-                        </p>
-                      </div>
-
-                      <p className="mx-auto mt-5 mb-0 max-w-[430px] text-center font-heading text-[13px] leading-[1.65] text-[#667085]">
-                        Thank you for choosing KRISHNORMI.
-                        <br />
-                        We look forward to assisting you.
-                      </p>
-
-                      <div className="mt-6 flex justify-center">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setStatus("idle");
-
-                            setForm({
-                              name: "",
-                              email: "",
-                              phone: "",
-                              treatment: "",
-                              date: "",
-                              message: "",
-                            });
-
-                            setFormErrors({});
-
-                            setErrorMessage("");
-
-                            setConfirmationEmailStatus("idle");
-
-                            setIsVerified(false);
-
-                            setVerificationLoading(false);
-                          }}
-                          className="
-                            inline-flex
-                            min-h-[44px]
-                            items-center
-                            justify-center
-                            rounded-full
-                            border
-                            border-primary
-                            bg-white
-                            px-7
-                            py-2.5
-                            font-heading
-                            text-[13px]
-                            font-semibold
-                            text-primary
-                            transition-all
-                            duration-300
-                            hover:bg-primary
-                            hover:text-white
-                          "
-                        >
-                          Submit Another Request
-                        </button>
-                      </div>
-                    </div>
+                    </svg>
                   </div>
+                  <p className="mt-5 mb-1 font-heading text-[12px] font-bold uppercase tracking-[0.14em] text-[#17773f]">
+                    Request Submitted
+                  </p>
+                  <h3 className="m-0 font-heading text-[27px] leading-[1.25] font-bold text-[#173f30] max-[560px]:text-[23px]">
+                    Thank You!
+                  </h3>
+                  <p className="mx-auto mt-3 mb-0 max-w-[470px] font-heading text-[14px] leading-[1.7] text-[#52645b]">
+                    We have received your appointment request successfully.
+                    Our clinic team will contact you to confirm the appointment.
+                  </p>
                 </div>
               )}
             </ContactReveal>
@@ -1323,14 +1148,10 @@ const handleSubmit = async (event) => {
         <section className="w-full bg-[#f9fcfb] pb-[90px] max-[700px]:pb-14">
           <ContactReveal className="relative h-[520px] w-full overflow-hidden border border-[#c6c6c6] max-[900px]:h-[400px] max-[560px]:h-[300px]">
             <iframe
-              title={
-                showHaritJewellers
-                  ? "Harit Jewellers location"
-                  : "Krishnormi clinic location"
-              }
+              title="Krishnormi clinic location"
               className="absolute inset-0 h-full w-full border-0"
               src={`https://www.google.com/maps?q=${encodeURIComponent(
-                activeMapQuery,
+                mapQuery,
               )}&output=embed`}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
@@ -1340,17 +1161,9 @@ const handleSubmit = async (event) => {
 
             <button
               type="button"
-              onClick={() => {
-                setShowHaritJewellers((v) => !v);
-
-                setShowLocationCard(true);
-              }}
+              onClick={() => setShowLocationCard(true)}
               aria-expanded={showLocationCard}
-              aria-label={
-                showHaritJewellers
-                  ? "Show clinic location"
-                  : "Show Harit Jewellers location"
-              }
+              aria-label="Show clinic location details"
               className={`contact-interactive absolute top-6 left-6 flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-accent p-0 shadow-[0_4px_10px_rgba(13,38,33,0.25)] transition-opacity duration-200 ${
                 showLocationCard ? "opacity-0" : "opacity-100"
               }`}
@@ -1374,9 +1187,7 @@ const handleSubmit = async (event) => {
             >
               <div className="mb-1.5 flex items-start justify-between gap-2">
                 <p className="font-heading text-xs font-semibold text-accent">
-                  {showHaritJewellers
-                    ? "Harit Jewellers"
-                    : content.map_label_name}
+                  {content.map_label_name}
                 </p>
 
                 <button
@@ -1390,20 +1201,16 @@ const handleSubmit = async (event) => {
               </div>
 
               <p className="mb-1 font-heading text-base font-semibold text-text-dark">
-                {showHaritJewellers
-                  ? "Harit Jewellers, Ahmedabad"
-                  : content.map_label_line1}
+                {content.map_label_line1}
               </p>
 
               <p className="mb-3 font-heading text-[13px] text-[#60736e]">
-                {showHaritJewellers
-                  ? "Select the correct branch in Google Maps."
-                  : content.map_label_line2}
+                {content.map_label_line2}
               </p>
 
               <a
                 href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
-                  activeMapQuery,
+                  mapQuery,
                 )}`}
                 target="_blank"
                 rel="noreferrer"
@@ -1413,15 +1220,6 @@ const handleSubmit = async (event) => {
                 <span aria-hidden="true">&rarr;</span>
               </a>
 
-              {showHaritJewellers && (
-                <button
-                  type="button"
-                  onClick={() => setShowHaritJewellers(false)}
-                  className="mt-3 block font-heading text-[13px] font-semibold text-primary hover:text-primary-dark"
-                >
-                  ← Show Clinic Location
-                </button>
-              )}
             </div>
           </ContactReveal>
         </section>

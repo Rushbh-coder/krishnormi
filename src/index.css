@@ -177,6 +177,28 @@
            hover:bg-accent-dark;
   }
 
+  .btn-hero {
+    @apply inline-flex
+           h-[50px]
+           w-[200px]
+           items-center
+           justify-center
+           rounded-full
+           border
+           border-accent
+           bg-white
+           px-5
+           py-3.5
+           font-body
+           text-sm
+           font-semibold
+           text-accent
+           transition-colors
+           duration-200
+           hover:bg-accent
+           hover:text-white;
+  }
+
   .section-eyebrow {
     @apply mb-3
            inline-flex

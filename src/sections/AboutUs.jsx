@@ -124,7 +124,7 @@ export default function AboutUs() {
 
           <p className="mt-[18px] font-body text-lg leading-[1.7] text-text">{content.body_text_3}</p>
 
-          <a href={content.cta_link || '#contact'} className="btn-primary mt-8">
+          <a href={content.cta_link || '#contact'} className="btn-hero mt-8">
             {content.cta_label}
           </a>
 

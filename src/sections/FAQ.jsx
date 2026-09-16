@@ -120,7 +120,7 @@ export default function FAQ() {
             })}
           </div>
 
-          <button type="button" className="btn-primary self-start">
+          <button type="button" className="btn-hero self-start">
             Learn More
           </button>
         </div>
