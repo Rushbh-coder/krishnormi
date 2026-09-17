@@ -5,219 +5,257 @@
 
 export const DEFAULT_CONTENT = {
   hero: {
-    heading: 'Healthy Skin Begins with the Right Care',
-    supporting_text: 'Expert Dermatology Guided by Experience, Evidence and Individual Care.',
+    heading: "Healthy Skin Begins with the Right Care",
+    supporting_text:
+      "Expert Dermatology Guided by Experience, Evidence and Individual Care.",
     body_text_1:
-      'At KRISHNORMI, dermatological care combines clinical experience, careful assessment and a personalised approach to skin, hair and aesthetic concerns.',
+      "At KRISHNORMI, dermatological care combines clinical experience, careful assessment and a personalised approach to skin, hair and aesthetic concerns.",
     body_text_2:
-      'Led by Dr. Deepa K. Bhatt, the clinic focuses on responsible dermatology where every treatment recommendation begins with understanding the individual patient, their concerns and their suitability for treatment.',
-    button_label: 'Book an Appointment',
-    button_link: '#contact',
+      "Led by Dr. Deepa K. Bhatt, the clinic focuses on responsible dermatology where every treatment recommendation begins with understanding the individual patient, their concerns and their suitability for treatment.",
+    button_label: "Book an Appointment",
+    button_link: "#contact",
     image_url: null,
   },
   about: {
-    eyebrow_text: 'Our About US',
-    heading: 'Welcome to KRISHNORMI',
-    lead_text: 'Expert Dermatology Guided by Experience, Evidence and Individual Care.',
+    eyebrow_text: "Our About US",
+    heading: "Welcome to KRISHNORMI",
+    lead_text:
+      "Expert Dermatology Guided by Experience, Evidence and Individual Care.",
     body_text_1:
-      'KRISHNORMI is a dermatology and aesthetics practice led by Dr. Deepa K. Bhatt, bringing together clinical dermatology, hair and scalp care, laser procedures and aesthetic dermatology within one professional setting.',
+      "KRISHNORMI is a dermatology and aesthetics practice led by Dr. Deepa K. Bhatt, bringing together clinical dermatology, hair and scalp care, laser procedures and aesthetic dermatology within one professional setting.",
     body_text_2:
       "Our approach begins with understanding the patient's concern, medical history and expectations before considering available treatment options.",
     body_text_3:
-      'We believe responsible dermatology should be evidence-informed, transparent, ethical and personalised. Every treatment plan is considered according to individual requirements and suitability rather than following a one-treatment-fits-all approach.',
-    cta_label: 'About More',
-    cta_link: '#contact',
-    badge_number: '35+',
-    badge_label: 'Experience',
-    signature_role: 'Consultant Dermatologist, Cosmetologist & Trichologist',
+      "We believe responsible dermatology should be evidence-informed, transparent, ethical and personalised. Every treatment plan is considered according to individual requirements and suitability rather than following a one-treatment-fits-all approach.",
+    cta_label: "About More",
+    cta_link: "#contact",
+    badge_number: "35+",
+    badge_label: "Experience",
+    signature_role: "Consultant Dermatologist, Cosmetologist & Trichologist",
     signature_note:
-      'Professor & Head of Department – institutional designation to be displayed after final verification.',
-    signature_name: '~ Dr. Deepa K. Bhatt',
+      "Professor & Head of Department – institutional designation to be displayed after final verification.",
+    signature_name: "~ Dr. Deepa K. Bhatt",
     photo_top_url: null,
     photo_bottom_url: null,
     focus_items: [
-      { title: 'Clinical Dermatology', description: 'Assessment and management of a wide range of skin-related concerns.' },
-      { title: 'Hair & Scalp Care', description: 'Evaluation of hair fall, scalp conditions and related concerns.' },
       {
-        title: 'Laser Dermatology',
-        description: 'Doctor-supervised laser and energy-based procedures selected according to individual suitability.',
+        title: "Clinical Dermatology",
+        description:
+          "Assessment and management of a wide range of skin-related concerns.",
       },
       {
-        title: 'Aesthetic Dermatology',
-        description: 'Responsible aesthetic procedures supported by clinical assessment and realistic expectations.',
+        title: "Hair & Scalp Care",
+        description:
+          "Evaluation of hair fall, scalp conditions and related concerns.",
+      },
+      {
+        title: "Laser Dermatology",
+        description:
+          "Doctor-supervised laser and energy-based procedures selected according to individual suitability.",
+      },
+      {
+        title: "Aesthetic Dermatology",
+        description:
+          "Responsible aesthetic procedures supported by clinical assessment and realistic expectations.",
       },
     ],
   },
-  'why-choose': {
-    title: 'Why Choose Krishnormi?',
+  "why-choose": {
+    title: "Why Choose Krishnormi?",
     cards: [
       {
-        type: 'text',
+        type: "text",
         dark: true,
-        title: 'Dermatology Care Built Around You',
-        text: 'Choosing dermatological care is not simply about selecting a procedure. It is about understanding the concern, establishing suitability and choosing an appropriate course of care.',
+        title: "Dermatology Care Built Around You",
+        text: "Choosing dermatological care is not simply about selecting a procedure. It is about understanding the concern, establishing suitability and choosing an appropriate course of care.",
         image_url: null,
       },
-      { type: 'image', dark: false, title: '', text: '', image_url: null },
+      { type: "image", dark: false, title: "", text: "", image_url: null },
       {
-        type: 'text',
+        type: "text",
         dark: false,
-        title: 'Experience That Matters',
-        text: 'Dr. Deepa K. Bhatt brings decades of dermatological experience across skin, hair, clinical procedures, lasers and aesthetic dermatology.',
+        title: "Experience That Matters",
+        text: "Dr. Deepa K. Bhatt brings decades of dermatological experience across skin, hair, clinical procedures, lasers and aesthetic dermatology.",
         image_url: null,
       },
-      { type: 'image', dark: false, title: '', text: '', image_url: null },
-      { type: 'image', dark: false, title: '', text: '', image_url: null },
+      { type: "image", dark: false, title: "", text: "", image_url: null },
+      { type: "image", dark: false, title: "", text: "", image_url: null },
       {
-        type: 'text',
+        type: "text",
         dark: false,
-        title: 'Individualized Assessment',
+        title: "Individualized Assessment",
         text: "Every patient's skin, medical history, lifestyle and expectations are different. Recommendations are therefore based on individual evaluation.",
         image_url: null,
       },
-      { type: 'image', dark: false, title: '', text: '', image_url: null },
+      { type: "image", dark: false, title: "", text: "", image_url: null },
       {
-        type: 'text',
+        type: "text",
         dark: false,
-        title: 'Evidence-Informed Approach',
-        text: 'Treatment options are considered using established clinical principles, professional judgement and current dermatological understanding.',
+        title: "Evidence-Informed Approach",
+        text: "Treatment options are considered using established clinical principles, professional judgement and current dermatological understanding.",
         image_url: null,
       },
     ],
   },
   treatments: {
-    title: 'Treatments & Procedures',
+    title: "Treatments & Procedures",
     body_text:
-      'Expert skin treatments tailored to your unique concerns, from rejuvenation to corrective procedures, promoting healthier, smoother, and more radiant-looking skin.',
-    button_label: 'Learn More',
+      "Expert skin treatments tailored to your unique concerns, from rejuvenation to corrective procedures, promoting healthier, smoother, and more radiant-looking skin.",
+    button_label: "Learn More",
     background_image_url: null,
     hero_image_url: null,
     cards: [
       {
         featured: true,
-        title: 'Dermatology Care Designed',
-        text: 'KRISHNORMI provides dermatology, hair and scalp care, lasers and aesthetic dermatology.',
+        title: "Dermatology Care Designed",
+        text: "KRISHNORMI provides dermatology, hair and scalp care, lasers and aesthetic dermatology.",
       },
       {
         featured: false,
-        title: 'Facials & Skin Hydration',
-        text: 'Selected clinic-based facial procedures may help support cleansing, hydration and general skin maintenance.',
+        title: "Facials & Skin Hydration",
+        text: "Selected clinic-based facial procedures may help support cleansing, hydration and general skin maintenance.",
       },
       {
         featured: false,
-        title: 'Chemical Peels',
-        text: 'Chemical peels gently exfoliate the skin to improve acne, pigmentation, uneven tone, and skin texture.',
+        title: "Chemical Peels",
+        text: "Chemical peels gently exfoliate the skin to improve acne, pigmentation, uneven tone, and skin texture.",
       },
       {
         featured: false,
-        title: 'Acne & Acne-Scar Care',
-        text: 'Acne and acne scars are different conditions and may require different management approaches.',
+        title: "Acne & Acne-Scar Care",
+        text: "Acne and acne scars are different conditions and may require different management approaches.",
       },
     ],
   },
   awards: {
-    title: 'Awards & Recognition',
-    subtitle: 'A Career Dedicated to Dermatology',
+    title: "Awards & Recognition",
+    subtitle: "A Career Dedicated to Dermatology",
     body_text_1:
-      'Dr. Deepa K. Bhatt brings approximately 35 years of professional experience in dermatology, combining clinical practice with longstanding involvement in medical education and mentorship.',
+      "Dr. Deepa K. Bhatt brings approximately 35 years of professional experience in dermatology, combining clinical practice with longstanding involvement in medical education and mentorship.",
     body_text_2:
-      'Her professional journey reflects a continued commitment to clinical dermatology, academic development, teaching and the advancement of responsible patient care.',
-    highlights_title: 'Recognition Highlights',
+      "Her professional journey reflects a continued commitment to clinical dermatology, academic development, teaching and the advancement of responsible patient care.",
+    highlights_title: "Recognition Highlights",
     highlights_text:
-      'KRISHNORMI is a dermatology and aesthetics practice led by Dr. Deepa K. Bhatt, bringing together clinical dermatology, hair and scalp care, laser procedures and aesthetic dermatology within one professional setting.',
+      "KRISHNORMI is a dermatology and aesthetics practice led by Dr. Deepa K. Bhatt, bringing together clinical dermatology, hair and scalp care, laser procedures and aesthetic dermatology within one professional setting.",
     photo_url: null,
     cards: [
-      { title: '35+ Years of Experience', description: 'Longstanding professional experience across clinical and aesthetic dermatology.' },
-      { title: 'Academic Leadership', description: 'Extensive involvement in dermatology education and departmental leadership.' },
       {
-        title: 'Teaching & Mentorship',
-        description: 'Contribution towards educating and mentoring medical students and emerging dermatology professionals.',
+        title: "35+ Years of Experience",
+        description:
+          "Longstanding professional experience across clinical and aesthetic dermatology.",
       },
-      { title: 'Professional Participation', description: 'Participation in lectures, conferences, workshops and scientific forums' },
+      {
+        title: "Academic Leadership",
+        description:
+          "Extensive involvement in dermatology education and departmental leadership.",
+      },
+      {
+        title: "Teaching & Mentorship",
+        description:
+          "Contribution towards educating and mentoring medical students and emerging dermatology professionals.",
+      },
+      {
+        title: "Professional Participation",
+        description:
+          "Participation in lectures, conferences, workshops and scientific forums",
+      },
     ],
   },
   testimonials: {
-    title: 'Patient Testimonials',
+    title: "Patient Testimonials",
     intro_text:
       "Every patient's experience is personal. KRISHNORMI values genuine feedback that helps us understand how patients experience our consultation, communication and care",
     background_image_url: null,
     stats: [
-      { value: '20+', label: 'Years of Experience' },
-      { value: '10K+', label: 'Patients Treated' },
-      { value: '50K+', label: 'Skin Treatments' },
-      { value: '98%', label: 'Patient Satisfaction' },
+      { value: "20+", label: "Years of Experience" },
+      { value: "10K+", label: "Patients Treated" },
+      { value: "50K+", label: "Skin Treatments" },
+      { value: "98%", label: "Patient Satisfaction" },
     ],
     testimonials: [
       {
-        name: 'Firoz Saiyad',
+        name: "Firoz Saiyad",
         photo_url: null,
         quote:
-          'very nice hospital dr explained everything clearly and treated patients with great patience and respect very grateful for the care provided. their dedication and kindness truly makes a difference. i would definitely recommend this hospital to others...❤️❤️',
+          "very nice hospital dr explained everything clearly and treated patients with great patience and respect very grateful for the care provided. their dedication and kindness truly makes a difference. i would definitely recommend this hospital to others...❤️❤️",
       },
     ],
   },
   faq: {
     intro_text:
-      'Explore answers to frequently asked questions about skin concerns and treatments. Get clear guidance on procedures, benefits, care, and expected results.',
+      "Explore answers to frequently asked questions about skin concerns and treatments. Get clear guidance on procedures, benefits, care, and expected results.",
     photo_url: null,
     items: [
-      { question: 'Is submitting the website form a confirmed appointment?', answer: '' },
       {
-        question: 'Do I need an appointment before visiting KRISHNORMI?',
-        answer:
-          'Yes. Consultations are provided through confirmed appointments. You may submit an appointment request online or contact the clinic directly.',
+        question: "Is submitting the website form a confirmed appointment?",
+        answer: "",
       },
-      { question: 'What concerns can I consult for?', answer: '' },
-      { question: 'Do you provide laser treatments?', answer: '' },
-      { question: 'How do I know which treatment is right for me?', answer: '' },
+      {
+        question: "Do I need an appointment before visiting KRISHNORMI?",
+        answer:
+          "Yes. Consultations are provided through confirmed appointments. You may submit an appointment request online or contact the clinic directly.",
+      },
+      { question: "What concerns can I consult for?", answer: "" },
+      { question: "Do you provide laser treatments?", answer: "" },
+      {
+        question: "How do I know which treatment is right for me?",
+        answer: "",
+      },
     ],
   },
   footer: {
-    tagline: 'Skin • Hair • Laser • Aesthetics',
+    tagline: "Skin • Hair • Laser • Aesthetics",
     description:
-      'Professional dermatology care focused on clinical assessment, responsible treatment and individualised recommendations.',
-    address: '311, 312, Akshar Complex, Shivranjani Cross Road, Satellite, Ahmedabad',
-    email: 'demo@example.com',
-    phone: '079-35641858 / +91 95374 84784',
-    whatsapp_number: '+91 8866589956',
-    facebook_url: '#',
-    linkedin_url: '#',
-    google_url: '#',
-    twitter_url: '#',
+      "Professional dermatology care focused on clinical assessment, responsible treatment and individualised recommendations.",
+    address:
+      "311, 312, Akshar Complex, Shivranjani Cross Road, Satellite, Ahmedabad",
+    email: "demo@example.com",
+    phone: "079-35641858 / +91 95374 84784",
+    whatsapp_number: "+91 8866589956",
+    whatsapp_url: "https://wa.me/918866589956?text=Hello%20Dr.%20Deepa%20Bhatt%2C%20I%20am%20reaching%20out%20to%20book%20a%20consultation%20appointment.%20Please%20share%20your%20upcoming%20availability%20so%20we%20can%20connect."
+    ,
+    facebook_url: "#",
+    linkedin_url: "#",
+    google_url: "#",
+    twitter_url: "#",
   },
   contact: {
-    banner_eyebrow: 'CONTACT US',
-    banner_heading: 'We’re here to help',
-    banner_text: 'Connect with the Krishnormi clinic team for appointments, directions or general enquiries.',
-    clinic_name: 'Krishnormi Dermatology',
-    clinic_subheading: 'Clinic contact information',
-    address: 'Akshar Complex, Satellite Rd, Shivranjani, Jodhpur Village, Ahmedabad, Gujarat 380015',
+    banner_eyebrow: "CONTACT US",
+    banner_heading: "We’re here to help",
+    banner_text:
+      "Connect with the Krishnormi clinic team for appointments, directions or general enquiries.",
+    clinic_name: "Krishnormi Dermatology",
+    clinic_subheading: "Clinic contact information",
+    address:
+      "Akshar Complex, Satellite Rd, Shivranjani, Jodhpur Village, Ahmedabad, Gujarat 380015",
     latitude: 23.024412,
     longitude: 72.528725,
-    phone: '079 3564 1858',
-    email: 'info@krishnormi.com',
-    appointment_note: 'Visits by confirmed appointment only',
-    map_label_name: 'KRISHNORMI',
-    map_label_line1: 'Akshar Complex, Shivranjani',
-    map_label_line2: 'Ahmedabad, Gujarat 380015',
-    connect_eyebrow: 'MULTIPLE WAYS TO CONNECT',
-    connect_heading: 'Choose the easiest way to reach us.',
-    connect_text: 'Our clinic team can assist with appointments, location guidance and general enquiries.',
-    form_title: 'Book a Consultation',
-    form_subtitle: 'Share your details and our team will contact you.',
+    phone: "079 3564 1858",
+    email: "info@krishnormi.com",
+    appointment_note: "Visits by confirmed appointment only",
+    map_label_name: "KRISHNORMI",
+    map_label_line1: "Akshar Complex, Shivranjani",
+    map_label_line2: "Ahmedabad, Gujarat 380015",
+    connect_eyebrow: "MULTIPLE WAYS TO CONNECT",
+    connect_heading: "Choose the easiest way to reach us.",
+    connect_text:
+      "Our clinic team can assist with appointments, location guidance and general enquiries.",
+    form_title: "Book a Consultation",
+    form_subtitle: "Share your details and our team will contact you.",
   },
   about_page: {
-    banner_eyebrow: 'ABOUT US',
-    banner_heading: 'About Krishnormi',
-    banner_text: 'Expert Dermatology Guided by Experience, Evidence and Individual Care.',
-    story_heading: 'Our Story',
+    banner_eyebrow: "ABOUT US",
+    banner_heading: "About Krishnormi",
+    banner_text:
+      "Expert Dermatology Guided by Experience, Evidence and Individual Care.",
+    story_heading: "Our Story",
     story_text:
-      'KRISHNORMI is a dermatology and aesthetics practice led by Dr. Deepa K. Bhatt, bringing together clinical dermatology, hair and scalp care, laser procedures and aesthetic dermatology within one professional setting.',
+      "KRISHNORMI is a dermatology and aesthetics practice led by Dr. Deepa K. Bhatt, bringing together clinical dermatology, hair and scalp care, laser procedures and aesthetic dermatology within one professional setting.",
     story_image_url: null,
     doctor_bio:
-      'Dr. Deepa K. Bhatt brings decades of dermatological experience across skin, hair, clinical procedures, lasers and aesthetic dermatology. Every consultation begins with understanding the patient — their concern, medical history and expectations — before any treatment option is considered.',
-    mission_heading: 'Our Approach',
+      "Dr. Deepa K. Bhatt brings decades of dermatological experience across skin, hair, clinical procedures, lasers and aesthetic dermatology. Every consultation begins with understanding the patient — their concern, medical history and expectations — before any treatment option is considered.",
+    mission_heading: "Our Approach",
     mission_text:
-      'We believe responsible dermatology should be evidence-informed, transparent, ethical and personalised. Every treatment plan is considered according to individual requirements and suitability rather than following a one-treatment-fits-all approach.',
+      "We believe responsible dermatology should be evidence-informed, transparent, ethical and personalised. Every treatment plan is considered according to individual requirements and suitability rather than following a one-treatment-fits-all approach.",
   },
 };

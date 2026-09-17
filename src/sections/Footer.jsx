@@ -10,14 +10,21 @@ import { useSection } from "../context/HomepageContentContext";
 import { DEFAULT_CONTENT } from "../data/homepageDefaults";
 import { useReducedMotion, useRevealOnce, revealClass } from "../hooks/useScrollReveal";
 
-const linksCol1 = ["Home", "About Us", "Our Doctor", "Areas of Care"];
-
-const linksCol2 = [
+const linksCol1 = [
+  "About Us",
+  "Our Doctor",
+  "Blog",
   "Treatments",
   "Gallery",
   "Contact Us",
-  "Book an Appointment",
 ];
+
+// const linksCol2 = [
+//   "Treatments",
+//   "Gallery",
+//   "Contact Us",
+  
+// ];
 
 const COL_BORDER = "[&:not(:last-child)]:border-[rgba(128,128,128,0.3)]";
 
@@ -52,7 +59,8 @@ export default function Footer() {
     {
       Icon: FaWhatsapp,
       label: "WhatsApp",
-      href: content.whatsapp_url || "#",
+      href:  "https://wa.me/918866589956?text=Hello%20Dr.%20Deepa%20Bhatt%2C%20I%20am%20reaching%20out%20to%20book%20a%20consultation%20appointment.%20Please%20share%20your%20upcoming%20availability%20so%20we%20can%20connect.",
+
     },
   ];
 
@@ -232,7 +240,7 @@ export default function Footer() {
               ))}
             </ul>
 
-            <ul className="m-0 list-none p-0">
+            {/* <ul className="m-0 list-none p-0">
               {linksCol2.map((link) => (
                 <li
                   key={link}
@@ -250,7 +258,7 @@ export default function Footer() {
                   {link}
                 </li>
               ))}
-            </ul>
+            </ul> */}
           </div>
         </div>
 

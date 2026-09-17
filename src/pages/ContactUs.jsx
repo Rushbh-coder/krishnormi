@@ -407,155 +407,155 @@ export default function ContactUs() {
     return Object.keys(errors).length === 0;
   };
 
-const handleSubmit = async (event) => {
-  event.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-  setErrorMessage("");
+    setErrorMessage("");
 
-  /*
-   * =====================================================
-   * VALIDATE FORM
-   * =====================================================
-   */
+    /*
+     * =====================================================
+     * VALIDATE FORM
+     * =====================================================
+     */
 
-  if (!validateForm()) {
-    setStatus("idle");
-    return;
-  }
+    if (!validateForm()) {
+      setStatus("idle");
+      return;
+    }
 
-  /*
-   * =====================================================
-   * CHECK SECURITY VERIFICATION
-   * =====================================================
-   */
+    /*
+     * =====================================================
+     * CHECK SECURITY VERIFICATION
+     * =====================================================
+     */
 
-  if (!isVerified) {
-    setStatus("idle");
+    if (!isVerified) {
+      setStatus("idle");
 
-    setErrorMessage("Please complete verification before submitting.");
+      setErrorMessage("Please complete verification before submitting.");
 
-    return;
-  }
+      return;
+    }
 
-  /*
-   * =====================================================
-   * START SUBMISSION
-   * =====================================================
-   */
+    /*
+     * =====================================================
+     * START SUBMISSION
+     * =====================================================
+     */
 
-  setStatus("submitting");
+    setStatus("submitting");
 
-  setConfirmationEmailStatus("idle");
+    setConfirmationEmailStatus("idle");
 
-  /*
-   * =====================================================
-   * CLEAN FORM VALUES
-   * =====================================================
-   */
+    /*
+     * =====================================================
+     * CLEAN FORM VALUES
+     * =====================================================
+     */
 
-  const cleanForm = {
-    name: form.name.trim(),
+    const cleanForm = {
+      name: form.name.trim(),
 
-    email: form.email.trim().toLowerCase(),
+      email: form.email.trim().toLowerCase(),
 
-    phone: form.phone.trim(),
+      phone: form.phone.trim(),
 
-    treatment: form.treatment,
+      treatment: form.treatment,
 
-    date: form.date,
+      date: form.date,
 
-    message: form.message.trim(),
-  };
+      message: form.message.trim(),
+    };
 
-  /*
-   * =====================================================
-   * SAVE APPOINTMENT TO SUPABASE DATABASE
-   * =====================================================
-   */
+    /*
+     * =====================================================
+     * SAVE APPOINTMENT TO SUPABASE DATABASE
+     * =====================================================
+     */
 
-  const { error } = await supabase.from("contact_enquiries").insert({
-    name: cleanForm.name,
+    const { error } = await supabase.from("contact_enquiries").insert({
+      name: cleanForm.name,
 
-    email: cleanForm.email,
+      email: cleanForm.email,
 
-    phone: cleanForm.phone,
+      phone: cleanForm.phone,
 
-    treatment: cleanForm.treatment,
+      treatment: cleanForm.treatment,
 
-    appointment_date: cleanForm.date,
+      appointment_date: cleanForm.date,
 
-    message: cleanForm.message,
-  });
+      message: cleanForm.message,
+    });
 
-  /*
-   * =====================================================
-   * DATABASE FAILURE
-   * =====================================================
-   */
+    /*
+     * =====================================================
+     * DATABASE FAILURE
+     * =====================================================
+     */
 
-  if (error) {
-    console.error("Appointment submission failed:", error);
+    if (error) {
+      console.error("Appointment submission failed:", error);
 
-    setStatus("error");
+      setStatus("error");
 
-    setErrorMessage(
-      "We could not submit your appointment request. Please try again.",
-    );
-
-    return;
-  }
-
-  /*
-   * =====================================================
-   * SEND EMAILS
-   * =====================================================
-   */
-
-  setConfirmationEmailStatus("sending");
-
-  try {
-    const emailResponse = await fetch(
-      "https://lnetznzqwwrvvugycdae.supabase.co/functions/v1/send-appointment-emails",
-      {
-        method: "POST",
-        body: JSON.stringify(cleanForm),
-      },
-    );
-
-    const emailData = await emailResponse.json().catch(() => null);
-
-    if (!emailResponse.ok || !emailData?.customerEmailSent) {
-      console.error(
-        "Customer confirmation email failed:",
-        emailData || `HTTP ${emailResponse.status}`,
+      setErrorMessage(
+        "We could not submit your appointment request. Please try again.",
       );
 
-      setConfirmationEmailStatus("failed");
-    } else {
-      setConfirmationEmailStatus("sent");
+      return;
     }
-  } catch (emailException) {
-    console.error("Customer confirmation email exception:", emailException);
 
-    setConfirmationEmailStatus("failed");
-  }
+    /*
+     * =====================================================
+     * SEND EMAILS
+     * =====================================================
+     */
 
-  /*
-   * =====================================================
-   * SHOW THANK-YOU SCREEN
-   * =====================================================
-   */
+    setConfirmationEmailStatus("sending");
 
-  setStatus("success");
+    try {
+      const emailResponse = await fetch(
+        "https://lnetznzqwwrvvugycdae.supabase.co/functions/v1/send-appointment-emails",
+        {
+          method: "POST",
+          body: JSON.stringify(cleanForm),
+        },
+      );
 
-  /*
-   * Reset verification.
-   */
+      const emailData = await emailResponse.json().catch(() => null);
 
-  setIsVerified(false);
+      if (!emailResponse.ok || !emailData?.customerEmailSent) {
+        console.error(
+          "Customer confirmation email failed:",
+          emailData || `HTTP ${emailResponse.status}`,
+        );
 
-  setVerificationLoading(false);
-};
+        setConfirmationEmailStatus("failed");
+      } else {
+        setConfirmationEmailStatus("sent");
+      }
+    } catch (emailException) {
+      console.error("Customer confirmation email exception:", emailException);
+
+      setConfirmationEmailStatus("failed");
+    }
+
+    /*
+     * =====================================================
+     * SHOW THANK-YOU SCREEN
+     * =====================================================
+     */
+
+    setStatus("success");
+
+    /*
+     * Reset verification.
+     */
+
+    setIsVerified(false);
+
+    setVerificationLoading(false);
+  };
 
   const contactDetails = [
     {
@@ -694,7 +694,7 @@ const handleSubmit = async (event) => {
                           {value}
                         </a>
                       ) : (
-                        <p className="m-0 font-heading text-lg leading-[1.4] font-medium text-text-dark">
+                        <p className="m-0 font-heading text-[18px] leading-[1.4] font-medium text-text-dark">
                           {value}
                         </p>
                       )}
@@ -703,12 +703,18 @@ const handleSubmit = async (event) => {
                 </div>
 
                 {/* WhatsApp Helpline */}
-
-                <ContactReveal
-                  delay={550}
-                  className="contact-interactive mt-7 flex items-center gap-4 rounded-[6px] bg-[#e8f5f5] p-[18px_22px]"
+                <a
+                  href="https://wa.me/918866589956?text=Hello%20Dr.%20Deepa%20Bhatt%2C%20I%20am%20reaching%20out%20to%20book%20a%20consultation%20appointment.%20Please%20share%20your%20upcoming%20availability%20so%20we%20can%20connect."
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Contact us on WhatsApp"
+                  className="flex flex-none items-center justify-center text-[#25d366] "
                 >
-                  <a
+                  <ContactReveal
+                    delay={550}
+                    className="contact-interactive mt-7 flex items-center gap-4 rounded-[6px] bg-[#e8f5f5] p-[18px_22px] cursor-pointer"
+                  >
+                    {/* <a
                     href={
                       whatsappDigits
                         ? `https://wa.me/${whatsappDigits}`
@@ -718,29 +724,30 @@ const handleSubmit = async (event) => {
                     rel="noreferrer"
                     aria-label="Contact us on WhatsApp"
                     className="flex flex-none items-center justify-center text-[#25d366]"
-                  >
+                  > */}
                     <FaWhatsapp size={46} aria-hidden="true" />
-                  </a>
+                    {/* </a> */}
 
-                  <span
-                    className="h-[50px] w-px flex-none bg-[#137979]/25"
-                    aria-hidden="true"
-                  />
+                    <span
+                      className="h-[50px] w-px flex-none bg-[#137979]/25"
+                      aria-hidden="true"
+                    />
 
-                  <div className="min-w-0 flex-1">
-                    <p className="m-0 mb-1 font-heading text-lg font-semibold text-[#137979]">
-                      WhatsApp Helpline
-                    </p>
+                    <div className="min-w-0 flex-1">
+                      <p className="m-0 mb-1 font-heading text-lg font-semibold text-[#137979]">
+                        WhatsApp Helpline
+                      </p>
 
-                    <p className="m-0 font-heading text-[15px] text-[#444]">
-                      Quick Appointment Booking via Whatsapp
-                    </p>
+                      <p className="m-0 font-heading text-[15px] text-[#444]">
+                        Quick Appointment Booking via Whatsapp
+                      </p>
 
-                    <p className="m-0 font-heading text-[15px] text-green-600 font-semibold">
-                      Message Us
-                    </p>
-                  </div>
-                </ContactReveal>
+                      <p className="m-0 font-heading text-[15px] text-green-600 font-semibold">
+                        Message Us
+                      </p>
+                    </div>
+                  </ContactReveal>
+                </a>
               </div>
 
               {/* =================================================
@@ -1132,8 +1139,8 @@ const handleSubmit = async (event) => {
                     Thank You!
                   </h3>
                   <p className="mx-auto mt-3 mb-0 max-w-[470px] font-heading text-[14px] leading-[1.7] text-[#52645b]">
-                    We have received your appointment request successfully.
-                    Our clinic team will contact you to confirm the appointment.
+                    We have received your appointment request successfully. Our
+                    clinic team will contact you to confirm the appointment.
                   </p>
                 </div>
               )}
@@ -1219,7 +1226,6 @@ const handleSubmit = async (event) => {
                 Get Directions
                 <span aria-hidden="true">&rarr;</span>
               </a>
-
             </div>
           </ContactReveal>
         </section>
