@@ -257,7 +257,7 @@ export default function Footer() {
         {/* RIGHT COLUMN */}
         <div>
           <h4 className="relative mb-5 font-heading text-2xl font-bold text-text-dark">
-            Contact With Us
+            Contact Us
             <span
               className="
                 relative

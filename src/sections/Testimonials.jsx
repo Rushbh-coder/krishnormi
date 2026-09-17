@@ -6,7 +6,7 @@ import leafBg from "../assets/testimonials/testimonial.png";
 import patientPhoto from "../assets/testimonials/patient-photo.png";
 import stars from "../assets/testimonials/stars.svg";
 import iconyear from "../assets/testimonials/icon-years.svg";
-import iconSkin from "../assets/testimonials/skin.png";
+import iconSkin from "../assets/testimonials/skin1.png";
 import iconPatients1 from "../assets/testimonials/icon-patients-1.svg";
 import iconPatients2 from "../assets/testimonials/icon-patients-2.svg";
 import iconSatisfaction from "../assets/testimonials/icon-satisfaction.svg";

@@ -18,7 +18,7 @@ import missionPhoto from "../assets/about-page/mission-photo.jpg";
 import goalsPhoto from "../assets/about-page/goals-photo.jpg";
 
 import iconYear from "../assets/testimonials/icon-years.svg";
-import iconSkin from "../assets/testimonials/skin.png";
+import iconSkin from "../assets/testimonials/skin1.png";
 import iconPatients1 from "../assets/testimonials/icon-patients-1.svg";
 import iconPatients2 from "../assets/testimonials/icon-patients-2.svg";
 import iconSatisfaction from "../assets/testimonials/icon-satisfaction.svg";
