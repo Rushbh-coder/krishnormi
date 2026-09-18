@@ -295,7 +295,23 @@ export default function Hero() {
 
           <a
             href={content.button_link || "#contact"}
-            className="btn-hero mt-5 max-[560px]:w-[140px]"
+            className="
+    btn-hero
+    mt-5
+
+    inline-flex
+    items-center
+    justify-center
+
+    whitespace-nowrap
+
+    px-6
+    py-3
+
+    max-[630px]:w-auto
+    max-[630px]:px-5
+    max-[630px]:text-sm
+  "
           >
             {content.button_label}
           </a>

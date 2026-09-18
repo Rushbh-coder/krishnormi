@@ -682,19 +682,19 @@ export default function ContactUs() {
                       delay={280 + i * 90}
                       className="contact-interactive flex items-center gap-4"
                     >
-                      <span className="contact-detail-icon flex h-[50px] w-[50px] flex-none items-center justify-center rounded-full bg-[#3a9090] text-white">
-                        <Icon size={26} aria-hidden="true" />
+                      <span className="contact-detail-icon flex h-[40px] w-[40px] flex-none items-center justify-center rounded-full bg-[#3a9090] text-white">
+                        <Icon size={22} aria-hidden="true" />
                       </span>
 
                       {href ? (
                         <a
                           href={href}
-                          className="w-full font-heading text-lg leading-[1.4] font-medium text-text-dark hover:text-accent"
+                          className="w-full font-heading text-lg leading-[1.2] font-medium text-text-dark hover:text-accent"
                         >
                           {value}
                         </a>
                       ) : (
-                        <p className="m-0 font-heading text-[18px] leading-[1.4] font-medium text-text-dark">
+                        <p className="m-0 font-heading text-[15px] leading-[1.2] font-medium text-text-dark">
                           {value}
                         </p>
                       )}

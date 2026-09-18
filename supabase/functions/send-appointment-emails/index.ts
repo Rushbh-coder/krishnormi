@@ -1,5 +1,6 @@
 // @ts-nocheck
-
+import logo from "../../../src/assets/header/logo-icon.png"
+import logoText from "../../../src/assets/header/logo-wordmark.png"
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -444,8 +445,16 @@ Deno.serve(async (req: Request) => {
         <table role="presentation" width="620" cellspacing="0" cellpadding="0" border="0" class="email-container" style="width:620px;max-width:620px;background:#ffffff;margin:0 auto;">
           <tr>
             <td align="center" style="background:#ffffff;padding:32px 30px 8px;">
-              <img class="krishnormi-logo-animation" src="../src/assets/header/logo-icon.png" alt="Krishnormi" width="190" style="display:block;width:190px;max-width:100%;height:auto;margin:0 auto;opacity:1;" />
-              <img class="krishnormi-logo-animation" src="../src/assets/header/logo-text.png" alt="Krishnormi" width="190" style="display:block;width:190px;max-width:100%;height:auto;margin:0 auto;opacity:1;" />
+              <img
+src="https://krishnormi.vercel.app/images/logo-icon.png"
+alt="Krishnormi Logo"
+width="80"
+style="
+display:block;
+height:auto;
+margin:auto;
+"
+/>              <img class="krishnormi-logo-animation" src={logoText} alt="Krishnormi" width="190" style="display:block;width:190px;max-width:100%;height:auto;margin:0 auto;opacity:1;" />
             </td>
           </tr>
           <tr>
@@ -457,7 +466,7 @@ Deno.serve(async (req: Request) => {
           </tr>
           <tr>
             <td style="overflow:hidden;line-height:0;font-size:0;">
-              <img class="hero-image krishnormi-hero-animation" src="https://yourdomain.com/images/krishnormi-contact-banner.jpg" alt="Krishnormi" width="620" style="display:block;width:100%;max-width:620px;height:auto;margin:0;opacity:1;" />
+              <img class="hero-image krishnormi-hero-animation" src="https://krishnormi.vercel.app/images/krishnormi-contact-banner.jpg" alt="Krishnormi" width="620" style="display:block;width:100%;max-width:620px;height:auto;margin:0;opacity:1;" />
             </td>
           </tr>
           <tr>
