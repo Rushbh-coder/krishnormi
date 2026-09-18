@@ -331,7 +331,25 @@ function DoctorCard({ photo, name, badge, role, bio, cardTextureUrl }) {
             </p>
           )}
 
-          <a href="/our-doctor" className="btn-hero mt-5 max-[460px]:w-[100px]">
+          <a
+            href="/our-doctor"
+            className="
+    btn-hero
+    mt-5
+
+    flex
+    items-center
+    justify-center
+
+    whitespace-nowrap
+
+    w-[150px]
+
+    max-[460px]:w-[150px]
+    max-[460px]:text-sm
+    max-[460px]:mx-25
+  "
+          >
             View Profile
           </a>
         </div>
