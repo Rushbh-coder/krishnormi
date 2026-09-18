@@ -3,6 +3,12 @@ import SectionPanel from "../SectionPanel";
 import { Field, TextInput, TextArea } from "../fields";
 import { useSaveSection } from "../../../hooks/useSaveSection";
 
+const HEADING_LIMIT = 24;
+const TEXT_LIMIT = 250;
+const ADDRESS_LIMIT = 100;
+const Appointment_Limit=100;
+const eyebrow_Limit=20;
+
 export default function ContactEditor({
   initialContent,
   initialVisible,
@@ -26,6 +32,13 @@ export default function ContactEditor({
       [key]: value,
     }));
 
+  const limitedSet = (key, limit) => (value) => {
+    setContent((c) => ({
+      ...c,
+      [key]: value.slice(0, limit),
+    }));
+  };
+
   const handleSave = async () => {
     const saved = await save(content, visible);
 
@@ -43,42 +56,60 @@ export default function ContactEditor({
       onVisibleChange={setVisible}
       lastSaved={lastSaved}
     >
+      {/* Banner Eyebrow */}
       <Field label="Banner eyebrow">
         <TextInput
           value={content.banner_eyebrow}
+          maxLength={eyebrow_Limit}
           onChange={set("banner_eyebrow")}
         />
+        <p className="mt-1 text-xs text-[#667085]">
+          {content.banner_eyebrow?.length || 0}/{eyebrow_Limit}
+        </p>
       </Field>
 
+      {/* Banner Heading */}
       <Field label="Banner heading">
         <TextInput
           value={content.banner_heading}
-          onChange={set("banner_heading")}
+          maxLength={HEADING_LIMIT}
+          onChange={limitedSet("banner_heading", HEADING_LIMIT)}
         />
+
+        <p className="mt-1 text-xs text-[#667085]">
+          {content.banner_heading?.length || 0}/{HEADING_LIMIT}
+        </p>
       </Field>
 
+      {/* Banner Text */}
       <Field label="Banner text">
         <TextArea
           value={content.banner_text}
-          onChange={set("banner_text")}
+          maxLength={TEXT_LIMIT}
+          onChange={limitedSet("banner_text", TEXT_LIMIT)}
           rows={2}
         />
+
+        <p className="mt-1 text-xs text-[#667085]">
+          {content.banner_text?.length || 0}/{TEXT_LIMIT}
+        </p>
       </Field>
 
+      {/* Address */}
       <Field label="Address">
-        <TextArea value={content.address} onChange={set("address")} rows={2} />
+        <TextArea
+          value={content.address}
+          maxLength={ADDRESS_LIMIT}
+          onChange={limitedSet("address", ADDRESS_LIMIT)}
+          rows={2}
+        />
+
+        <p className="mt-1 text-xs text-[#667085]">
+          {content.address?.length || 0}/{ADDRESS_LIMIT}
+        </p>
       </Field>
 
-      {/* <div className="flex gap-4 max-[900px]:flex-col">
-        <Field label="Latitude">
-          <TextInput value={content.latitude} onChange={set("latitude")} />
-        </Field>
-
-        <Field label="Longitude">
-          <TextInput value={content.longitude} onChange={set("longitude")} />
-        </Field>
-      </div> */}
-
+      {/* Phone + Email */}
       <div className="flex gap-4 max-[900px]:flex-col">
         <Field label="Phone">
           <TextInput value={content.phone} onChange={set("phone")} />
@@ -93,6 +124,7 @@ export default function ContactEditor({
         </Field>
       </div>
 
+      {/* Appointment Note */}
       <Field label="Appointment note">
         <TextInput
           value={content.appointment_note}
@@ -100,6 +132,7 @@ export default function ContactEditor({
         />
       </Field>
 
+      {/* Map Info */}
       <Field label="Map info card">
         <div className="flex flex-col gap-3">
           <TextInput
@@ -119,24 +152,45 @@ export default function ContactEditor({
         </div>
       </Field>
 
+      {/* Get In Touch Text */}
       <Field label="Get in Touch intro text">
         <TextArea
           value={content.connect_text}
-          onChange={set("connect_text")}
+          maxLength={TEXT_LIMIT}
+          onChange={limitedSet("connect_text", TEXT_LIMIT)}
           rows={2}
         />
+
+        <p className="mt-1 text-xs text-[#667085]">
+          {content.connect_text?.length || 0}/{TEXT_LIMIT}
+        </p>
       </Field>
+
+      {/* Form Heading + Subtitle */}
 
       <div className="flex gap-4 max-[900px]:flex-col">
         <Field label="Appointment form heading">
-          <TextInput value={content.form_title} onChange={set("form_title")} />
+          <TextInput
+            value={content.form_title}
+            maxLength={HEADING_LIMIT}
+            onChange={limitedSet("form_title", HEADING_LIMIT)}
+          />
+
+          <p className="mt-1 text-xs text-[#667085]">
+            {content.form_title?.length || 0}/{HEADING_LIMIT}
+          </p>
         </Field>
 
         <Field label="Appointment form subtitle">
           <TextInput
             value={content.form_subtitle}
-            onChange={set("form_subtitle")}
+            maxLength={Appointment_Limit}
+            onChange={limitedSet("form_subtitle", Appointment_Limit)}
           />
+
+          <p className="mt-1 text-xs text-[#667085]">
+            {content.form_subtitle?.length || 0}/{Appointment_Limit}
+          </p>
         </Field>
       </div>
 
@@ -148,15 +202,15 @@ export default function ContactEditor({
           onClick={handleSave}
           disabled={saving}
           className="
-          rounded-[10px]
-          bg-[#df2759]
-          px-5
-          py-2.5
-          font-heading
-          text-sm
-          font-semibold
-          text-white
-          disabled:opacity-60
+            rounded-[10px]
+            bg-[#df2759]
+            px-5
+            py-2.5
+            font-heading
+            text-sm
+            font-semibold
+            text-white
+            disabled:opacity-60
           "
         >
           {saving ? "Saving…" : "Save changes"}
@@ -171,17 +225,17 @@ export default function ContactEditor({
             })
           }
           className="
-          rounded-[10px]
-          border
-          border-[#df2759]
-          px-5
-          py-2.5
-          font-heading
-          text-sm
-          font-semibold
-          text-[#df2759]
-          hover:bg-[#df2759]
-          hover:text-white
+            rounded-[10px]
+            border
+            border-[#df2759]
+            px-5
+            py-2.5
+            font-heading
+            text-sm
+            font-semibold
+            text-[#df2759]
+            hover:bg-[#df2759]
+            hover:text-white
           "
         >
           Preview Changes

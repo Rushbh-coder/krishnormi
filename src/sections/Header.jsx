@@ -92,7 +92,7 @@ export default function Header() {
           onClick={() => handleNavClick("#contact")}
           className="btn-hero flex-none max-[1100px]:hidden"
         >
-          Book Appointment
+          Book an Appointment
         </a>
 
         {/* MOBILE HAMBURGER */}
@@ -177,7 +177,7 @@ export default function Header() {
             tabIndex={isMenuOpen ? 0 : -1}
             className="btn-hero mt-5 w-full"
           >
-            Book Appointment
+            Book an Appointment
           </a>
         </nav>
       </div>

@@ -22,6 +22,7 @@ export default function ContactPageEditor() {
 
     window.location.href = "/contact-us?preview=true";
   };
+
   return (
     <AdminLayout activeNav="contact-us" pageTitle="Contact Us Page">
       <div className="w-[1100px] flex flex-col gap-[22px]">
@@ -44,6 +45,9 @@ export default function ContactPageEditor() {
               initialContent={initialContent}
               initialVisible={initialVisible}
               onPreview={handlePreview}
+              // Character Limits
+              headingMaxLength={20}
+              paragraphMaxLength={250}
             />
           </div>
         )}

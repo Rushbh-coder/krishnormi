@@ -779,7 +779,7 @@ export default function ContactUs() {
                     className="mb-4 flex flex-col gap-1.5"
                   >
                     <label className={labelClasses} htmlFor="contact-name">
-                      Full Name *
+                      Full Name <span className="text-red-500">*</span>
                     </label>
 
                     <input
@@ -821,7 +821,7 @@ export default function ContactUs() {
                   >
                     <div className="flex flex-col gap-1.5">
                       <label className={labelClasses} htmlFor="contact-email">
-                        Email *
+                        Email <span className="text-red-500">*</span>
                       </label>
 
                       <input
@@ -858,7 +858,7 @@ export default function ContactUs() {
 
                     <div className="flex flex-col gap-1.5">
                       <label className={labelClasses} htmlFor="contact-phone">
-                        Mobile Number *
+                        Mobile Number <span className="text-red-500">*</span>
                       </label>
 
                       <input
@@ -911,7 +911,7 @@ export default function ContactUs() {
                         className={labelClasses}
                         htmlFor="contact-treatment"
                       >
-                        Select Treatment *
+                        Select Treatment <span className="text-red-500">*</span>
                       </label>
 
                       <div className="relative">
@@ -971,10 +971,12 @@ export default function ContactUs() {
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                      <label className={labelClasses} htmlFor="contact-date">
-                        Preferred Appointment Date *
+                      <label
+                        className={labelClasses}
+                        htmlFor="contact-treatment"
+                      >
+                        Select Treatment <span className="text-red-500">*</span>
                       </label>
-
                       <input
                         id="contact-date"
                         type="date"
@@ -1152,8 +1154,13 @@ export default function ContactUs() {
             MAP
         ====================================================== */}
 
+        {/* =====================================================
+    MAP
+====================================================== */}
+
         <section className="w-full bg-[#f9fcfb] pb-[90px] max-[700px]:pb-14">
           <ContactReveal className="relative h-[520px] w-full overflow-hidden border border-[#c6c6c6] max-[900px]:h-[400px] max-[560px]:h-[300px]">
+            {/* Google Map */}
             <iframe
               title="Krishnormi clinic location"
               className="absolute inset-0 h-full w-full border-0"
@@ -1164,67 +1171,89 @@ export default function ContactUs() {
               referrerPolicy="no-referrer-when-downgrade"
             />
 
-            {/* Location Toggle */}
-
-            <button
-              type="button"
-              onClick={() => setShowLocationCard(true)}
-              aria-expanded={showLocationCard}
-              aria-label="Show clinic location details"
-              className={`contact-interactive absolute top-6 left-6 flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-accent p-0 shadow-[0_4px_10px_rgba(13,38,33,0.25)] transition-opacity duration-200 ${
-                showLocationCard ? "opacity-0" : "opacity-100"
-              }`}
-            >
-              <img
-                src={iconLocation}
-                alt=""
-                aria-hidden="true"
-                className="h-4 w-4 brightness-0 invert"
-              />
-            </button>
-
-            {/* Location Details Card */}
+            {/* =================================================
+        LOCATION CARD - ALWAYS VISIBLE
+    ================================================== */}
 
             <div
-              className={`absolute top-6 left-6 w-[280px] max-w-[80%] origin-top-left rounded-[15px] border border-[#d6e3dd] bg-white p-[18px_22px] shadow-[0_10px_24px_-6px_rgba(13,38,33,0.13)] transition-[opacity,transform] duration-300 ease-out ${
-                showLocationCard
-                  ? "translate-y-0 scale-100 opacity-100"
-                  : "pointer-events-none translate-y-1 scale-[0.98] opacity-0"
-              }`}
+              className="
+        absolute
+        top-6
+        left-6
+        z-10
+        w-[300px]
+        max-w-[calc(100%-48px)]
+        rounded-[15px]
+        border
+        border-[#d6e3dd]
+        bg-white
+        p-[18px_22px]
+        shadow-[0_10px_24px_-6px_rgba(13,38,33,0.18)]
+
+        max-[560px]:top-4
+        max-[560px]:left-4
+        max-[560px]:w-[260px]
+        max-[560px]:max-w-[calc(100%-32px)]
+        max-[560px]:p-[14px_16px]
+      "
             >
-              <div className="mb-1.5 flex items-start justify-between gap-2">
-                <p className="font-heading text-xs font-semibold text-accent">
-                  {content.map_label_name}
-                </p>
+              {/* Clinic Name */}
+              <p className="mb-1.5 font-heading text-xs font-semibold uppercase tracking-[0.04em] text-accent">
+                {content.map_label_name}
+              </p>
 
-                <button
-                  type="button"
-                  onClick={() => setShowLocationCard(false)}
-                  aria-label="Close"
-                  className="-mt-1 -mr-1 flex h-5 w-5 flex-none items-center justify-center rounded-full bg-transparent p-0 text-[#98a2b3] hover:text-text-dark"
-                >
-                  &times;
-                </button>
-              </div>
-
-              <p className="mb-1 font-heading text-base font-semibold text-text-dark">
+              {/* Address Line 1 */}
+              <p className="mb-1 font-heading text-base font-semibold leading-[1.4] text-text-dark">
                 {content.map_label_line1}
               </p>
 
-              <p className="mb-3 font-heading text-[13px] text-[#60736e]">
+              {/* Address Line 2 */}
+              <p className="mb-4 font-heading text-[13px] leading-[1.5] text-[#60736e]">
                 {content.map_label_line2}
               </p>
 
+              {/* Get Directions */}
               <a
                 href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
                   mapQuery,
                 )}`}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1.5 font-heading text-[13px] font-semibold text-primary hover:text-primary-dark"
+                aria-label="Get directions to Krishnormi clinic"
+                className="
+          inline-flex
+          items-center
+          gap-2
+          rounded-[6px]
+          bg-primary
+          px-4
+          py-2.5
+          font-heading
+          text-[13px]
+          font-semibold
+          text-white
+          transition-all
+          duration-200
+          hover:bg-primary-dark
+          hover:shadow-md
+        "
               >
                 Get Directions
-                <span aria-hidden="true">&rarr;</span>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M5 12h14M13 6l6 6-6 6"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </a>
             </div>
           </ContactReveal>
