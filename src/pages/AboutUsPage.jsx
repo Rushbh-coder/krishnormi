@@ -237,15 +237,34 @@ function DoctorCard({ photo, name, badge, role, bio, cardTextureUrl }) {
             src={photo}
             alt={name}
             className="
-              relative
-              z-[2]
-              h-[96%]
-              w-auto
-              max-w-[94%]
-              object-contain
-              object-bottom
-              drop-shadow-[0_18px_28px_rgba(0,0,0,0.35)]
-            "
+    kr-doctor-photo
+    absolute
+    bottom-0
+    left-[-5%]
+    z-[1]
+
+    h-[98%]
+    w-auto
+    max-w-[48%]
+
+    object-contain
+    object-bottom
+
+    drop-shadow-[0_25px_35px_rgba(0,0,0,0.4)]
+
+    md:left-[3%]
+    md:h-[100%]
+    md:w-[50%]
+
+    lg:left-[-6%]
+    lg:h-[103%]
+
+    xl:left-[-7%]
+    xl:h-[105%]
+
+    2xl:left-[-5%]
+    2xl:h-[108%]
+  "
           />
         </div>
 
@@ -446,7 +465,7 @@ function DoctorCard({ photo, name, badge, role, bio, cardTextureUrl }) {
             pr-8
             pl-[44%]
             md:min-h-[450px]
-            md:pr-10
+            md:pl-75
             xl:h-full
             xl:min-h-0
             xl:py-[7%]
@@ -596,7 +615,7 @@ function GuideCard({ label, icon: Icon, photo, text }) {
           h-[39%]
           flex-col
           px-[7.3%]
-          pb-[4.5%]
+          pb-[4.8%]
           text-left
         "
         >
@@ -622,7 +641,7 @@ function GuideCard({ label, icon: Icon, photo, text }) {
             m-0
             font-heading
             text-lg
-            leading-[30px]
+            leading-[28px]
             text-white
             max-[1200px]:text-base
             max-[1200px]:leading-[26px]
@@ -1740,7 +1759,7 @@ export default function AboutUsPage() {
           w-full
           bg-white
           pt-[120px]
-          pb-[100px]
+          pb-[30px]
           max-[700px]:py-14
         "
         >

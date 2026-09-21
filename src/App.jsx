@@ -11,6 +11,7 @@ import AboutUsPageEditor from "./pages/admin/AboutUsPageEditor";
 import Appointments from "./pages/admin/Appointments";
 import RequireAdminAuth from "./components/RequireAdminAuth";
 import WhatsAppButton from "./components/WhatsAppButton";
+// import TreatmentsPage from "./pages/Treatment";
 
 function App() {
   const location = useLocation();
@@ -22,6 +23,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/about-us" element={<AboutUsPage />} />
+        {/* <Route path="/treatment" element={<TreatmentsPage/>}/> */}
         <Route path="/admin" element={<AdminLogin />} />
         <Route
           path="/admin/dashboard"
