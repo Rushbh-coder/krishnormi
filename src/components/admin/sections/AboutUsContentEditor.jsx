@@ -769,7 +769,7 @@ export default function AboutUsContentEditor({
                 <TextInput
                   value={value}
                   onChange={setCoreValue(index)}
-                  maxLength={100}
+                  maxLength={20}
                 />
 
                 <button
