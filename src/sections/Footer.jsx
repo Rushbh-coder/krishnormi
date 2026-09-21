@@ -13,7 +13,7 @@ import { useReducedMotion, useRevealOnce, revealClass } from "../hooks/useScroll
 const linksCol1 = [
   "About Us",
   "Our Doctor",
-  "Blog",
+  "Blogs",
   "Treatments",
   "Gallery",
   "Contact Us",
