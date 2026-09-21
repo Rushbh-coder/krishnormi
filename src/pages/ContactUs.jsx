@@ -1162,7 +1162,7 @@ export default function ContactUs() {
     MAP
 ===================================================== */}
 
-        <section className="w-full bg-[#f9fcfb] pb-[90px] max-[700px]:pb-14">
+        <section className="w-full mt-2 pb-0 bg-[#f9fcfb] max-[700px]:pb-14">
           <ContactReveal>
             <div
               className="
@@ -1354,7 +1354,7 @@ export default function ContactUs() {
           </ContactReveal>
         </section>
 
-        <ContactReveal variant="fade">
+        <ContactReveal variant="fade" className="py-1">
           <FAQ />
         </ContactReveal>
 
