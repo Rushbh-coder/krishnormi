@@ -5,10 +5,12 @@ import './index.css'
 import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext'
 import { HomepageContentProvider } from './context/HomepageContentContext'
+import ScrollToTop from './components/ScrollTop.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
+    <ScrollToTop/>
       <AuthProvider>
         <HomepageContentProvider>
           <App />

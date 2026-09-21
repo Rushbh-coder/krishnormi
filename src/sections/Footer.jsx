@@ -5,18 +5,18 @@ import bgMobile from "../assets/footer/bg-mobile.png";
 import decoration from "../assets/footer/decoration.svg";
 import { FaFacebookF, FaLinkedinIn, FaGoogle, FaWhatsapp, FaMapMarkerAlt, FaEnvelope, FaPhoneAlt } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-
+import { Link } from "react-router-dom";
 import { useSection } from "../context/HomepageContentContext";
 import { DEFAULT_CONTENT } from "../data/homepageDefaults";
 import { useReducedMotion, useRevealOnce, revealClass } from "../hooks/useScrollReveal";
 
 const linksCol1 = [
-  "About Us",
-  "Our Doctor",
-  "Blogs",
-  "Treatments",
-  "Gallery",
-  "Contact Us",
+  { name: "About Us", link: "/about-us" },
+  { name: "Our Doctor", link: "/our-doctor" },
+  { name: "Blogs", link: "/blogs" },
+  { name: "Treatments", link: "/treatments" },
+  { name: "Gallery", link: "/gallery" },
+  { name: "Contact Us", link: "/contact-us" },
 ];
 
 // const linksCol2 = [
@@ -153,7 +153,9 @@ export default function Footer() {
 
           {/* Description */}
           <div className="mb-6 max-w-[400px]">
-            <p className="font-body text-[15px] leading-[1.6] text-text">{content.description}</p>
+            <p className="font-body text-[15px] leading-[1.6] text-text">
+              {content.description}
+            </p>
           </div>
 
           {/* Social Icons */}
@@ -221,21 +223,27 @@ export default function Footer() {
 
           <div className="flex gap-8">
             <ul className="m-0 list-none p-0">
-              {linksCol1.map((link, index) => (
+              {linksCol1.map((item, index) => (
                 <li
-                  key={link}
-                  className={`
-                    cursor-pointer
-                    py-2
-                    font-heading
-                    text-[17px]
-                    font-semibold
-                    transition
-                    hover:text-accent
-                    ${index === 0 ? "text-accent" : "text-text-dark"}
-                  `}
+                  key={item.name}
+                  className="
+        py-2
+        font-heading
+        text-[17px]
+        font-semibold
+      "
                 >
-                  {link}
+                  <Link
+                    to={item.link}
+                    className={`
+          transition
+          duration-200
+          hover:text-accent
+          ${index === 0 ? "text-accent" : "text-text-dark"}
+        `}
+                  >
+                    {item.name}
+                  </Link>
                 </li>
               ))}
             </ul>
