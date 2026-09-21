@@ -591,13 +591,16 @@ export default function AboutUsContentEditor({
             <TextInput
               value={content.banner.heading}
               onChange={setNested("banner.heading")}
+              maxLength={15}
             />
           </Field>
 
           {fieldErrors["banner.heading"] && (
             <p className="mt-1 text-xs text-[#df2759]">
               {fieldErrors["banner.heading"]}
+              
             </p>
+
           )}
         </div>
 
@@ -607,6 +610,7 @@ export default function AboutUsContentEditor({
               value={content.banner.text}
               onChange={setNested("banner.text")}
               rows={3}
+              maxLength={150}
             />
           </Field>
 
@@ -658,6 +662,7 @@ export default function AboutUsContentEditor({
             <TextInput
               value={content.modern_practice.heading}
               onChange={setNested("modern_practice.heading")}
+              maxLength={50}
             />
           </Field>
         </div>
@@ -709,12 +714,12 @@ export default function AboutUsContentEditor({
           />
         </div>
 
-        <Field label="Core values heading">
+        {/* <Field label="Core values heading">
           <TextInput
             value={content.modern_practice.core_values_title}
             onChange={setNested("modern_practice.core_values_title")}
           />
-        </Field>
+        </Field> */}
 
         <div className="mt-4">
           <div
@@ -725,7 +730,7 @@ export default function AboutUsContentEditor({
               justify-between
             "
           >
-            <p
+            {/* <p
               className="
                 font-heading
                 text-sm
@@ -734,7 +739,7 @@ export default function AboutUsContentEditor({
               "
             >
               Core values
-            </p>
+            </p> */}
 
             <button
               type="button"
@@ -800,7 +805,7 @@ export default function AboutUsContentEditor({
           WHATSAPP
       =================================================== */}
 
-      <div
+      {/* <div
         id="whatsapp"
         className="
           mb-8
@@ -842,7 +847,7 @@ export default function AboutUsContentEditor({
             onChange={setNested("whatsapp.button_text")}
           />
         </Field>
-      </div>
+      </div> */}
 
       {/* ===================================================
           DOCTORS
