@@ -61,56 +61,133 @@ export default function FAQ() {
           />
         </div>
         {/* RIGHT FAQ CONTENT */}
+        {/* RIGHT FAQ CONTENT */}
         <div
           ref={contentRef}
           className={`flex h-full flex-col ${revealClass(contentVisible)}`}
         >
+          {/* Heading */}
           <h2 className="section-title text-navy">
             Frequently Asked Questions
           </h2>
 
           <hr className="section-divider mb-6" />
+
+          {/* Intro Text */}
           <div className="mb-8">
             <p className="font-heading text-lg leading-[1.75] text-text">
               {content.intro_text}
             </p>
           </div>
-          <div className="mb-8 flex flex-col gap-4">
+
+          {/* FAQ LIST */}
+          <div
+            className="
+      mb-6
+      flex
+      min-h-[500px]
+      flex-col
+      gap-4
+
+      max-[1100px]:min-h-[480px]
+      max-[700px]:min-h-[460px]
+      max-[560px]:min-h-0
+    "
+          >
             {faqs.map((item, i) => {
               const isOpen = openIndex === i;
 
               return (
                 <div
                   key={i}
-                  className={`rounded border p-[4px_24px] transition-colors duration-200 ${
-                    isOpen ? "border-accent" : "border-black/15"
-                  }`}
+                  className={`
+            rounded
+            border
+            p-[4px_24px]
+            transition-colors
+            duration-200
+
+            max-[560px]:p-[2px_16px]
+
+            ${isOpen ? "border-accent" : "border-black/15"}
+          `}
                 >
+                  {/* QUESTION */}
                   <button
                     type="button"
                     onClick={() => setOpenIndex(isOpen ? -1 : i)}
                     aria-expanded={isOpen}
-                    className={`flex w-full items-center justify-between gap-4 border-none bg-transparent py-[22px] text-left font-heading text-xl font-medium ${
-                      isOpen ? "text-accent" : "text-text-dark"
-                    }`}
-                  >
-                    <span>{item.question}</span>
+                    className={`
+              flex
+              w-full
+              items-center
+              justify-between
+              gap-4
+              border-none
+              bg-transparent
+              py-[22px]
+              text-left
+              font-heading
+              text-xl
+              font-medium
 
+              max-[700px]:text-lg
+              max-[560px]:py-[18px]
+              max-[560px]:text-[16px]
+
+              ${isOpen ? "text-accent" : "text-text-dark"}
+            `}
+                  >
+                    {/* Question Text */}
+                    <span className="min-w-0 flex-1">{item.question}</span>
+
+                    {/* Plus / Minus Icon */}
                     <span
                       aria-hidden="true"
-                      className={`flex h-7 w-7 flex-none items-center justify-center rounded text-lg leading-none ${
-                        isOpen
-                          ? "bg-accent text-white"
-                          : "bg-black/[0.06] text-text-dark"
-                      }`}
+                      className={`
+                flex
+                h-7
+                w-7
+                flex-none
+                items-center
+                justify-center
+                rounded
+                text-lg
+                leading-none
+
+                ${
+                  isOpen
+                    ? "bg-accent text-white"
+                    : "bg-black/[0.06] text-text-dark"
+                }
+              `}
                     >
                       {isOpen ? "−" : "+"}
                     </span>
                   </button>
 
+                  {/* ANSWER */}
                   {isOpen && item.answer && (
-                    <div className="mb-[22px]">
-                      <p className="font-heading text-[15px] leading-[1.85] text-text">
+                    <div
+                      className="
+                mb-[22px]
+                pr-10
+
+                max-[560px]:mb-[18px]
+                max-[560px]:pr-0
+              "
+                    >
+                      <p
+                        className="
+                  font-heading
+                  text-[15px]
+                  leading-[1.85]
+                  text-text
+
+                  max-[560px]:text-[14px]
+                  max-[560px]:leading-[1.7]
+                "
+                      >
                         {item.answer}
                       </p>
                     </div>
@@ -120,7 +197,8 @@ export default function FAQ() {
             })}
           </div>
 
-          <button type="button" className="btn-hero self-start">
+          {/* LEARN MORE */}
+          <button type="button" className="btn-hero mt-auto self-start">
             Learn More
           </button>
         </div>

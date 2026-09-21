@@ -321,6 +321,7 @@ function normalizeContent(incoming) {
   });
 }
 
+
 /* =========================================================
    VALIDATION
 ========================================================= */
@@ -546,7 +547,7 @@ export default function AboutUsContentEditor({
         Manage all About Us page content,
         doctors, images and What Guides Us.
       "
-       className="max-w-[1200px] w-100"
+      className="max-w-[400px] w-100"
       visible={visible}
       savedVisible={savedVisible}
       onVisibleChange={setVisible}
@@ -667,7 +668,7 @@ export default function AboutUsContentEditor({
               value={content.modern_practice.text_1}
               onChange={setNested("modern_practice.text_1")}
               rows={4}
-              maxLength={1000}
+              maxLength={300}
             />
           </Field>
         </div>
@@ -677,7 +678,7 @@ export default function AboutUsContentEditor({
             value={content.modern_practice.text_2}
             onChange={setNested("modern_practice.text_2")}
             rows={4}
-            maxLength={1000}
+            maxLength={300}
           />
         </Field>
 
@@ -765,7 +766,11 @@ export default function AboutUsContentEditor({
                     gap-3
                   "
               >
-                <TextInput value={value} onChange={setCoreValue(index)} />
+                <TextInput
+                  value={value}
+                  onChange={setCoreValue(index)}
+                  maxLength={100}
+                />
 
                 <button
                   type="button"
@@ -966,7 +971,7 @@ export default function AboutUsContentEditor({
               value={content.doctors.doctor_1.bio}
               onChange={setNested("doctors.doctor_1.bio")}
               rows={5}
-              maxLength={1200}
+              maxLength={400}
             />
           </Field>
         </div>
@@ -1008,13 +1013,16 @@ export default function AboutUsContentEditor({
             <TextInput
               value={content.doctors.doctor_2.name}
               onChange={setNested("doctors.doctor_2.name")}
-            />
+              maxLength={20}
+                        />
           </Field>
 
           <Field label="Badge">
             <TextInput
               value={content.doctors.doctor_2.badge}
               onChange={setNested("doctors.doctor_2.badge")}
+              maxLength={15}
+              rows={1}
             />
           </Field>
 
@@ -1022,6 +1030,8 @@ export default function AboutUsContentEditor({
             <TextInput
               value={content.doctors.doctor_2.role}
               onChange={setNested("doctors.doctor_2.role")}
+              rows={4}
+              maxLength={50}
             />
           </Field>
 
@@ -1030,34 +1040,35 @@ export default function AboutUsContentEditor({
               value={content.doctors.doctor_2.bio}
               onChange={setNested("doctors.doctor_2.bio")}
               rows={5}
-              maxLength={1200}
+              maxLength={400}
             />
           </Field>
         </div>
       </div>
 
+
       {/* ===================================================
-          WHAT GUIDES US
-      =================================================== */}
+    WHAT GUIDES US
+=================================================== */}
 
       <div
         id="what-guides-us"
         className="
-          mb-8
-          scroll-mt-[100px]
-          border-b
-          border-[#eaecf0]
-          pb-8
-        "
+    mb-8
+    scroll-mt-[100px]
+    border-b
+    border-[#eaecf0]
+    pb-8
+  "
       >
         <h2
           className="
-            mb-5
-            font-heading
-            text-xl
-            font-bold
-            text-[#101828]
-          "
+      mb-5
+      font-heading
+      text-xl
+      font-bold
+      text-[#101828]
+    "
         >
           4. What Guides Us
         </h2>
@@ -1066,7 +1077,9 @@ export default function AboutUsContentEditor({
           <TextInput
             value={content.what_guides_us.title}
             onChange={setNested("what_guides_us.title")}
+            maxLength={20}
           />
+
         </Field>
 
         <Field label="Section description">
@@ -1074,29 +1087,30 @@ export default function AboutUsContentEditor({
             value={content.what_guides_us.description}
             onChange={setNested("what_guides_us.description")}
             rows={3}
+            maxLength={250}
           />
         </Field>
 
-        {/* VISION */}
+        {/* ===================== VISION ===================== */}
 
         <div
           className="
-            mt-6
-            rounded-xl
-            border
-            border-[#e4eae7]
-            bg-[#f8faf9]
-            p-5
-          "
+      mt-6
+      rounded-xl
+      border
+      border-[#e4eae7]
+      bg-[#f8faf9]
+      p-5
+    "
         >
           <h3
             className="
-              mb-5
-              font-heading
-              text-lg
-              font-bold
-              text-[#101828]
-            "
+        mb-5
+        font-heading
+        text-lg
+        font-bold
+        text-[#101828]
+      "
           >
             Our Vision
           </h3>
@@ -1122,30 +1136,31 @@ export default function AboutUsContentEditor({
               value={content.what_guides_us.vision.text}
               onChange={setNested("what_guides_us.vision.text")}
               rows={4}
+              maxLength={110}
             />
           </Field>
         </div>
 
-        {/* MISSION */}
+        {/* ===================== MISSION ===================== */}
 
         <div
           className="
-            mt-6
-            rounded-xl
-            border
-            border-[#e4eae7]
-            bg-[#f8faf9]
-            p-5
-          "
+      mt-6
+      rounded-xl
+      border
+      border-[#e4eae7]
+      bg-[#f8faf9]
+      p-5
+    "
         >
           <h3
             className="
-              mb-5
-              font-heading
-              text-lg
-              font-bold
-              text-[#101828]
-            "
+        mb-5
+        font-heading
+        text-lg
+        font-bold
+        text-[#101828]
+      "
           >
             Our Mission
           </h3>
@@ -1171,30 +1186,31 @@ export default function AboutUsContentEditor({
               value={content.what_guides_us.mission.text}
               onChange={setNested("what_guides_us.mission.text")}
               rows={4}
+              maxLength={110}
             />
           </Field>
         </div>
 
-        {/* GOALS */}
+        {/* ===================== GOALS ===================== */}
 
         <div
           className="
-            mt-6
-            rounded-xl
-            border
-            border-[#e4eae7]
-            bg-[#f8faf9]
-            p-5
-          "
+      mt-6
+      rounded-xl
+      border
+      border-[#e4eae7]
+      bg-[#f8faf9]
+      p-5
+    "
         >
           <h3
             className="
-              mb-5
-              font-heading
-              text-lg
-              font-bold
-              text-[#101828]
-            "
+        mb-5
+        font-heading
+        text-lg
+        font-bold
+        text-[#101828]
+      "
           >
             Our Goals
           </h3>
@@ -1220,11 +1236,11 @@ export default function AboutUsContentEditor({
               value={content.what_guides_us.goals.text}
               onChange={setNested("what_guides_us.goals.text")}
               rows={4}
+              maxLength={110}
             />
           </Field>
         </div>
       </div>
-
       {/* ===================================================
           ERROR
       =================================================== */}

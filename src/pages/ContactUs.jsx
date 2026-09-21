@@ -616,13 +616,13 @@ export default function ContactUs() {
               </ContactReveal>
 
               <ContactReveal delay={180}>
-                <p className="mt-6 font-heading text-2xl font-semibold text-text-dark max-[420px]:text-xl">
+                <p className="mt-6 font-heading text-2xl font-bold text-text-dark max-[420px]:text-xl">
                   {content.banner_heading}
                 </p>
               </ContactReveal>
 
               <ContactReveal delay={280}>
-                <p className="mt-4 max-w-[420px] font-heading text-sm leading-[1.6] text-text">
+                <p className="mt-4 max-w-[450px] font-heading text-[16px] leading-[1.6] text-text">
                   {content.banner_text}
                 </p>
               </ContactReveal>
@@ -1158,103 +1158,198 @@ export default function ContactUs() {
     MAP
 ====================================================== */}
 
+        {/* =====================================================
+    MAP
+===================================================== */}
+
         <section className="w-full bg-[#f9fcfb] pb-[90px] max-[700px]:pb-14">
-          <ContactReveal className="relative h-[520px] w-full overflow-hidden border border-[#c6c6c6] max-[900px]:h-[400px] max-[560px]:h-[300px]">
-            {/* Google Map */}
-            <iframe
-              title="Krishnormi clinic location"
-              className="absolute inset-0 h-full w-full border-0"
-              src={`https://www.google.com/maps?q=${encodeURIComponent(
-                mapQuery,
-              )}&output=embed`}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-
-            {/* =================================================
-        LOCATION CARD - ALWAYS VISIBLE
-    ================================================== */}
-
+          <ContactReveal>
             <div
               className="
-        absolute
-        top-6
-        left-6
-        z-10
-        w-[300px]
-        max-w-[calc(100%-48px)]
-        rounded-[15px]
+        relative
+        w-full
         border
-        border-[#d6e3dd]
+        border-[#c6c6c6]
         bg-white
-        p-[18px_22px]
-        shadow-[0_10px_24px_-6px_rgba(13,38,33,0.18)]
 
-        max-[560px]:top-4
-        max-[560px]:left-4
-        max-[560px]:w-[260px]
-        max-[560px]:max-w-[calc(100%-32px)]
-        max-[560px]:p-[14px_16px]
+        min-[561px]:h-[520px]
+        max-[900px]:min-[561px]:h-[400px]
+
+        max-[560px]:flex
+        max-[560px]:flex-col
+        max-[560px]:border-0
       "
             >
-              {/* Clinic Name */}
-              <p className="mb-1.5 font-heading text-xs font-semibold uppercase tracking-[0.04em] text-accent">
-                {content.map_label_name}
-              </p>
+              {/* ================= GOOGLE MAP ================= */}
 
-              {/* Address Line 1 */}
-              <p className="mb-1 font-heading text-base font-semibold leading-[1.4] text-text-dark">
-                {content.map_label_line1}
-              </p>
-
-              {/* Address Line 2 */}
-              <p className="mb-4 font-heading text-[13px] leading-[1.5] text-[#60736e]">
-                {content.map_label_line2}
-              </p>
-
-              {/* Get Directions */}
-              <a
-                href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
-                  mapQuery,
-                )}`}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Get directions to Krishnormi clinic"
+              <div
                 className="
-          inline-flex
-          items-center
-          gap-2
-          rounded-[6px]
-          bg-primary
-          px-4
-          py-2.5
-          font-heading
-          text-[13px]
-          font-semibold
-          text-white
-          transition-all
-          duration-200
-          hover:bg-primary-dark
-          hover:shadow-md
+          absolute
+          inset-0
+          overflow-hidden
+
+          max-[560px]:relative
+          max-[560px]:inset-auto
+          max-[560px]:h-[320px]
+          max-[560px]:w-full
+          max-[560px]:border
+          max-[560px]:border-[#c6c6c6]
         "
               >
-                Get Directions
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden="true"
+                <iframe
+                  title="Krishnormi clinic location"
+                  src={`https://www.google.com/maps?q=${encodeURIComponent(
+                    mapQuery,
+                  )}&output=embed`}
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="
+            absolute
+            inset-0
+            h-full
+            w-full
+            border-0
+          "
+                />
+              </div>
+
+              {/* ================= LOCATION CARD ================= */}
+
+              <div
+                className="
+          absolute
+          top-6
+          left-6
+          z-10
+
+          w-[300px]
+          max-w-[calc(100%-48px)]
+
+          rounded-[15px]
+          border
+          border-[#d6e3dd]
+          bg-white
+
+          p-[18px_22px]
+
+          shadow-[0_10px_24px_-6px_rgba(13,38,33,0.18)]
+
+          max-[560px]:relative
+          max-[560px]:top-auto
+          max-[560px]:left-auto
+          max-[560px]:z-auto
+
+          max-[560px]:w-full
+          max-[560px]:max-w-none
+
+          max-[560px]:rounded-none
+          max-[560px]:border-t-0
+
+          max-[560px]:p-[18px_20px]
+
+          max-[560px]:shadow-none
+        "
+              >
+                {/* Clinic Name */}
+
+                <p
+                  className="
+            mb-1.5
+            font-heading
+            text-xs
+            font-semibold
+            uppercase
+            tracking-[0.04em]
+            text-accent
+          "
                 >
-                  <path
-                    d="M5 12h14M13 6l6 6-6 6"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </a>
+                  {content.map_label_name}
+                </p>
+
+                {/* Address Line 1 */}
+
+                <p
+                  className="
+            mb-1
+            font-heading
+            text-base
+            font-semibold
+            leading-[1.4]
+            text-text-dark
+          "
+                >
+                  {content.map_label_line1}
+                </p>
+
+                {/* Address Line 2 */}
+
+                <p
+                  className="
+            mb-4
+            font-heading
+            text-[13px]
+            leading-[1.5]
+            text-[#60736e]
+          "
+                >
+                  {content.map_label_line2}
+                </p>
+
+                {/* ================= GET DIRECTIONS ================= */}
+
+                <a
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+                    mapQuery,
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Get directions to Krishnormi clinic"
+                  className="
+            inline-flex
+            items-center
+            justify-center
+            gap-2
+
+            rounded-[6px]
+            bg-primary
+
+            px-4
+            py-2.5
+
+            font-heading
+            text-[13px]
+            font-semibold
+            text-white
+
+            transition-all
+            duration-200
+
+            hover:bg-primary-dark
+            hover:shadow-md
+
+            max-[560px]:w-full
+            max-[560px]:py-3
+          "
+                >
+                  Get Directions
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M5 12h14M13 6l6 6-6 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </a>
+              </div>
             </div>
           </ContactReveal>
         </section>

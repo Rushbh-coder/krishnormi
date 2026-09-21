@@ -446,7 +446,7 @@ Deno.serve(async (req: Request) => {
           <tr>
             <td align="center" style="background:#ffffff;padding:32px 30px 8px;">
               <img
-src="https://krishnormi.vercel.app/images/logo-icon.png"
+src="https://krishnormi.vercel.app/public/logo-icon.png"
 alt="Krishnormi Logo"
 width="80"
 style="
