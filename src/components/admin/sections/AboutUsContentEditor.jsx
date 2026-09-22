@@ -976,7 +976,7 @@ export default function AboutUsContentEditor({
               value={content.doctors.doctor_1.bio}
               onChange={setNested("doctors.doctor_1.bio")}
               rows={5}
-              maxLength={300}
+              maxLength={200}
             />
           </Field>
         </div>
@@ -1045,7 +1045,7 @@ export default function AboutUsContentEditor({
               value={content.doctors.doctor_2.bio}
               onChange={setNested("doctors.doctor_2.bio")}
               rows={5}
-              maxLength={300}
+              maxLength={200}
             />
           </Field>
         </div>
