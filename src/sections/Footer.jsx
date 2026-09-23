@@ -3,13 +3,29 @@ import logoWordmark from "../assets/header/logo-wordmark.png";
 import bgFull from "../assets/footer/bg-full.png";
 import bgMobile from "../assets/footer/bg-mobile.png";
 import decoration from "../assets/footer/decoration.svg";
-import { FaFacebookF, FaLinkedinIn, FaGoogle, FaWhatsapp, FaMapMarkerAlt, FaEnvelope, FaPhoneAlt } from "react-icons/fa";
+
+import {
+  FaFacebookF,
+  FaLinkedinIn,
+  FaGoogle,
+  FaWhatsapp,
+  FaMapMarkerAlt,
+  FaEnvelope,
+  FaPhoneAlt,
+} from "react-icons/fa";
+
 import { FaXTwitter } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+
+import { Link, useLocation } from "react-router-dom";
 
 import { useSection } from "../context/HomepageContentContext";
 import { DEFAULT_CONTENT } from "../data/homepageDefaults";
-import { useReducedMotion, useRevealOnce, revealClass } from "../hooks/useScrollReveal";
+
+import {
+  useReducedMotion,
+  useRevealOnce,
+  revealClass,
+} from "../hooks/useScrollReveal";
 
 const linksCol1 = [
   { name: "About Us", link: "/about-us" },
@@ -24,12 +40,14 @@ const linksCol1 = [
 //   "Treatments",
 //   "Gallery",
 //   "Contact Us",
-  
 // ];
 
 const COL_BORDER = "[&:not(:last-child)]:border-[rgba(128,128,128,0.3)]";
 
 export default function Footer() {
+  // ONLY ADDED FOR ACTIVE LINK
+  const location = useLocation();
+
   const { row } = useSection("footer");
   const content = row?.content ?? DEFAULT_CONTENT.footer;
 
@@ -60,8 +78,7 @@ export default function Footer() {
     {
       Icon: FaWhatsapp,
       label: "WhatsApp",
-      href:  "https://wa.me/918866589956?text=Hello%20Dr.%20Deepa%20Bhatt%2C%20I%20am%20reaching%20out%20to%20book%20a%20consultation%20appointment.%20Please%20share%20your%20upcoming%20availability%20so%20we%20can%20connect.",
-
+      href: "https://wa.me/918866589956?text=Hello%20Dr.%20Deepa%20Bhatt%2C%20I%20am%20reaching%20out%20to%20book%20a%20consultation%20appointment.%20Please%20share%20your%20upcoming%20availability%20so%20we%20can%20connect.",
     },
   ];
 
@@ -94,7 +111,9 @@ export default function Footer() {
       {/* Main Footer Content */}
       <div
         ref={contentRef}
-        className={`container relative z-10 grid grid-cols-[1.15fr_1fr_1fr] gap-10 pb-12 max-[900px]:grid-cols-1 ${revealClass(contentVisible)}`}
+        className={`container relative z-10 grid grid-cols-[1.15fr_1fr_1fr] gap-10 pb-12 max-[900px]:grid-cols-1 ${revealClass(
+          contentVisible,
+        )}`}
       >
         {/* LEFT COLUMN */}
         <div
@@ -224,29 +243,45 @@ export default function Footer() {
 
           <div className="flex gap-8">
             <ul className="m-0 list-none p-0">
-              {linksCol1.map((item, index) => (
-                <li
-                  key={item.name}
-                  className="
-        py-2
-        font-heading
-        text-[17px]
-        font-semibold
-      "
-                >
-                  <Link
-                    to={item.link}
-                    className={`
-          transition
-          duration-200
-          hover:text-accent
-          ${index === 0 ? "text-accent" : "text-text-dark"}
-        `}
+              {linksCol1.map((item) => {
+                /*
+                  ACTIVE LINK LOGIC ONLY.
+
+                  Exact:
+                  /about-us -> About Us
+
+                  Child URL:
+                  /blogs/example -> Blogs
+                  /treatments/example -> Treatments
+                */
+                const isActive =
+                  location.pathname === item.link ||
+                  location.pathname.startsWith(`${item.link}/`);
+
+                return (
+                  <li
+                    key={item.name}
+                    className="
+                      py-2
+                      font-heading
+                      text-[17px]
+                      font-semibold
+                    "
                   >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
+                    <Link
+                      to={item.link}
+                      className={`
+                        transition
+                        duration-200
+                        hover:text-accent
+                        ${isActive ? "text-accent" : "text-text-dark"}
+                      `}
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
 
             {/* <ul className="m-0 list-none p-0">
