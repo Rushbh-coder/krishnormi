@@ -287,13 +287,13 @@ function DoctorCard({ photo, name, badge, role, bio, cardTextureUrl }) {
     items-center
     justify-center
 
-    whitespace-nowrap
+    mx-auto
 
     w-[150px]
+    whitespace-nowrap
 
     max-[460px]:w-[150px]
     max-[460px]:text-sm
-    max-[460px]:mx-22
   "
           >
             View Profile

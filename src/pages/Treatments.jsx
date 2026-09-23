@@ -188,7 +188,7 @@ export default function Treatments() {
             MEET OUR DOCTORS
             Now receives same mapped data as About page
         ================================================= */}
-        <div className="treatment-doctors-section -translate-y-1/40">
+        <div className="treatment-doctors-section ">
           <style>{`
     .treatment-doctors-section .doctors-band {
       border-radius: 50% 50% 0 0 / 3vw 3vw 0 0 !important;

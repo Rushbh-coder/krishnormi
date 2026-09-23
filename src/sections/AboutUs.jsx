@@ -686,9 +686,10 @@ export default function AboutUs() {
                 className={`
     group
     rounded-[10px]
-    border-x
+    // border-x-[#e]
     border-y-[3px]
-    border-x-[#e9e9e9]
+    border-y-[#A9A9A9]
+    border-x-accent
     px-7
     py-8
     text-left
@@ -697,8 +698,9 @@ export default function AboutUs() {
     ease-out
     hover:-translate-y-1
     hover:border-y-accent
+    hover:border-y-[3px]
     hover:shadow-[0_10px_25px_rgba(0,0,0,0.08)]
-    ${isActive ? "border-y-accent" : "border-y-[#e9e9e9]"}
+    
   `}
               >
                 <img

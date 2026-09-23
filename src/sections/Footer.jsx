@@ -6,13 +6,14 @@ import decoration from "../assets/footer/decoration.svg";
 import { FaFacebookF, FaLinkedinIn, FaGoogle, FaWhatsapp, FaMapMarkerAlt, FaEnvelope, FaPhoneAlt } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+
 import { useSection } from "../context/HomepageContentContext";
 import { DEFAULT_CONTENT } from "../data/homepageDefaults";
 import { useReducedMotion, useRevealOnce, revealClass } from "../hooks/useScrollReveal";
 
 const linksCol1 = [
   { name: "About Us", link: "/about-us" },
-  { name: "Our Doctor", link: "/our-doctor" },
+  { name: "Our Doctors", link: "/our-doctor" },
   { name: "Blogs", link: "/blogs" },
   { name: "Treatments", link: "/treatments" },
   { name: "Gallery", link: "/gallery" },
