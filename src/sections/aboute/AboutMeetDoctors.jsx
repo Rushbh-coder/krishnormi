@@ -192,20 +192,20 @@ function DoctorCard({ photo, name, badge, role, bio, cardTextureUrl }) {
           </div>
 
           <div className="relative z-[3] flex flex-col items-center px-5 pt-5 pb-7 text-center max-[375px]:px-4">
-            <span className="mb-3 inline-flex min-h-[32px] w-fit items-center justify-center rounded-full bg-[#5d8648] px-4 py-[7px] font-heading text-[12px] leading-none font-semibold whitespace-nowrap text-white">
+            <span className="mb-3  inline-flex min-h-[32px] w-fit items-center justify-center rounded-full bg-[#5d8648] px-4 py-[7px] font-heading text-[12px] leading-none font-semibold whitespace-nowrap text-white">
               {badge}
             </span>
 
-            <h3 className="m-0 font-heading text-[21px] leading-[1.2] font-semibold text-white max-[375px]:text-[19px]">
+            <h3 className="m-0  font-heading text-[21px] leading-[1.2] font-semibold text-white max-[375px]:text-[19px]">
               {name}
             </h3>
 
-            <p className="mt-1.5 mb-0 mx-auto max-w-[340px] font-heading text-[12px] leading-[1.5] text-white/90">
+            <p className="mt-2.5 mb-0 mx-auto max-w-[340px] font-heading text-[16px] leading-[1.5] text-white/90">
               {role}
             </p>
 
             {bio && (
-              <p className="m-0 mt-4 mx-auto max-w-[355px] font-body text-[12px] leading-[1.65] text-white/85 max-[375px]:text-[11px]">
+              <p className="m-0 mt-4 mx-auto max-w-[355px] font-body text-[14px] leading-[1.65] text-white/85 max-[375px]:text-[11px]">
                 {bio}
               </p>
             )}
@@ -330,7 +330,7 @@ export default function AboutMeetDoctors({ content = {}, stats = [] }) {
         bg-white
 
         pb-[100px]
-
+        
         max-[900px]:pb-[80px]
         max-[640px]:pb-[60px]
       "
@@ -379,7 +379,7 @@ export default function AboutMeetDoctors({ content = {}, stats = [] }) {
           absolute
           inset-x-0
 
-          top-[120px]
+          top-5%
           bottom-0
 
           z-0
@@ -418,12 +418,14 @@ export default function AboutMeetDoctors({ content = {}, stats = [] }) {
           max-w-[1240px]
 
           px-4
-          pt-16
+          
+          pt-[-20]
           pb-14
 
           sm:px-6
 
           lg:px-10
+          
 
           max-[900px]:
           pt-12
@@ -455,7 +457,9 @@ export default function AboutMeetDoctors({ content = {}, stats = [] }) {
             bg-[#082D70]
 
             px-4
-            py-5
+            py-3
+            mt-20
+
 
             sm:gap-3
             sm:px-5
@@ -638,7 +642,7 @@ export default function AboutMeetDoctors({ content = {}, stats = [] }) {
             "
           />
 
-          <p
+          <h4
             className="
               mx-auto
               mb-3
@@ -656,13 +660,13 @@ export default function AboutMeetDoctors({ content = {}, stats = [] }) {
               max-[640px]:
               max-w-[350px]
               px-2
-              text-[14px]
+              text-[18px]
               leading-[1.65]
             "
           >
             {content.doctors_subtitle ||
               "Expert Dermatology Guided by Experience, Evidence and Individual Care."}
-          </p>
+          </h4>
 
           <p
             className="

@@ -133,7 +133,7 @@ export default function AboutWhatGuidesUs({ content }) {
       className="
           w-full
           bg-white
-          pt-[120px]
+          pt-[80px]
           pb-[30px]
           max-[700px]:py-14
         "

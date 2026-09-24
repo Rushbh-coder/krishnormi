@@ -285,7 +285,9 @@ export default function AboutUsPage() {
       <main key={aboutRow?.updated_at || "about-page"}>
         <AboutHero content={content} />
         <AboutModernPractice content={content} />
+        
         <AboutMeetDoctors content={content} stats={stats} />
+       
         <AboutWhatGuidesUs content={content} />
         <WhyChoose />
       </main>

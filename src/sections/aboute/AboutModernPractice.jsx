@@ -15,7 +15,7 @@ export default function AboutModernPractice({ content }) {
           w-full
           bg-white
           pt-[100px]
-          pb-[40px]
+          pb-0
           max-[900px]:py-14
         "
         >
