@@ -1990,9 +1990,9 @@ export default function AboutUs() {
     linear-gradient(
       90deg,
       transparent,
-      #BCCE8D,
-      #1B3B13,
-      #BCCE8D,
+      #14db8c,
+      #23b95c,
+      #248612,
       transparent
     );
 
@@ -2139,7 +2139,7 @@ export default function AboutUs() {
 
   border:
     1px dashed
-    rgba(0,34,97,.20);
+    rgba(73, 97, 0, 0.2);
 }
 
 .focus-wow-card:hover
@@ -2419,7 +2419,7 @@ export default function AboutUs() {
   background:
     radial-gradient(
       circle,
-      rgba(188,206,141,.30),
+      rgba(178, 245, 8, 0.3),
       transparent 68%
     );
 

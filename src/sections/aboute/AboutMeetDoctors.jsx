@@ -192,27 +192,34 @@ function DoctorCard({ photo, name, badge, role, bio, cardTextureUrl }) {
           </div>
 
           <div className="relative z-[3] flex flex-col items-center px-5 pt-5 pb-7 text-center max-[375px]:px-4">
-            <span className="mb-3  inline-flex min-h-[32px] w-fit items-center justify-center rounded-full bg-[#5d8648] px-4 py-[7px] font-heading text-[12px] leading-none font-semibold whitespace-nowrap text-white">
-              {badge}
-            </span>
+            {/* Badge */}
+            <div className="mb-5 py-2">
+              <span className="inline-flex min-h-[32px] w-fit items-center justify-center rounded-full bg-[#5d8648] px-4 py-0 font-heading text-[12px] leading-none font-semibold whitespace-nowrap text-white">
+                {badge}
+              </span>
+            </div>
 
-            <h3 className="m-0  font-heading text-[21px] leading-[1.2] font-semibold text-white max-[375px]:text-[19px]">
+            {/* Name */}
+            <h3 className="m-0 font-heading text-[21px] leading-[1.2] font-semibold text-white max-[375px]:text-[19px]">
               {name}
             </h3>
 
-            <p className="mt-2.5 mb-0 mx-auto max-w-[340px] font-heading text-[16px] leading-[1.5] text-white/90">
+            {/* Role */}
+            <p className="mt-4 mb-0 mx-auto max-w-[340px] font-heading text-[16px] leading-[1.8] text-white/90">
               {role}
             </p>
 
+            {/* Bio */}
             {bio && (
-              <p className="m-0 mt-4 mx-auto max-w-[355px] font-body text-[14px] leading-[1.65] text-white/85 max-[375px]:text-[11px]">
+              <p className="m-0 mt-6 mx-auto max-w-[355px] font-body text-[14px] leading-[1.65] text-white/85 max-[375px]:text-[11px]">
                 {bio}
               </p>
             )}
 
+            {/* Button */}
             <a
               href="/our-doctor"
-              className="btn-hero kr-btn mt-5 inline-flex h-[46px] w-[150px] flex-none items-center justify-center rounded-full text-[13px] font-semibold whitespace-nowrap"
+              className="btn-hero kr-btn mt-7 inline-flex h-[46px] w-[150px] flex-none items-center justify-center rounded-full text-[13px] font-semibold whitespace-nowrap"
             >
               View Profile
             </a>
@@ -393,7 +400,7 @@ export default function AboutMeetDoctors({ content = {}, stats = [] }) {
           top-[150px]
 
           max-[640px]:
-          top-[210px]
+          top-[120px]
         "
         style={{
           backgroundImage: `url(${
@@ -409,31 +416,28 @@ export default function AboutMeetDoctors({ content = {}, stats = [] }) {
 
       <div
         className="
-          relative
-          z-10
+    relative
+    z-10
 
-          mx-auto
+    mx-auto
 
-          w-full
-          max-w-[1240px]
+    w-full
+    max-w-[1240px]
 
-          px-4
-          
-          pt-[-20]
-          pb-14
+    px-4
 
-          sm:px-6
+    py-8
 
-          lg:px-10
-          
+    sm:px-6
+    sm:py-10
 
-          max-[900px]:
-          pt-12
+    md:py-12
 
-          max-[640px]:
-          pt-7
-          pb-10
-        "
+    lg:px-10
+    lg:py-16
+
+    xl:py-20
+    xl:mb-0  "
       >
         <div
           ref={statsRef}
@@ -458,7 +462,7 @@ export default function AboutMeetDoctors({ content = {}, stats = [] }) {
 
             px-4
             py-3
-            mt-20
+            
 
 
             sm:gap-3
@@ -470,6 +474,8 @@ export default function AboutMeetDoctors({ content = {}, stats = [] }) {
 
             lg:grid-cols-4
             lg:gap-0
+
+            
 
             transition-all
             duration-700
@@ -610,6 +616,7 @@ export default function AboutMeetDoctors({ content = {}, stats = [] }) {
 
           sm:px-6
           lg:px-10
+          xl:my-3
         "
       >
         {/* HEADING */}
