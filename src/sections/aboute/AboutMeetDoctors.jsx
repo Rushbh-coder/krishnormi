@@ -111,7 +111,7 @@ const STAT_ICONS = [
 ];
 
 /* =========================================================
-   REUSABLE CARD CONTENT
+   REUSABLE DOCTOR CARD
 ========================================================= */
 
 function DoctorCard({ photo, name, badge, role, bio, cardTextureUrl }) {
@@ -121,7 +121,10 @@ function DoctorCard({ photo, name, badge, role, bio, cardTextureUrl }) {
       className="kr-doctor-card relative h-full w-full min-w-0"
     >
       <article className="relative h-full w-full min-w-0">
-        {/* DESKTOP / LAPTOP: preserve original angled reference shape */}
+        {/* =================================================
+            DESKTOP / LAPTOP
+        ================================================= */}
+
         <div className="relative hidden w-full sm:block aspect-[665/460]">
           <div className="absolute inset-0 [filter:drop-shadow(0_18px_32px_rgba(0,0,0,0.24))] mr-5">
             <div className="absolute inset-0 overflow-hidden [clip-path:polygon(17.75%_0,100%_0,100%_100%,0_100%)]">
@@ -131,6 +134,7 @@ function DoctorCard({ photo, name, badge, role, bio, cardTextureUrl }) {
                 aria-hidden="true"
                 className="absolute inset-0 h-full w-full object-cover object-[75%_center]"
               />
+
               <div className="absolute inset-0 bg-[linear-gradient(to_left,rgba(36,71,17,0.72)_0%,#15350e_14%,#15350e_100%)]" />
             </div>
           </div>
@@ -138,25 +142,116 @@ function DoctorCard({ photo, name, badge, role, bio, cardTextureUrl }) {
           <img
             src={photo}
             alt={name}
-            className="kr-doctor-photo pointer-events-none absolute bottom-0 left-[-8%] z-[2] h-[94%] w-[47%] max-w-none object-contain object-bottom drop-shadow-[0_22px_30px_rgba(0,0,0,0.28)] lg:left-[-9%] lg:h-[96%] xl:left-[-10%] xl:h-[97%] 2xl:left-[-9%]"
+            className="
+              kr-doctor-photo
+              pointer-events-none
+              absolute
+              bottom-0
+              left-[-8%]
+              z-[2]
+              h-[94%]
+              w-[47%]
+              max-w-none
+              object-contain
+              object-bottom
+              drop-shadow-[0_22px_30px_rgba(0,0,0,0.28)]
+              lg:left-[-9%]
+              lg:h-[96%]
+              xl:left-[-10%]
+              xl:h-[97%]
+              2xl:left-[-9%]
+            "
           />
 
           <div className="absolute inset-y-0 right-0 z-[3] flex w-[61%] flex-col justify-center pr-[6%] pl-[5%] py-[6%]">
-            <span className="mb-3 inline-flex min-h-[30px] w-fit items-center justify-center rounded-full bg-[#5d8648] px-4 py-[7px] font-heading text-[11px] leading-none font-semibold whitespace-nowrap text-white lg:min-h-[32px] lg:px-5 lg:text-[12px] xl:text-[13px]">
+            <span
+              className="
+              mb-3
+              inline-flex
+              min-h-[30px]
+              w-fit
+              items-center
+              justify-center
+              rounded-full
+              bg-[#5d8648]
+              px-4
+              py-[7px]
+              font-heading
+              text-[11px]
+              leading-none
+              font-semibold
+              whitespace-nowrap
+              text-white
+              lg:min-h-[32px]
+              lg:px-5
+              lg:text-[12px]
+              xl:text-[13px]
+            "
+            >
               {badge}
             </span>
 
-            <h3 className="m-0 font-heading text-[18px] leading-[1.2] font-semibold text-white lg:text-[20px] xl:text-[22px]">
+            <h3
+              className="
+              m-0
+              font-heading
+              text-[18px]
+              leading-[1.2]
+              font-semibold
+              text-white
+              lg:text-[20px]
+              xl:text-[22px]
+            "
+            >
               {name}
             </h3>
 
-            <p className="mt-1.5 mb-0 min-h-[38px] max-w-[360px] font-heading text-[11px] leading-[1.45] text-white/90 lg:text-[12px] xl:text-[13px]">
+            <p
+              className="
+              mt-1.5
+              mb-0
+              min-h-[38px]
+              max-w-[360px]
+              font-heading
+              text-[11px]
+              leading-[1.45]
+              text-white/90
+              lg:text-[12px]
+              xl:text-[13px]
+            "
+            >
               {role}
             </p>
 
-            <div className="mt-3 min-h-[86px] w-full lg:min-h-[96px] xl:min-h-[105px]">
+            <div
+              className="
+              mt-3
+              min-h-[86px]
+              w-full
+              lg:min-h-[96px]
+              xl:min-h-[105px]
+            "
+            >
               {bio && (
-                <p className="m-0 max-w-[390px] font-body text-[10px] leading-[1.55] text-white/85 lg:text-[11px] lg:leading-[1.6] xl:text-[12px] xl:leading-[1.65]">
+                <p
+                  className="
+                    m-0
+                    max-w-[390px]
+
+                    whitespace-pre-wrap
+
+                    font-body
+                    text-[10px]
+                    leading-[1.55]
+                    text-white/85
+
+                    lg:text-[11px]
+                    lg:leading-[1.6]
+
+                    xl:text-[12px]
+                    xl:leading-[1.65]
+                  "
+                >
                   {bio}
                 </p>
               )}
@@ -165,7 +260,28 @@ function DoctorCard({ photo, name, badge, role, bio, cardTextureUrl }) {
             <div className="mt-3 flex w-full justify-start">
               <a
                 href="/our-doctor"
-                className="btn-hero kr-btn inline-flex h-[42px] w-[138px] flex-none items-center justify-center rounded-full text-[12px] font-semibold whitespace-nowrap lg:h-[44px] lg:w-[145px] lg:text-[13px] xl:h-[46px] xl:w-[150px] xl:text-[14px]"
+                className="
+                  btn-hero
+                  kr-btn
+                  inline-flex
+                  h-[42px]
+                  w-[138px]
+                  flex-none
+                  items-center
+                  justify-center
+                  rounded-full
+                  text-[12px]
+                  font-semibold
+                  whitespace-nowrap
+
+                  lg:h-[44px]
+                  lg:w-[145px]
+                  lg:text-[13px]
+
+                  xl:h-[46px]
+                  xl:w-[150px]
+                  xl:text-[14px]
+                "
               >
                 View Profile
               </a>
@@ -173,53 +289,195 @@ function DoctorCard({ photo, name, badge, role, bio, cardTextureUrl }) {
           </div>
         </div>
 
-        {/* MOBILE: shape changes only here */}
-        <div className="relative w-full overflow-hidden rounded-[24px] bg-[#15350e] shadow-[0_16px_38px_rgba(0,0,0,0.22)] sm:hidden">
+        {/* =================================================
+            MOBILE
+        ================================================= */}
+
+        <div
+          className="
+          relative
+          w-full
+          overflow-hidden
+          rounded-[24px]
+          bg-[#15350e]
+          shadow-[0_16px_38px_rgba(0,0,0,0.22)]
+          sm:hidden
+        "
+        >
           <img
             src={cardTextureUrl || cardTexture}
             alt=""
             aria-hidden="true"
-            className="absolute inset-0 h-full w-full object-cover object-center opacity-35"
+            className="
+              absolute
+              inset-0
+              h-full
+              w-full
+              object-cover
+              object-center
+              opacity-35
+            "
           />
-          <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(36,71,17,0.58)_0%,#15350e_46%,#15350e_100%)]" />
 
-          <div className="relative z-[2] flex h-[255px] w-full items-end justify-center max-[430px]:h-[245px] max-[375px]:h-[225px]">
+          <div
+            className="
+            absolute
+            inset-0
+            bg-[linear-gradient(to_bottom,rgba(36,71,17,0.58)_0%,#15350e_46%,#15350e_100%)]
+          "
+          />
+
+          {/* Doctor image */}
+
+          <div
+            className="
+            relative
+            z-[2]
+            flex
+            h-[255px]
+            w-full
+            items-end
+            justify-center
+
+            max-[430px]:h-[245px]
+            max-[375px]:h-[225px]
+          "
+          >
             <img
               src={photo}
               alt={name}
-              className="block h-[98%] w-auto max-w-[86%] object-contain object-bottom drop-shadow-[0_18px_26px_rgba(0,0,0,0.28)]"
+              className="
+                block
+                h-[98%]
+                w-auto
+                max-w-[86%]
+                object-contain
+                object-bottom
+                drop-shadow-[0_18px_26px_rgba(0,0,0,0.28)]
+              "
             />
           </div>
 
-          <div className="relative z-[3] flex flex-col items-center px-5 pt-5 pb-7 text-center max-[375px]:px-4">
+          {/* Mobile content */}
+
+          <div
+            className="
+            relative
+            z-[3]
+            flex
+            flex-col
+            items-center
+            px-5
+            pt-5
+            pb-7
+            text-center
+
+            max-[375px]:px-4
+          "
+          >
             {/* Badge */}
+
             <div className="mb-5 py-2">
-              <span className="inline-flex min-h-[32px] w-fit items-center justify-center rounded-full bg-[#5d8648] px-4 py-0 font-heading text-[12px] leading-none font-semibold whitespace-nowrap text-white">
+              <span
+                className="
+                inline-flex
+                min-h-[32px]
+                w-fit
+                items-center
+                justify-center
+                rounded-full
+                bg-[#5d8648]
+                px-4
+                py-0
+                font-heading
+                text-[12px]
+                leading-none
+                font-semibold
+                whitespace-nowrap
+                text-white
+              "
+              >
                 {badge}
               </span>
             </div>
 
             {/* Name */}
-            <h3 className="m-0 font-heading text-[21px] leading-[1.2] font-semibold text-white max-[375px]:text-[19px]">
+
+            <h3
+              className="
+              m-0
+              font-heading
+              text-[21px]
+              leading-[1.2]
+              font-semibold
+              text-white
+
+              max-[375px]:text-[19px]
+            "
+            >
               {name}
             </h3>
 
             {/* Role */}
-            <p className="mt-4 mb-0 mx-auto max-w-[340px] font-heading text-[16px] leading-[1.8] text-white/90">
+
+            <p
+              className="
+              mt-4
+              mb-0
+              mx-auto
+              max-w-[340px]
+              font-heading
+              text-[16px]
+              leading-[1.8]
+              text-white/90
+            "
+            >
               {role}
             </p>
 
             {/* Bio */}
+
             {bio && (
-              <p className="m-0 mt-6 mx-auto max-w-[355px] font-body text-[14px] leading-[1.65] text-white/85 max-[375px]:text-[11px]">
+              <p
+                className="
+                  m-0
+                  mt-6
+                  mx-auto
+                  max-w-[355px]
+
+                  whitespace-pre-wrap
+
+                  font-body
+                  text-[14px]
+                  leading-[1.65]
+                  text-white/85
+
+                  max-[375px]:text-[11px]
+                "
+              >
                 {bio}
               </p>
             )}
 
             {/* Button */}
+
             <a
               href="/our-doctor"
-              className="btn-hero kr-btn mt-7 inline-flex h-[46px] w-[150px] flex-none items-center justify-center rounded-full text-[13px] font-semibold whitespace-nowrap"
+              className="
+                btn-hero
+                kr-btn
+                mt-7
+                inline-flex
+                h-[46px]
+                w-[150px]
+                flex-none
+                items-center
+                justify-center
+                rounded-full
+                text-[13px]
+                font-semibold
+                whitespace-nowrap
+              "
             >
               View Profile
             </a>
@@ -337,7 +595,7 @@ export default function AboutMeetDoctors({ content = {}, stats = [] }) {
         bg-white
 
         pb-[100px]
-        
+
         max-[900px]:pb-[80px]
         max-[640px]:pb-[60px]
       "
@@ -346,15 +604,11 @@ export default function AboutMeetDoctors({ content = {}, stats = [] }) {
         maxWidth: "100vw",
 
         marginLeft: "calc(50% - 50vw)",
-
         marginRight: "calc(50% - 50vw)",
       }}
     >
       {/* =================================================
           BACKGROUND SHAPE
-
-          Desktop = original curved shape
-          Tablet/mobile = adjusted responsive shape
       ================================================= */}
 
       <style>{`
@@ -416,28 +670,28 @@ export default function AboutMeetDoctors({ content = {}, stats = [] }) {
 
       <div
         className="
-    relative
-    z-10
+          relative
+          z-10
 
-    mx-auto
+          mx-auto
 
-    w-full
-    max-w-[1240px]
+          w-full
+          max-w-[1240px]
 
-    px-4
+          px-4
+          py-8
 
-    py-8
+          sm:px-6
+          sm:py-10
 
-    sm:px-6
-    sm:py-10
+          md:py-12
 
-    md:py-12
+          lg:px-10
+          lg:py-16
 
-    lg:px-10
-    lg:py-16
-
-    xl:py-20
-    xl:mb-0  "
+          xl:py-20
+          xl:mb-0
+        "
       >
         <div
           ref={statsRef}
@@ -445,6 +699,7 @@ export default function AboutMeetDoctors({ content = {}, stats = [] }) {
             relative
 
             mx-auto
+
             grid
 
             w-full
@@ -462,8 +717,6 @@ export default function AboutMeetDoctors({ content = {}, stats = [] }) {
 
             px-4
             py-3
-            
-
 
             sm:gap-3
             sm:px-5
@@ -474,8 +727,6 @@ export default function AboutMeetDoctors({ content = {}, stats = [] }) {
 
             lg:grid-cols-4
             lg:gap-0
-
-            
 
             transition-all
             duration-700
@@ -616,11 +867,10 @@ export default function AboutMeetDoctors({ content = {}, stats = [] }) {
 
           sm:px-6
           lg:px-10
+
           xl:my-3
         "
       >
-        {/* HEADING */}
-
         <Reveal>
           <h2
             className="
@@ -704,10 +954,6 @@ export default function AboutMeetDoctors({ content = {}, stats = [] }) {
 
         {/* =================================================
             DOCTOR GRID
-
-            Desktop >= 1200 = two columns
-            Tablet <1200 = one column
-            Mobile <640 = vertical cards
         ================================================= */}
 
         <div
