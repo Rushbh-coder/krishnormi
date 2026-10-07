@@ -1,6 +1,6 @@
 // @ts-nocheck
-import logo from "../../../src/assets/header/logo-icon.png"
-import logoText from "../../../src/assets/header/logo-wordmark.png"
+import { LOGO_ICON_BASE64, LOGO_WORDMARK_BASE64 } from "./logos.ts";
+
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -51,6 +51,19 @@ function formatDate(value: string) {
   }).format(date);
 }
 
+// Base64 keeps every line short and ASCII-only, so long HTML lines and
+// characters like "•" or "✓" survive SMTP without being mangled.
+function encodeMimeBody(value: string) {
+  const bytes = new TextEncoder().encode(value);
+  let binary = "";
+
+  for (const byte of bytes) {
+    binary += String.fromCharCode(byte);
+  }
+
+  return btoa(binary).replace(/.{76}/g, "$&\r\n");
+}
+
 async function readSmtpResponse(reader: ReadableStreamDefaultReader<Uint8Array>) {
   const decoder = new TextDecoder();
   let buffer = "";
@@ -82,11 +95,13 @@ async function sendEmailViaGmailSmtp({
   subject,
   html,
   text,
+  inlineImages = [],
 }: {
   to: string[];
   subject: string;
   html: string;
   text: string;
+  inlineImages?: { cid: string; filename: string; base64: string }[];
 }) {
   const SMTP_HOST = Deno.env.get("SMTP_HOST")?.trim() || "smtp.gmail.com";
   const SMTP_PORT = Number(Deno.env.get("SMTP_PORT") || "465");
@@ -170,15 +185,50 @@ async function sendEmailViaGmailSmtp({
       throw new Error(`SMTP DATA failed: ${response}`);
     }
 
+    const boundary = `krishnormi-${crypto.randomUUID()}`;
+    const relatedBoundary = `krishnormi-related-${crypto.randomUUID()}`;
+
+    const htmlPart = [
+      "Content-Type: text/html; charset=UTF-8",
+      "Content-Transfer-Encoding: base64",
+      "",
+      encodeMimeBody(html),
+    ];
+
+    // Inline images travel inside the email and are referenced from the HTML
+    // as cid:<id>, so they show without the client fetching anything remote.
+    const htmlWithImagesPart = [
+      `Content-Type: multipart/related; boundary="${relatedBoundary}"`,
+      "",
+      `--${relatedBoundary}`,
+      ...htmlPart,
+      ...inlineImages.flatMap((image) => [
+        `--${relatedBoundary}`,
+        `Content-Type: image/png; name="${image.filename}"`,
+        "Content-Transfer-Encoding: base64",
+        `Content-ID: <${image.cid}>`,
+        `Content-Disposition: inline; filename="${image.filename}"`,
+        "",
+        image.base64.replace(/.{76}/g, "$&\r\n"),
+      ]),
+      `--${relatedBoundary}--`,
+    ];
+
     const emailMessage = [
-      `From: ${SMTP_FROM}`,
+      `From: Krishnormi Dermatology <${SMTP_FROM}>`,
       `To: ${to.join(", ")}`,
       `Subject: ${subject}`,
       "MIME-Version: 1.0",
-      "Content-Type: text/html; charset=UTF-8",
+      `Content-Type: multipart/alternative; boundary="${boundary}"`,
       "",
-      html,
+      `--${boundary}`,
+      "Content-Type: text/plain; charset=UTF-8",
+      "Content-Transfer-Encoding: base64",
       "",
+      encodeMimeBody(text),
+      `--${boundary}`,
+      ...(inlineImages.length > 0 ? htmlWithImagesPart : htmlPart),
+      `--${boundary}--`,
       ".",
       "",
     ].join("\r\n");
@@ -380,291 +430,191 @@ Deno.serve(async (req: Request) => {
     const customerSubject = "Thank You for Contacting KRISHNORMI";
     const adminSubject = "New KRISHNORMI Appointment Request";
 
+    const SITE_URL = (
+      Deno.env.get("SITE_URL")?.trim() || "https://krishnormi.vercel.app"
+    ).replace(/\/+$/, "");
+
+    // The logos (from src/assets/header) are attached to the email inline and
+    // referenced by Content-ID, so they do not depend on any remote URL.
+    const LOGO_ICON_URL = "cid:krishnormi-logo-icon";
+    const LOGO_WORDMARK_URL = "cid:krishnormi-logo-wordmark";
+    const logoImages = [
+      { cid: "krishnormi-logo-icon", filename: "logo-icon.png", base64: LOGO_ICON_BASE64 },
+      { cid: "krishnormi-logo-wordmark", filename: "logo-wordmark.png", base64: LOGO_WORDMARK_BASE64 },
+    ];
+
+    const FONT_SANS = "Arial, Helvetica, sans-serif";
+    const FONT_SERIF = "Georgia, 'Times New Roman', serif";
+
+    const detailRow = (label: string, valueHtml: string, isLast = false) => `
+                <tr>
+                  <td width="38%" valign="top" style="padding:14px 12px 14px 22px;${isLast ? "" : "border-bottom:1px solid #f1e8ec;"}color:#8a8a8a;font-family:${FONT_SANS};font-size:11px;line-height:20px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;">${label}</td>
+                  <td width="62%" valign="top" style="padding:14px 22px 14px 12px;${isLast ? "" : "border-bottom:1px solid #f1e8ec;"}color:#2f2f2f;font-family:${FONT_SANS};font-size:14px;line-height:20px;font-weight:600;word-break:break-word;">${valueHtml}</td>
+                </tr>`;
+
+    const stepRow = (
+      badge: string,
+      badgeBackground: string,
+      badgeColor: string,
+      title: string,
+      titleColor: string,
+      description: string,
+      isLast = false,
+    ) => `
+                <tr>
+                  <td width="44" valign="top" style="padding:0 0 ${isLast ? "0" : "22px"};">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td width="44" height="44" align="center" valign="middle" bgcolor="${badgeBackground}" style="width:44px;height:44px;background:${badgeBackground};border-radius:22px;color:${badgeColor};font-family:${FONT_SANS};font-size:15px;line-height:44px;font-weight:700;">${badge}</td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td valign="top" style="padding:2px 0 ${isLast ? "0" : "22px"} 16px;">
+                    <p style="margin:0 0 3px;color:${titleColor};font-family:${FONT_SANS};font-size:15px;line-height:22px;font-weight:700;">${title}</p>
+                    <p style="margin:0;color:#6b6b6b;font-family:${FONT_SANS};font-size:13px;line-height:21px;">${description}</p>
+                  </td>
+                </tr>`;
+
     const customerHtml = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Thank You for Reaching Out | Krishnormi</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="color-scheme" content="light" />
+  <meta name="supported-color-schemes" content="light" />
+  <title>Thank You for Contacting KRISHNORMI</title>
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      background-color: #f7f3f1;
-    }
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      -webkit-text-size-adjust: 100%;
-      -ms-text-size-adjust: 100%;
-    }
+    body { margin: 0; padding: 0; width: 100%; background-color: #f7f3f1; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
     table { border-collapse: collapse; }
-    img { border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; max-width: 100%; }
-    a { text-decoration: none; }
-    @keyframes krishnormiLogoFade { 0% { opacity: 0; transform: translateY(-8px);} 100% { opacity:1; transform: translateY(0);} }
-    @keyframes krishnormiServices { 0% { opacity:0; transform:translateY(8px);} 100% { opacity:1; transform:translateY(0);} }
-    @keyframes krishnormiHero { 0% { opacity:0; transform:scale(1.035);} 100% { opacity:1; transform:scale(1);} }
-    @keyframes krishnormiHeading { 0% { opacity:0; transform:translateY(18px);} 100% { opacity:1; transform:translateY(0);} }
-    @keyframes krishnormiDescription { 0% { opacity:0; transform:translateY(12px);} 100% { opacity:1; transform:translateY(0);} }
-    @keyframes krishnormiDots { 0%, 100% { opacity:0.55;} 50% { opacity:1;} }
-    @keyframes krishnormiTrackStep { 0% { opacity:0; transform:translateY(10px) scale(0.9);} 100% { opacity:1; transform:translateY(0) scale(1);} }
-    @keyframes krishnormiTrackFill { 0% { background-position:100% 0;} 100% { background-position:0 0;} }
-    @keyframes krishnormiTrackPulse { 0% { transform:scale(0.75); opacity:0.55;} 70% { transform:scale(1.7); opacity:0;} 100% { transform:scale(1.7); opacity:0;} }
-    @keyframes krishnormiTrackGlow { 0%, 100% { box-shadow:0 0 0 0 rgba(181,45,104,0.35);} 50% { box-shadow:0 0 0 8px rgba(181,45,104,0);} }
-    @supports (animation-name: krishnormiLogoFade) {
-      .krishnormi-logo-animation { animation: krishnormiLogoFade 0.9s ease-out both; }
-      .krishnormi-services-animation { animation: krishnormiServices 0.7s ease-out 0.35s both; }
-      .krishnormi-hero-animation { animation: krishnormiHero 1.8s ease-out both; }
-      .krishnormi-heading-animation { animation: krishnormiHeading 0.85s ease-out 0.35s both; }
-      .krishnormi-description-animation { animation: krishnormiDescription 0.8s ease-out 0.55s both; }
-      .krishnormi-dots-animation { animation: krishnormiDots 2.4s ease-in-out infinite; }
-      .krishnormi-track-step-1 { animation: krishnormiTrackStep 0.6s ease-out 0.2s both; }
-      .krishnormi-track-step-2 { animation: krishnormiTrackStep 0.6s ease-out 0.9s both; }
-      .krishnormi-track-step-3 { animation: krishnormiTrackStep 0.6s ease-out 1.6s both; }
-      .krishnormi-track-line-1 { animation: krishnormiTrackFill 0.9s ease-out 0.7s both; }
-      .krishnormi-track-pulse { animation: krishnormiTrackPulse 1.8s ease-out 1.1s infinite; }
-      .krishnormi-track-active-node { animation: krishnormiTrackGlow 1.8s ease-in-out 1.1s infinite; }
-    }
-    @media only screen and (max-width: 600px) {
+    img { border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+    @media only screen and (max-width: 620px) {
       .email-container { width: 100% !important; }
-      .mobile-padding { padding-left: 24px !important; padding-right: 24px !important; }
-      .hero-title { font-size: 34px !important; line-height: 42px !important; }
-      .section-title { font-size: 25px !important; line-height: 34px !important; }
-      .hero-image { width: 100% !important; height: auto !important; }
-      .track-label { font-size: 10px !important; }
-      .track-node { width: 46px !important; height: 46px !important; font-size: 15px !important; }
+      .mobile-padding { padding-left: 22px !important; padding-right: 22px !important; }
+      .hero-title { font-size: 28px !important; line-height: 36px !important; }
+      .section-title { font-size: 21px !important; line-height: 29px !important; }
     }
   </style>
 </head>
-<body>
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#f7f3f1;width:100%;">
+<body style="margin:0;padding:0;background-color:#f7f3f1;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#f7f3f1;font-size:1px;line-height:1px;">
+    We have received your appointment request for ${escapeHtml(treatment)}. Our team will contact you shortly.
+  </div>
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#f7f3f1" style="width:100%;background-color:#f7f3f1;">
     <tr>
-      <td align="center" style="padding:40px 15px;">
-        <table role="presentation" width="620" cellspacing="0" cellpadding="0" border="0" class="email-container" style="width:620px;max-width:620px;background:#ffffff;margin:0 auto;">
+      <td align="center" style="padding:32px 12px;">
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" class="email-container" bgcolor="#ffffff" style="width:100%;max-width:600px;background:#ffffff;margin:0 auto;">
           <tr>
-            <td align="center" style="background:#ffffff;padding:32px 30px 8px;">
-              <img
-src="https://krishnormi.vercel.app/public/logo-icon.png"
-alt="Krishnormi Logo"
-width="80"
-style="
-display:block;
-height:auto;
-margin:auto;
-"
-/>              <img class="krishnormi-logo-animation" src={logoText} alt="Krishnormi" width="190" style="display:block;width:190px;max-width:100%;height:auto;margin:0 auto;opacity:1;" />
-            </td>
+            <td height="5" bgcolor="#16845b" style="height:5px;line-height:5px;font-size:0;background:#16845b;">&nbsp;</td>
           </tr>
           <tr>
-            <td align="center" style="background:#ffffff;padding:4px 30px 28px;">
-              <p class="krishnormi-services-animation" style="margin:0;padding:0;color:#16845b;font-family:Arial, Helvetica, sans-serif;font-size:11px;line-height:18px;font-weight:600;letter-spacing:2px;text-align:center;opacity:1;">
-                SKIN&nbsp;&nbsp;•&nbsp;&nbsp;HAIR&nbsp;&nbsp;•&nbsp;&nbsp;LASER&nbsp;&nbsp;•&nbsp;&nbsp;AESTHETICS
-              </p>
-            </td>
-          </tr>
-          <tr>
-            <td style="overflow:hidden;line-height:0;font-size:0;">
-              <img class="hero-image krishnormi-hero-animation" src="https://krishnormi.vercel.app/images/krishnormi-contact-banner.jpg" alt="Krishnormi" width="620" style="display:block;width:100%;max-width:620px;height:auto;margin:0;opacity:1;" />
-            </td>
-          </tr>
-          <tr>
-            <td align="center" class="mobile-padding" style="background:#fffaf8;padding:48px 50px 45px;">
-              <p style="margin:0 0 15px;color:#16845b;font-family:Arial, Helvetica, sans-serif;font-size:11px;line-height:18px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;">
-                MESSAGE RECEIVED
-              </p>
-              <h1 class="hero-title krishnormi-heading-animation" style="margin:0 0 20px;color:#b52d68;font-family:Georgia, 'Times New Roman', serif;font-size:40px;line-height:48px;font-weight:600;opacity:1;">
-                Thank You for<br />
-                Reaching Out
-              </h1>
-              <p class="krishnormi-description-animation" style="margin:0 auto;max-width:480px;color:#555555;font-family:Arial, Helvetica, sans-serif;font-size:15px;line-height:26px;opacity:1;">
-                Hi <strong style="color:#333333;">${escapeHtml(name)}</strong>,<br /><br />
-                We're so glad you connected with <strong style="color:#333333;">Krishnormi</strong>.
-                Your message has been received successfully, and our team will be in touch with you shortly.
-              </p>
-            </td>
-          </tr>
-          <tr>
-            <td align="center" style="background:#fffaf8;padding:0 0 35px;">
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+            <td align="center" class="mobile-padding" style="padding:34px 40px 30px;background:#ffffff;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:0 auto;">
                 <tr>
-                  <td class="krishnormi-dots-animation" style="width:6px;height:6px;background:#b52d68;border-radius:50%;font-size:0;">&nbsp;</td>
-                  <td style="width:8px;"></td>
-                  <td class="krishnormi-dots-animation" style="width:6px;height:6px;background:#16845b;border-radius:50%;font-size:0;animation-delay:0.2s;">&nbsp;</td>
-                  <td style="width:8px;"></td>
-                  <td class="krishnormi-dots-animation" style="width:6px;height:6px;background:#b52d68;border-radius:50%;font-size:0;animation-delay:0.4s;">&nbsp;</td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td class="mobile-padding" style="background:#ffffff;padding:48px 50px 52px;">
-              <p align="center" style="margin:0 0 10px;color:#16845b;font-family:Arial, Helvetica, sans-serif;font-size:11px;line-height:18px;font-weight:600;letter-spacing:2px;text-transform:uppercase;">
-                WHAT HAPPENS NEXT
-              </p>
-              <h2 class="section-title" align="center" style="margin:0 0 10px;color:#303030;font-family:Georgia, 'Times New Roman', serif;font-size:28px;line-height:36px;font-weight:600;">
-                Your message is with us.
-              </h2>
-              <p align="center" style="margin:0 0 40px;color:#999999;font-family:Arial, Helvetica, sans-serif;font-size:12px;line-height:19px;">
-                Status:
-                <span style="color:#b52d68; font-weight:700;">Under Review</span>
-              </p>
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                <tr>
-                  <td width="18%" align="center" valign="top">
-                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" class="krishnormi-track-step-1" style="opacity:1;">
-                      <tr>
-                        <td align="center" valign="middle" class="track-node" style="width:52px;height:52px;background:#16845b;border-radius:50%;color:#ffffff;font-family:Arial, Helvetica, sans-serif;font-size:18px;font-weight:bold;line-height:52px;">✓</td>
-                      </tr>
-                    </table>
+                  <td valign="middle" style="padding:0 12px 0 0;">
+                    <a href="${SITE_URL}/" target="_blank" style="text-decoration:none;">
+                      <img src="${LOGO_ICON_URL}" alt="" width="52" height="56" style="display:block;width:52px;height:56px;border:0;" />
+                    </a>
                   </td>
-                  <td width="32%" align="center" valign="middle" style="padding:0 4px;">
-                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                      <tr>
-                        <td class="krishnormi-track-line-1" style="height:4px;line-height:4px;font-size:0;border-radius:2px;background-image:linear-gradient(to right, #16845b 50%, #ece3e8 50%);background-size:200% 100%;background-position:0 0;">&nbsp;</td>
-                      </tr>
-                    </table>
-                  </td>
-                  <td width="18%" align="center" valign="top">
-                    <div class="krishnormi-track-step-2" style="position:relative;width:52px;margin:0 auto;opacity:1;">
-                      <div class="krishnormi-track-pulse" style="position:absolute;top:0;left:0;width:52px;height:52px;border-radius:50%;background:#b52d68;"></div>
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="position:relative;">
-                        <tr>
-                          <td align="center" valign="middle" class="krishnormi-track-active-node track-node" style="width:52px;height:52px;background:#b52d68;border-radius:50%;color:#ffffff;font-family:Arial, Helvetica, sans-serif;font-size:18px;font-weight:bold;line-height:52px;">02</td>
-                        </tr>
-                      </table>
-                    </div>
-                  </td>
-                  <td width="32%" align="center" valign="middle" style="padding:0 4px;">
-                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                      <tr>
-                        <td style="height:4px;line-height:4px;font-size:0;border-radius:2px;background:#ece3e8;">&nbsp;</td>
-                      </tr>
-                    </table>
-                  </td>
-                  <td width="18%" align="center" valign="top">
-                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" class="krishnormi-track-step-3" style="opacity:1;">
-                      <tr>
-                        <td align="center" valign="middle" class="track-node" style="width:52px;height:52px;min-width:52px;max-width:52px;box-sizing:border-box;background:#f2eef0;box-shadow:inset 0 0 0 1px #e4dade;border-radius:50%;color:#bbaab4;font-family:Arial, Helvetica, sans-serif;font-size:18px;font-weight:bold;line-height:52px;">03</td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                <tr>
-                  <td width="18%" align="center" style="padding-top:12px;">
-                    <p class="track-label" style="margin:0;color:#16845b;font-family:Arial, Helvetica, sans-serif;font-size:11px;line-height:16px;font-weight:700;">Message<br />Received</p>
-                  </td>
-                  <td width="32%"></td>
-                  <td width="18%" align="center" style="padding-top:12px;">
-                    <p class="track-label" style="margin:0;color:#b52d68;font-family:Arial, Helvetica, sans-serif;font-size:11px;line-height:16px;font-weight:700;">Being<br />Reviewed</p>
-                  </td>
-                  <td width="32%"></td>
-                  <td width="18%" align="center" style="padding-top:12px;">
-                    <p class="track-label" style="margin:0;color:#aaaaaa;font-family:Arial, Helvetica, sans-serif;font-size:11px;line-height:16px;font-weight:600;">We'll Be<br />In Touch</p>
-                  </td>
-                </tr>
-              </table>
-              <p align="center" style="margin:34px 0 0;color:#777777;font-family:Arial, Helvetica, sans-serif;font-size:13px;line-height:22px;">
-                Our team typically reaches out within 24–48 hours. We'll keep this simple — no action needed from you right now.
-              </p>
-            </td>
-          </tr>
-          <tr>
-            <td class="mobile-padding" style="background:#faf7f8;padding:48px 50px;">
-              <p style="margin:0 0 9px;color:#16845b;font-family:Arial, Helvetica, sans-serif;font-size:11px;line-height:18px;font-weight:600;letter-spacing:2px;text-transform:uppercase;">
-                YOUR ENQUIRY
-              </p>
-              <h2 class="section-title" style="margin:0 0 25px;color:#303030;font-family:Georgia, 'Times New Roman', serif;font-size:26px;line-height:35px;font-weight:600;">
-                Here's what you shared with us
-              </h2>
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#ffffff;border:1px solid #eee6e9;">
-                <tr>
-                  <td style="padding:22px 24px 8px;">
-                    <p style="margin:0 0 5px;color:#999999;font-family:Arial, Helvetica, sans-serif;font-size:10px;line-height:15px;font-weight:600;letter-spacing:1.5px;">NAME</p>
-                    <p style="margin:0;color:#333333;font-family:Arial, Helvetica, sans-serif;font-size:14px;line-height:22px;font-weight:600;">${escapeHtml(name)}</p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:12px 24px;">
-                    <p style="margin:0 0 5px;color:#999999;font-family:Arial, Helvetica, sans-serif;font-size:10px;line-height:15px;font-weight:600;letter-spacing:1.5px;">EMAIL</p>
-                    <p style="margin:0;color:#333333;font-family:Arial, Helvetica, sans-serif;font-size:14px;line-height:22px;">${escapeHtml(email)}</p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:12px 24px;">
-                    <p style="margin:0 0 5px;color:#999999;font-family:Arial, Helvetica, sans-serif;font-size:10px;line-height:15px;font-weight:600;letter-spacing:1.5px;">PHONE</p>
-                    <p style="margin:0;color:#333333;font-family:Arial, Helvetica, sans-serif;font-size:14px;line-height:22px;">${escapeHtml(phone)}</p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:12px 24px 24px;">
-                    <p style="margin:0 0 7px;color:#999999;font-family:Arial, Helvetica, sans-serif;font-size:10px;line-height:15px;font-weight:600;letter-spacing:1.5px;">MESSAGE</p>
-                    <p style="margin:0;color:#555555;font-family:Arial, Helvetica, sans-serif;font-size:14px;line-height:24px;">${escapeHtml(message)}</p>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td align="center" class="mobile-padding" style="background:#b52d68;padding:55px 50px;">
-              <p style="margin:0 0 16px;color:#ffffff;font-family:Arial, Helvetica, sans-serif;font-size:10px;line-height:18px;font-weight:600;letter-spacing:3px;text-transform:uppercase;">
-                THE KRISHNORMI EXPERIENCE
-              </p>
-              <h2 style="margin:0 0 18px;color:#ffffff;font-family:Georgia, 'Times New Roman', serif;font-size:30px;line-height:40px;font-weight:600;">
-                Every connection<br />
-                begins with a conversation.
-              </h2>
-              <p style="max-width:450px;margin:0 auto 28px;color:#ffffff;font-family:Arial, Helvetica, sans-serif;font-size:14px;line-height:24px;">
-                We're here to listen, understand and help. Thank you for taking the first step and connecting with Krishnormi.
-              </p>
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
-                <tr>
-                  <td align="center" style="background:#ffffff;border-radius:30px;">
-                    <a href="https://krishnormi.vercel.app/" target="_blank" style="display:inline-block;padding:13px 28px;color:#b52d68;font-family:Arial, Helvetica, sans-serif;font-size:13px;line-height:18px;font-weight:600;text-decoration:none;">
-                      Explore Krishnormi →
+                  <td valign="middle">
+                    <a href="${SITE_URL}/" target="_blank" style="text-decoration:none;">
+                      <img src="${LOGO_WORDMARK_URL}" alt="KRISHNORMI" width="198" height="27" style="display:block;width:198px;height:27px;border:0;color:#b52d68;font-family:${FONT_SERIF};font-size:26px;line-height:27px;font-weight:700;letter-spacing:2px;" />
                     </a>
                   </td>
                 </tr>
               </table>
+              <p style="margin:16px 0 0;color:#16845b;font-family:${FONT_SANS};font-size:10px;line-height:16px;font-weight:700;letter-spacing:2.4px;text-transform:uppercase;">
+                Skin &nbsp;&bull;&nbsp; Hair &nbsp;&bull;&nbsp; Laser &nbsp;&bull;&nbsp; Aesthetics
+              </p>
             </td>
           </tr>
           <tr>
-            <td align="center" style="background:#f1f7f4;padding:42px 30px;">
-              <p style="margin:0 0 8px;color:#16845b;font-family:Arial, Helvetica, sans-serif;font-size:10px;line-height:18px;font-weight:600;letter-spacing:2px;text-transform:uppercase;">
-                STAY CONNECTED
+            <td align="center" class="mobile-padding" bgcolor="#fdf4f7" style="padding:44px 48px 46px;background:#fdf4f7;border-top:1px solid #f4e3ea;border-bottom:1px solid #f4e3ea;">
+              <p style="margin:0 0 14px;color:#16845b;font-family:${FONT_SANS};font-size:11px;line-height:18px;font-weight:700;letter-spacing:2.4px;text-transform:uppercase;">
+                Request Received
               </p>
-              <h3 style="margin:0 0 22px;color:#333333;font-family:Georgia, 'Times New Roman', serif;font-size:22px;line-height:30px;font-weight:600;">
-                Follow Krishnormi
-              </h3>
+              <h1 class="hero-title" style="margin:0 0 18px;color:#b52d68;font-family:${FONT_SERIF};font-size:34px;line-height:42px;font-weight:700;">
+                Thank you, ${escapeHtml(name)}
+              </h1>
+              <p style="margin:0 auto;max-width:460px;color:#555555;font-family:${FONT_SANS};font-size:15px;line-height:25px;">
+                We have received your appointment request at
+                <strong style="color:#2f2f2f;">Krishnormi Dermatology</strong>.
+                Our team will contact you shortly to confirm your visit.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td class="mobile-padding" style="padding:42px 40px 14px;background:#ffffff;">
+              <p style="margin:0 0 8px;color:#16845b;font-family:${FONT_SANS};font-size:11px;line-height:18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">
+                Your Request
+              </p>
+              <h2 class="section-title" style="margin:0 0 20px;color:#2f2f2f;font-family:${FONT_SERIF};font-size:24px;line-height:32px;font-weight:700;">
+                Here's what you shared with us
+              </h2>
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border-collapse:separate;border:1px solid #f1e8ec;border-radius:10px;background:#ffffff;">${detailRow("Treatment", `<span style="color:#b52d68;">${escapeHtml(treatment)}</span>`)}${detailRow("Preferred Date", escapeHtml(formattedDate || date))}${detailRow("Name", escapeHtml(name))}${detailRow("Email", `<a href="mailto:${escapeHtml(email)}" style="color:#2f2f2f;text-decoration:none;">${escapeHtml(email)}</a>`)}${detailRow("Mobile", `+91 ${escapeHtml(phone)}`, !message)}${message ? detailRow("Message", `<span style="color:#555555;font-weight:400;">${escapeHtml(message).replace(/\r?\n/g, "<br />")}</span>`, true) : ""}
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td class="mobile-padding" style="padding:32px 40px 44px;background:#ffffff;">
+              <p style="margin:0 0 8px;color:#16845b;font-family:${FONT_SANS};font-size:11px;line-height:18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">
+                What Happens Next
+              </p>
+              <h2 class="section-title" style="margin:0 0 24px;color:#2f2f2f;font-family:${FONT_SERIF};font-size:24px;line-height:32px;font-weight:700;">
+                Three simple steps
+              </h2>
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;">${stepRow("&#10003;", "#16845b", "#ffffff", "Request received", "#16845b", "Your details have reached our clinic team safely.")}${stepRow("2", "#b52d68", "#ffffff", "Being reviewed", "#b52d68", "We are checking availability for your preferred date.")}${stepRow("3", "#f2eef0", "#a8979f", "We'll be in touch", "#2f2f2f", "Our team will call or email you to confirm your appointment. Visits are by confirmed appointment only.", true)}
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" class="mobile-padding" bgcolor="#b52d68" style="padding:42px 40px 44px;background:#b52d68;">
+              <h2 class="section-title" style="margin:0 0 12px;color:#ffffff;font-family:${FONT_SERIF};font-size:24px;line-height:32px;font-weight:700;">
+                Need to reach us sooner?
+              </h2>
+              <p style="margin:0 auto 24px;max-width:420px;color:#fbe9f0;font-family:${FONT_SANS};font-size:14px;line-height:23px;">
+                Call the clinic on
+                <a href="tel:+917935641858" style="color:#ffffff;font-weight:700;text-decoration:none;white-space:nowrap;">079 3564 1858</a>
+                and we will be happy to help.
+              </p>
               <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
                 <tr>
-                  <td style="padding:0 10px;"><a href="https://instagram.com/" target="_blank" style="color:#b52d68;font-family:Arial, Helvetica, sans-serif;font-size:13px;line-height:20px;font-weight:600;text-decoration:none;">Instagram</a></td>
-                  <td style="color:#cfcfcf;">•</td>
-                  <td style="padding:0 10px;"><a href="https://facebook.com/" target="_blank" style="color:#b52d68;font-family:Arial, Helvetica, sans-serif;font-size:13px;line-height:20px;font-weight:600;text-decoration:none;">Facebook</a></td>
-                  <td style="color:#cfcfcf;">•</td>
-                  <td style="padding:0 10px;"><a href="https://linkedin.com/" target="_blank" style="color:#b52d68;font-family:Arial, Helvetica, sans-serif;font-size:13px;line-height:20px;font-weight:600;text-decoration:none;">LinkedIn</a></td>
+                  <td align="center" bgcolor="#ffffff" style="background:#ffffff;border-radius:26px;">
+                    <a href="${SITE_URL}/" target="_blank" style="display:inline-block;padding:13px 30px;color:#b52d68;font-family:${FONT_SANS};font-size:13px;line-height:18px;font-weight:700;text-decoration:none;">Visit Our Website</a>
+                  </td>
                 </tr>
               </table>
             </td>
           </tr>
           <tr>
-            <td align="center" style="background:#ffffff;padding:35px 30px 38px;">
-              <img src="./logo.png" alt="Krishnormi" width="145" style="display:block;width:145px;max-width:100%;height:auto;margin:0 auto 18px;" />
-              <p style="max-width:430px;margin:0 auto 17px;color:#999999;font-family:Arial, Helvetica, sans-serif;font-size:11px;line-height:19px;">
-                Thank you for reaching out to Krishnormi. We appreciate your interest and look forward to connecting with you.
+            <td align="center" class="mobile-padding" style="padding:34px 40px 36px;background:#ffffff;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:0 auto 14px;">
+                <tr>
+                  <td valign="middle" style="padding:0 9px 0 0;">
+                    <img src="${LOGO_ICON_URL}" alt="" width="32" height="35" style="display:block;width:32px;height:35px;border:0;" />
+                  </td>
+                  <td valign="middle">
+                    <img src="${LOGO_WORDMARK_URL}" alt="KRISHNORMI" width="124" height="17" style="display:block;width:124px;height:17px;border:0;" />
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:0 0 4px;color:#2f2f2f;font-family:${FONT_SANS};font-size:13px;line-height:20px;font-weight:700;">
+                Krishnormi Dermatology
               </p>
-              <p style="margin:0 0 15px;font-family:Arial, Helvetica, sans-serif;font-size:11px;line-height:18px;">
-                <a href="https://yourdomain.com" target="_blank" style="color:#777777;text-decoration:none;">Website</a>
-                <span style="color:#cccccc;">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-                <a href="https://yourdomain.com/contact" target="_blank" style="color:#777777;text-decoration:none;">Contact</a>
-                <span style="color:#cccccc;">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
-                <a href="https://yourdomain.com/privacy-policy" target="_blank" style="color:#777777;text-decoration:none;">Privacy Policy</a>
+              <p style="margin:0 auto 16px;max-width:400px;color:#8a8a8a;font-family:${FONT_SANS};font-size:12px;line-height:19px;">
+                311, 312, Akshar Complex, Shivranjani Cross Road, Satellite, Ahmedabad, Gujarat 380015
               </p>
-              <p style="margin:0;color:#aaaaaa;font-family:Arial, Helvetica, sans-serif;font-size:10px;line-height:17px;">
-                © 2026 Krishnormi. All rights reserved.
+              <p style="margin:0 0 18px;font-family:${FONT_SANS};font-size:12px;line-height:18px;">
+                <a href="${SITE_URL}/" target="_blank" style="color:#16845b;font-weight:700;text-decoration:none;">Website</a>
+                <span style="color:#d5d5d5;">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                <a href="${SITE_URL}/treatments" target="_blank" style="color:#16845b;font-weight:700;text-decoration:none;">Treatments</a>
+                <span style="color:#d5d5d5;">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                <a href="${SITE_URL}/contact-us" target="_blank" style="color:#16845b;font-weight:700;text-decoration:none;">Contact Us</a>
               </p>
-              <p style="margin:7px 0 0;color:#bbbbbb;font-family:Arial, Helvetica, sans-serif;font-size:10px;line-height:17px;">
+              <p style="margin:0;color:#a5a5a5;font-family:${FONT_SANS};font-size:11px;line-height:17px;">
+                &copy; ${new Date().getFullYear()} Krishnormi. All rights reserved.
+              </p>
+              <p style="margin:6px 0 0;color:#b5b5b5;font-family:${FONT_SANS};font-size:11px;line-height:17px;">
                 This is an automated confirmation email. Please do not reply to this message.
               </p>
             </td>
@@ -712,6 +662,7 @@ margin:auto;
       subject: TEST_MODE ? `[TEST - Patient] ${customerSubject}` : customerSubject,
       html: customerHtml,
       text: customerText,
+      inlineImages: logoImages,
     });
 
     const adminResult = await sendEmailViaGmailSmtp({
