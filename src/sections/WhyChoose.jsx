@@ -178,7 +178,7 @@ function Card({ card, template, visible, delay, reducedMotion }) {
 
           group-hover:opacity-100
 
-          ${card.dark ? "bg-white/[0.025]" : "bg-navy/[0.018]"}
+          ${card.dark ? "bg-white/[0.025]" : "bg-navy"}
         `}
       />
 
@@ -198,13 +198,13 @@ function Card({ card, template, visible, delay, reducedMotion }) {
 
             origin-center
 
-            transition-transform
+            transition-[transform,background-color]
             duration-500
             ease-out
 
             group-hover:scale-y-[1.2]
 
-            ${card.dark ? "bg-white" : "bg-navy"}
+            ${card.dark ? "bg-white" : "bg-navy group-hover:bg-white"}
 
             motion-reduce:transform-none
             motion-reduce:transition-none
@@ -223,13 +223,13 @@ function Card({ card, template, visible, delay, reducedMotion }) {
             leading-[1.4]
             font-semibold
 
-            transition-transform
+            transition-[transform,color]
             duration-500
             ease-out
 
             group-hover:translate-x-[3px]
 
-            ${card.dark ? "text-white" : "text-navy"}
+            ${card.dark ? "text-white" : "text-navy group-hover:text-white"}
 
             motion-reduce:transform-none
             motion-reduce:transition-none
@@ -259,13 +259,13 @@ function Card({ card, template, visible, delay, reducedMotion }) {
           text-[15px]
           leading-[1.85]
 
-          transition-transform
+          transition-[transform,color]
           duration-500
           ease-out
 
           group-hover:translate-y-[-2px]
 
-          ${card.dark ? "text-white" : "text-text"}
+          ${card.dark ? "text-white" : "text-text group-hover:text-white"}
 
           motion-reduce:transform-none
           motion-reduce:transition-none
