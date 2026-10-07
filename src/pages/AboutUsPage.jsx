@@ -242,7 +242,6 @@ export default function AboutUsPage() {
 
       <style>{`
         @keyframes krHeroZoom { 0% { transform:scale(1.08); filter:saturate(.85) blur(2px); } 100% { transform:scale(1); filter:saturate(1) blur(0); } }
-        @keyframes krHeroContent { 0% { opacity:0; transform:translate3d(-45px,25px,0) scale(.96); } 70% { opacity:1; transform:translate3d(8px,-3px,0) scale(1.01); } 100% { opacity:1; transform:translate3d(0,0,0) scale(1); } }
         @keyframes krFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
         @keyframes krPulse { 0%,100% { box-shadow:0 0 0 0 rgba(37,211,102,.22); } 50% { box-shadow:0 0 0 14px rgba(37,211,102,0); } }
         @keyframes krGlow { 0%,100% { box-shadow:0 0 0 rgba(23,119,63,0); } 50% { box-shadow:0 0 32px rgba(23,119,63,.18); } }
@@ -251,7 +250,11 @@ export default function AboutUsPage() {
         .kr-reveal-hidden { opacity:0; }
         .kr-reveal-visible { animation:krRevealUp .9s cubic-bezier(.2,.75,.2,1) var(--reveal-delay,0ms) both; }
         .kr-hero-image { animation:krHeroZoom 1.8s cubic-bezier(.2,.7,.2,1) both; transform-origin:center; }
-        .kr-hero-content { animation:krHeroContent 1.15s cubic-bezier(.2,.75,.2,1) .25s both; }
+        .kr-hero-content .contact-reveal { opacity:0; transform:translate3d(0,24px,0); transition:opacity 700ms ease,transform 700ms cubic-bezier(.22,1,.36,1); transition-delay:var(--contact-delay,0ms); }
+        .kr-hero-content .contact-reveal[data-reveal="left"] { transform:translate3d(-24px,0,0); }
+        .kr-hero-content .contact-reveal.is-visible { opacity:1; transform:none; }
+        .kr-hero-content .contact-accent-line { transform:scaleX(0); transform-origin:left center; transition:transform 650ms cubic-bezier(.22,1,.36,1); }
+        .kr-hero-content .contact-reveal.is-visible .contact-accent-line { transform:scaleX(1); }
         .kr-orbit { animation:krFloat 5s ease-in-out infinite; }
         .kr-stat-card { transition:transform .35s ease,box-shadow .35s ease; }
         .kr-stat-card:hover { transform:translateY(-9px) scale(1.025); box-shadow:0 18px 55px rgba(0,0,0,.14); }
@@ -275,8 +278,6 @@ export default function AboutUsPage() {
         .kr-btn:hover::after { transform:translateX(120%); }
         .kr-whatsapp { animation:krPulse 2.2s ease-out infinite; transition:transform .3s ease; }
         .kr-whatsapp:hover { transform:scale(1.08) rotate(-4deg); }
-        .kr-divider { position:relative; overflow:hidden; }
-        .kr-divider::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,.9),transparent); transform:translateX(-120%); animation:krShimmer 3.2s linear infinite; }
         .kr-core-value { transition:transform .3s ease,color .3s ease; }
         .kr-core-value:hover { transform:translateX(7px); color:#df2759; }
         @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; transition-duration:.01ms !important; } }
