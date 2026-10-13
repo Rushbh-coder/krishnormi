@@ -8,6 +8,7 @@ import HomePageEditor from "./pages/admin/HomePageEditor";
 import AdminSettings from "./pages/admin/AdminSettings";
 import ContactPageEditor from "./pages/admin/ContactPageEditor";
 import AboutUsPageEditor from "./pages/admin/AboutUsPageEditor";
+import TreatmentsPageEditor from "./pages/admin/TreatmentsPageEditor";
 import Appointments from "./pages/admin/Appointments";
 import RequireAdminAuth from "./components/RequireAdminAuth";
 import WhatsAppButton from "./components/WhatsAppButton";
@@ -64,6 +65,14 @@ function App() {
           element={
             <RequireAdminAuth>
               <AboutUsPageEditor />
+            </RequireAdminAuth>
+          }
+        />
+        <Route
+          path="/admin/treatments-page"
+          element={
+            <RequireAdminAuth>
+              <TreatmentsPageEditor />
             </RequireAdminAuth>
           }
         />

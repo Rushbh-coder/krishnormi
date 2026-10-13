@@ -20,7 +20,7 @@ const NAV_ITEMS = [
   { key: 'about-us', label: 'About Us', icon: iconAboutUs, to: '/admin/about-page' },
   // { key: 'our-doctor', label: 'Our Doctor', icon: iconOurDoctor },
   // { key: 'areas-of-care', label: 'Areas of Care', icon: iconAreasOfCare },
-  { key: 'treatments', label: 'Treatments', icon: iconTreatments },
+  { key: 'treatments', label: 'Treatments', icon: iconTreatments, to: '/admin/treatments-page' },
   { key: 'gallery', label: 'Gallery', icon: iconGallery },
   { key: 'contact-us', label: 'Contact Us', icon: iconContactUs, to: '/admin/contact-page' },
   { key: 'appointments', label: 'Appointments', icon: iconAppointments, to: '/admin/appointments' },

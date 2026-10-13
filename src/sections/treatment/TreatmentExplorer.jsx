@@ -3,20 +3,57 @@ import { useMemo, useState } from "react";
 import TreatmentSidebar from "./TreatmentSidebar";
 import TreatmentCard from "./TreatmentCard";
 
-import { treatmentCategories, treatments } from "./treatmentData";
+import { resolveTreatmentImage } from "./treatmentData";
+import { useTreatmentCatalog } from "../../hooks/useTreatmentCatalog";
+import { DEFAULT_CONTENT } from "../../data/homepageDefaults";
 
 import logo from "../../assets/header/logo-icon.png";
 import sidebarDoctorsImg from "../../assets/treatment-page/doctors.jpg";
 
-export default function TreatmentExplorer() {
-  const [activeCategory, setActiveCategory] = useState("facials");
+export default function TreatmentExplorer({ content }) {
+  const c = { ...DEFAULT_CONTENT.treatments_page, ...content };
 
-  const selectedCategory = useMemo(
-    () => treatmentCategories.find((item) => item.id === activeCategory),
-    [activeCategory],
+  const { categories } = useTreatmentCatalog();
+  const [requestedCategory, setRequestedCategory] = useState(null);
+
+  // A signed-in admin also receives hidden rows, so filter here as well.
+  const treatmentCategories = useMemo(
+    () =>
+      categories
+        .filter((category) => category.visible !== false)
+        .map((category) => {
+          const visibleTreatments = category.treatments
+            .filter((treatment) => treatment.visible !== false)
+            .map((treatment) => ({
+              id: treatment.id,
+              title: treatment.title,
+              description: treatment.description,
+              image: resolveTreatmentImage(treatment),
+            }));
+
+          return {
+            id: category.id,
+            title: category.title,
+            description: category.description,
+            description2: category.description_2,
+            image: resolveTreatmentImage(category),
+            count: visibleTreatments.length,
+            treatments: visibleTreatments,
+          };
+        }),
+    [categories],
   );
 
-  const selectedTreatments = treatments?.[activeCategory] || [];
+  // Falls back to the first category until one is picked, and again if the
+  // picked one is hidden or deleted while the page is open.
+  const selectedCategory =
+    treatmentCategories.find((item) => item.id === requestedCategory) ??
+    treatmentCategories[0];
+
+  const activeCategory = selectedCategory?.id;
+  const setActiveCategory = setRequestedCategory;
+
+  const selectedTreatments = selectedCategory?.treatments || [];
 
   return (
     <section
@@ -93,7 +130,7 @@ export default function TreatmentExplorer() {
             "
           >
             <img
-              src={sidebarDoctorsImg}
+              src={c.banner_image_url || sidebarDoctorsImg}
               alt=""
               aria-hidden="true"
               className="
@@ -115,7 +152,7 @@ export default function TreatmentExplorer() {
                 top-[10%]
                 z-10
                 w-[65%]
-                max-w-[185px]
+                max-w-[160px]
 
                 max-[900px]:left-[5%]
                 max-[900px]:top-[15%]
@@ -132,20 +169,18 @@ export default function TreatmentExplorer() {
                   font-heading
                   text-[clamp(19px,1.55vw,24px)]
                   font-bold
-                  leading-[1.12]
+                  leading-[1]
                   text-black
 
                   max-[900px]:text-[26px]
                   max-[600px]:text-[clamp(19px,5vw,24px)]
                 "
               >
-                <span className="text-[#147a46]">Healthy Skin</span>
+                <span className="text-[#147a46]">
+                  {c.banner_heading_highlight}
+                </span>
                 <br />
-                Begins with
-                <br />
-                the Right
-                <br />
-                Care
+                {c.banner_heading}
               </h5>
             </div>
 
@@ -332,49 +367,50 @@ export default function TreatmentExplorer() {
               DISCLAIMER
           ====================================================== */}
 
-          <div
-            className="
-              mt-[18px]
-              flex
-              min-h-[62px]
-              w-full
-              box-border
-              items-center
-
-              border
-              border-[#36454F]
-              border-l-[4px]
-              border-l-[#ef2d62]
-
-              bg-[#fafaf3]
-
-              px-5
-              py-3
-
-              max-[768px]:min-h-[60px]
-              max-[768px]:px-4
-
-              max-[480px]:px-3
-              max-[480px]:py-3
-            "
-          >
-            <p
+          {c.disclaimer && (
+            <div
               className="
-                m-0
-                font-body
-                text-[11px]
-                italic
-                leading-[1.6]
-                text-[#444]
+                mt-[18px]
+                flex
+                min-h-[62px]
+                w-full
+                box-border
+                items-center
 
-                max-[768px]:text-[10.5px]
-                max-[480px]:text-[10px]
+                border
+                border-[#36454F]
+                border-l-[4px]
+                border-l-[#ef2d62]
+
+                bg-[#fafaf3]
+
+                px-5
+                py-3
+
+                max-[768px]:min-h-[60px]
+                max-[768px]:px-4
+
+                max-[480px]:px-3
+                max-[480px]:py-3
               "
             >
-              Treatment selection depends on the skin condition, concern and
-              suitability established during consultation.
-            </p>
-          </div>
+              <p
+                className="
+                  m-0
+                  font-body
+                  text-[11px]
+                  italic
+                  leading-[1.6]
+                  text-[#444]
+
+                  max-[768px]:text-[10.5px]
+                  max-[480px]:text-[10px]
+                "
+              >
+                {c.disclaimer}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </section>

@@ -1,6 +1,24 @@
 import treatmentHeroBg from "../../assets/treatment-page/hero.jpg";
+import { DEFAULT_CONTENT } from "../../data/homepageDefaults";
 
-export default function TreatmentHero() {
+// Keeps the clinic name bold wherever it appears in the editable copy.
+function withBoldBrand(text) {
+  return String(text ?? "")
+    .split(/(KRISHNORMI)/)
+    .map((part, index) =>
+      part === "KRISHNORMI" ? (
+        <span key={index} className="font-bold text-black">
+          {part}
+        </span>
+      ) : (
+        part
+      ),
+    );
+}
+
+export default function TreatmentHero({ content }) {
+  const c = { ...DEFAULT_CONTENT.treatments_page, ...content };
+
   return (
     <section className="mx-auto w-full max-w-[1920px] overflow-hidden bg-white">
       <div
@@ -14,7 +32,7 @@ export default function TreatmentHero() {
       >
         {/* HERO IMAGE */}
         <img
-          src={treatmentHeroBg}
+          src={c.hero_image_url || treatmentHeroBg}
           alt=""
           aria-hidden="true"
           className="
@@ -75,7 +93,8 @@ export default function TreatmentHero() {
               max-[400px]:text-[29px]
             "
           >
-            <span className="text-primary">Our Treatment</span> Areas
+            <span className="text-primary">{c.hero_heading_highlight}</span>{" "}
+            {c.hero_heading}
           </h1>
 
           <hr
@@ -102,7 +121,7 @@ export default function TreatmentHero() {
               max-[600px]:text-[18px]
             "
           >
-            Thoughtful treatment begins with the right assessment.
+            {c.hero_subheading}
           </h2>
 
           <p
@@ -118,9 +137,7 @@ export default function TreatmentHero() {
               max-[600px]:leading-[1.7]
             "
           >
-            At <span className="font-bold text-black">KRISHNORMI</span>, every
-            treatment begins with understanding the patient's concern, medical
-            history, expectations and individual suitability.
+            {withBoldBrand(c.hero_body_text_1)}
           </p>
 
           <p
@@ -136,13 +153,11 @@ export default function TreatmentHero() {
               max-[600px]:leading-[1.7]
             "
           >
-            Treatment information is for general awareness. The final treatment,
-            number of sessions, expected results, precautions and aftercare are
-            discussed during consultation.
+            {withBoldBrand(c.hero_body_text_2)}
           </p>
 
           <a
-            href="/contact-us"
+            href={c.hero_button_link || "/contact-us"}
             className="
               mt-5
               inline-flex
@@ -170,7 +185,7 @@ export default function TreatmentHero() {
               max-[600px]:min-w-[180px]
             "
           >
-            Book an Appointment
+            {c.hero_button_label}
           </a>
         </div>
       </div>

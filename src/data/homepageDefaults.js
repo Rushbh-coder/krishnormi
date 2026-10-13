@@ -243,6 +243,23 @@ export const DEFAULT_CONTENT = {
     form_title: "Book a Consultation",
     form_subtitle: "Share your details and our team will contact you.",
   },
+  treatments_page: {
+    hero_heading_highlight: "Our Treatment",
+    hero_heading: "Areas",
+    hero_subheading: "Thoughtful treatment begins with the right assessment.",
+    hero_body_text_1:
+      "At KRISHNORMI, every treatment begins with understanding the patient's concern, medical history, expectations and individual suitability.",
+    hero_body_text_2:
+      "Treatment information is for general awareness. The final treatment, number of sessions, expected results, precautions and aftercare are discussed during consultation.",
+    hero_button_label: "Book an Appointment",
+    hero_button_link: "/contact-us",
+    hero_image_url: null,
+    banner_heading_highlight: "Healthy Skin",
+    banner_heading: "Begins with the Right Care",
+    banner_image_url: null,
+    disclaimer:
+      "Treatment selection depends on the skin condition, concern and suitability established during consultation.",
+  },
   about_page: {
     banner_eyebrow: "ABOUT US",
     banner_heading: "About Krishnormi",

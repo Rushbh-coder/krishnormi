@@ -18,6 +18,14 @@ export default function Treatments() {
   const { row: contactRow } = useSection("contact");
   const { row: aboutRow } = useSection("about_page");
   const { row: testimonialsRow } = useSection("testimonials");
+  const { row: treatmentsPageRow } = useSection("treatments_page");
+
+  /* =========================================================
+     TREATMENTS PAGE CONTENT
+  ========================================================= */
+
+  const treatmentsPageContent =
+    treatmentsPageRow?.content ?? DEFAULT_CONTENT?.treatments_page ?? {};
 
   /* =========================================================
      CONTACT CONTENT
@@ -177,11 +185,11 @@ export default function Treatments() {
 
       <main>
         {/* HERO */}
-        <TreatmentHero />
+        <TreatmentHero content={treatmentsPageContent} />
 
         {/* TREATMENTS */}
         <div className="mb-0">
-          <TreatmentExplorer />
+          <TreatmentExplorer content={treatmentsPageContent} />
         </div>
 
         {/* =================================================
